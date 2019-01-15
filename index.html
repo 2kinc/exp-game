@@ -229,6 +229,8 @@
             }
             return text;
         }
+        setCookie('maxhealth', maxHealth, 30);
+
         if (getCookie('map') == "") {
             var generatedMap = generateMap(625);
         } else {
