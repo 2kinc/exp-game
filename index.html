@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>E.X.P.</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: monospace;
+            background: #333;
+            user-select: none !important;
+            font-size: 12px;
+            color: white;
+            overflow: hidden;
+            padding: 30px;
+            min-width: 1100px;
+        }
+
+        #player {
+            color: #fff;
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            z-index: 2;
+        }
+
+        #box {
+            border: 2px solid #fff;
+            width: 500px;
+            height: 500px;
+            margin: auto;
+        }
+
+        td {
+            width: 20px;
+            height: 16px;
+            text-align: center;
+        }
+
+        .bullet {
+            background: url(https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=360&h=360);
+            height: 18px;
+            width: 18px;
+            z-index: 3;
+            position: absolute;
+        }
+
+        .card {
+            border: 2px solid #fff;
+            padding: 10px;
+            max-width: 250px;
+            z-index: 4;
+            background: #333;
+        }
+
+        .card div {
+            margin: 0;
+        }
+
+        .left-side {
+            float: left;
+            position: relative;
+        }
+
+        .right-side {
+            float: right;
+            position: relative;
+        }
+
+        .heading {
+            font-size: 18px;
+        }
+
+        #log {
+            overflow: hidden;
+            max-height: 100px;
+            width: 300px;
+        }
+
+        #name:hover {
+            background: #fff;
+            color: #333;
+        }
+
+        #name:focus {
+            background: #fff;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="left-side">
+        <div id="stats" class="card">
+            <div id="name" class="heading" title="Click to edit name" contenteditable="true" autocomplete="off"
+                autocorrect="off" autocapitalize="off" spellcheck="false">
+                Loading...
+            </div>
+            <hr>
+            <div class="main">
+                <span id="health">Loading...</span>
+                <br>
+                <span id="energy">Loading...</span>
+                <br>
+                <span id="ammo">Loading...</span>
+                <br>
+                <span id="food">Loading...</span>
+                <hr>
+                <span id="ammo-used">Loading...</span>
+                <br>
+                <span id="steps-taken">Loading...</span>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <div id="loot-heading" class="heading">
+                Loading...
+            </div>
+            <hr>
+            <div id="loot">
+                Loading...
+            </div>
+        </div>
+    </div>
+
+    <div class="right-side">
+        <div class="card">
+            <div id="log-heading" class="heading">
+                Loading...
+            </div>
+            <hr>
+            <div id="log">
+                Loading...
+            </div>
+        </div>
+    </div>
+
+    <div id="box"></div>
+
+    <div id="player">
+        <img src="https://docs.google.com/drawings/d/e/2PACX-1vSq_-3Lh0dtFvHeJ5Iv_FmlgLDjTY8IREBXBssBikosM59-ro2JYe20cZlJZbVu5DOr6tCoh3fNfH4e/pub?w=209&amp;h=197"
+            height="20px" width="20px">
+    </div>
+
+    <img src='https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=720&amp;h=719'
+        height='18px' width='18px' style='display:none;'>
+
+    <script>
+        var player = document.querySelector('#player');
+        var box = document.querySelector('#box');
+        var logEl = document.querySelector('#log');
+        var currentCell = 312;
+        var facing = 'up';
+        var ammo = 100;
+        var health = 10;
+        var maxHealth = 10;
+        var steps = 0;
+        var energy = 15;
+        var ammoUsed = 0;
+        var name = 'Default Noob';
+        var lootArray = [];
+        var food = 10;
+        var maxEnergy = 15;
+        var foodEl = document.querySelector('#food');
+        var lootEl = document.querySelector('#loot');
+        var nameEl = document.querySelector('#name');
+        var ammoEl = document.querySelector('#ammo');
+        var healthEl = document.querySelector('#health');
+        var energyEl = document.querySelector('#energy')
+        var ammoUsedEl = document.querySelector('#ammo-used');
+        var stepsEl = document.querySelector('#steps-taken');
+
+        checkCookie();
+
+        setCookie('maxenergy', maxEnergy, 30);
+
+        function lootSpawn(chest) {
+            this.ammo = Math.floor(Math.random() * 10);
+            this.food = Math.floor(Math.random() * 5);
+            if (chest) {
+                this.ammo++;
+                this.food++;
+                this.ammo *= 3;
+                this.food *= 3;
+            }
+            this.take = function (item, amount) {
+                if (item == 'ammo') {
+                    if (amount == 'all') {
+                        ammo += this.ammo;
+                        this.ammo = 0;
+                    } else {
+                        this.ammo--;
+                        ammo++;
+                    }
+                }
+                if (item == 'food') {
+                    if (amount == 'all') {
+                        food += this.food;
+                        this.food = 0;
+                    } else {
+                        this.food--;
+                        food++;
+                    }
+                }
+                ammoEl.innerHTML = 'Ammo: ' + ammo;
+                foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
+                lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
+                    " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
+                    ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
+                        " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+                document.querySelectorAll('.take').forEach(function (element) {
+                    var x = element.id.slice(0, 3);
+                    var y = element.id.slice(3);
+                    element.addEventListener('click', function () {
+                        lootArray[currentCell].take(y, x);
+                    });
+                });
+                setCookie('loot', lootArray, 30);
+            }
+            setCookie('loot', lootArray, 30);
+        }
+
+        function move(direction) {
+            if (energy >= 0.4) {
+                if (direction == 'up') {
+                    currentCell = ((currentCell > 24) ? currentCell - 25 : currentCell);
+                    player.style.transform = 'rotate(0deg)';
+                }
+                if (direction == 'right') {
+                    currentCell = (((currentCell + 1) % 25 != 0) ? currentCell + 1 : currentCell);
+                    player.style.transform = 'rotate(90deg)';
+                }
+                if (direction == 'left') {
+                    currentCell = (((currentCell + 1) % 25 != 1) ? currentCell - 1 : currentCell);
+                    player.style.transform = 'rotate(270deg)';
+                }
+                if (direction == 'down') {
+                    currentCell = ((currentCell < 600) ? currentCell + 25 : currentCell);
+                    player.style.transform = 'rotate(180deg)';
+                }
+                player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                facing = direction;
+                steps++;
+                stepsEl.innerHTML = 'Steps taken: ' + steps;
+                energy -= 0.4;
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                if (lootArray[currentCell] == undefined)
+                    lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
+                setCookie('loot', lootArray, 30);
+                lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
+                    " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
+                    ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
+                        " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+                document.querySelectorAll('.take').forEach(function (element) {
+                    var x = element.id.slice(0, 2);
+                    var y = element.id.slice(3, 0);
+                    element.addEventListener('click', function () {
+                        lootArray[currentCell].take(y, x);
+                    });
+                });
+                if (document.querySelector('#c' + currentCell).innerHTML == "'")
+                    document.querySelector('#loot-heading').innerHTML = "[']" + ' Plains';
+                if (document.querySelector('#c' + currentCell).innerHTML == "*")
+                    document.querySelector('#loot-heading').innerHTML = "[*]" + ' Forest';
+                if (document.querySelector('#c' + currentCell).innerHTML == ",")
+                    document.querySelector('#loot-heading').innerHTML = "[,]" + ' Swamp';
+                if (document.querySelector('#c' + currentCell).innerHTML == "C")
+                    document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
+                if (document.querySelector('#c' + currentCell).innerHTML == " ")
+                    document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
+            } else {
+                log("You have no energy! Get food fast!")
+            }
+        }
+        document.body.onkeyup = function (e) {
+            if (document.activeElement != nameEl) {
+                if (e.keyCode == 38 || e.keyCode == 87) {
+                    move('up');
+                }
+                if (e.keyCode == 39 || e.keyCode == 68) {
+                    move('right');
+                }
+                if (e.keyCode == 37 || e.keyCode == 65) {
+                    move('left');
+                }
+                if (e.keyCode == 40 || e.keyCode == 83) {
+                    move('down');
+                }
+                if (e.keyCode == 32) {
+                    if (energy >= 0.2) {
+                        shoot(facing);
+                    } else {
+                        log("You have no energy! Get food fast!");
+                    }
+                }
+                if (e.keyCode == 69) {
+                    eat(1);
+                }
+            }
+        }
+
+        function generateMap(length) {
+            var text = '';
+            var possible = "                                       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*****************'''''''''''''''''''CCCC";
+
+            for (var i = 0; i < length; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+                if (text.endsWith(',')) {
+                    possible = "                 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,********''''''''''''''CCCC";
+                }
+                if (text.endsWith('*')) {
+                    possible = "           *********************************************************************,,,,,,,,,,''''''''CCCCCCC";
+                }
+                if (text.endsWith("'")) {
+                    possible = "              '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''',,,,,,,,,,,,,,,,*******CCCC";
+                }
+            }
+            return text;
+        }
+        var generatedMap = generateMap(625);
+        var mapHTML;
+        var textRows = generatedMap.match(/.{1,25}/g);
+        for (var j = 0; j < 25; j += 2) {
+            textRows[j] = textRows[j].split('').reverse().join('');
+        }
+        mapHTML = '<td>' + textRows.join('').split('').join('</td><td>') + '</td>';
+        mapHTML = '<table><tr>' + mapHTML.match(/.{1,250}/g).join('</tr><tr>') + '</tr></table>';
+        setCookie('map', generatedMap, 100);
+        box.innerHTML = mapHTML;
+
+        document.querySelectorAll('td').forEach(function (element, index) {
+            element.id = 'c' + index;
+        });
+
+
+        if (lootArray[currentCell] == undefined)
+            lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
+        setCookie('loot', lootArray, 30);
+        lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
+            " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
+            ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
+                " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+        document.querySelectorAll('.take').forEach(function (element) {
+            var x = element.id.slice(0, 3);
+            var y = element.id.slice(3, 0);
+            element.addEventListener('click', function () {
+                lootArray[currentCell].take(y, x);
+            });
+        });
+
+        player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+        player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+
+        function shoot(direction) {
+            if (ammo > 0) {
+                var bullet = document.createElement('div');
+                bullet.className = 'bullet';
+                bullet.innerHTML = "<img src='https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=720&amp;h=719' height='18px' width='18px'>"
+                bullet.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                bullet.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                document.body.appendChild(bullet);
+                var i = 0;
+                var x = setInterval(function () {
+                    if (direction == 'up') {
+                        bullet.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y - i + 'px';
+                        i += 10;
+                    } else if (direction == 'right') {
+                        bullet.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + i + 'px';
+                        i += 10;
+                    } else if (direction == 'left') {
+                        bullet.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x - i + 'px';
+                        i += 10;
+                    } else if (direction == 'down') {
+                        bullet.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + i + 'px';
+                        i += 10;
+                    }
+                }, 33);
+                ammo--;
+                ammoUsed++;
+                ammoEl.innerHTML = 'Ammo: ' + ammo;
+                ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
+                setCookie('ammo', ammo, 30);
+                setCookie('ammoused', ammoUsed, 30);
+                energy -= 0.2;
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                setCookie('energy', energy, 30);
+                setTimeout(function () {
+                    clearInterval(x);
+                    bullet.parentNode.removeChild(bullet);
+                }, 500);
+            } else {
+                log('Not enough ammo!');
+            }
+        }
+        var regenDegenInterval = setInterval(function () {
+            if (Math.round(energy) > 0)
+                energy++;
+            if (energy > maxEnergy)
+                energy = maxEnergy;
+            if (Math.round(energy) == maxEnergy && health < maxHealth) {
+                energy = maxEnergy;
+                health += 3;
+            }
+            if (Math.round(energy) == 0)
+                health -= Math.floor(maxHealth / 3);
+            if (health < 0)
+                document.body.innerHTML = "<image src='https://media3.giphy.com/media/26tPdwMm4jyClgxTq/giphy.gif?cid=3640f6095c3bba5f346334425581de61' height='600px'>"
+            energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+            healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+            setCookie('energy', energy, 30);
+        }, 5000);
+
+        function log(message) {
+            logEl.innerHTML = message + '<br>' + logEl.innerHTML;
+        }
+
+        setInterval(function () {
+            name = nameEl.innerHTML;
+            setCookie('name', name, 30);
+        }, 1000)
+
+        function eat(amount) {
+            if (energy < maxEnergy && food >= amount) {
+                food -= amount;
+                energy += amount * 3;
+                if (energy > maxEnergy)
+                    energy = maxEnergy;
+                foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                setCookie('food', food, 30);
+                setCookie('energy', energy, 30);
+            } else if (energy < maxEnergy && food < amount) {
+                log('Not enough food!')
+            } else if (energy = maxEnergy) {
+                log("Your energy is already maxed.");
+            }
+        }
+
+        if (document.querySelector('#c' + currentCell).innerHTML == "'")
+            document.querySelector('#loot-heading').innerHTML = "[']" + ' Plains';
+        if (document.querySelector('#c' + currentCell).innerHTML == "*")
+            document.querySelector('#loot-heading').innerHTML = "[*]" + ' Forest';
+        if (document.querySelector('#c' + currentCell).innerHTML == ",")
+            document.querySelector('#loot-heading').innerHTML = "[,]" + ' Swamp';
+        if (document.querySelector('#c' + currentCell).innerHTML == "C")
+            document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
+        if (document.querySelector('#c' + currentCell).innerHTML == " ")
+            document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function checkCookie() {
+            var checker = getCookie('checker');
+            if (checker != "") {
+                name = getCookie('name');
+                health = getCookie('health');
+                maxHealth = getCookie('maxhealth');
+                ammo = getCookie('ammo');
+                energy = getCookie('energy');
+                maxEnergy = getCookie('maxenergy');
+                food = getCookie('food')
+                steps = getCookie('steps');
+                ammoUsed = getCookie('ammoused');
+                generatedMap = getCookie('map');
+                lootArray = getCookie('loot');
+            }
+        }
+
+        setCookie('checker', 'yup', 30);
+
+        nameEl.innerHTML = name;
+        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+        energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+        ammoEl.innerHTML = 'Ammo: ' + ammo;
+        foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
+        ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
+        stepsEl.innerHTML = 'Steps taken: ' + steps;
+        document.querySelector('#log-heading').innerHTML = 'Log';
+        logEl.innerHTML = 'You spawn into a strange world.';
+        box.innerHTML = mapHTML;
+
+        document.querySelectorAll('td').forEach(function (element, index) {
+            element.id = 'c' + index;
+        });
+    </script>
+</body>
+
+</html>
