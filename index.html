@@ -171,10 +171,85 @@
         var energyEl = document.querySelector('#energy')
         var ammoUsedEl = document.querySelector('#ammo-used');
         var stepsEl = document.querySelector('#steps-taken');
+        var generatedMap;
+
+        var takeF = function (item, amount) {
+            if (item == 'ammo') {
+                if (amount == 'all') {
+                    ammo += lootArray[currentCell].ammo;
+                    lootArray[currentCell].ammo = 0;
+                } else {
+                    lootArray[currentCell].ammo--;
+                    ammo++;
+                }
+            }
+            if (item == 'food') {
+                if (amount == 'all') {
+                    food += lootArray[currentCell].food;
+                    lootArray[currentCell].food = 0;
+                } else {
+                    lootArray[currentCell].food--;
+                    food++;
+                }
+            }
+            ammoEl.innerHTML = 'Ammo: ' + ammo;
+            foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
+            lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
+                " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
+                ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
+                    " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+            lootArray[currentCell].take = takeF;
+            document.querySelectorAll('.take').forEach(function (element) {
+                var x = element.id.slice(0, 3);
+                var y = element.id.slice(3);
+                element.addEventListener('click', function () {
+                    lootArray[currentCell].take(y, x);
+                });
+            });
+            setCookie('loot', JSON.stringify(lootArray));
+            setCookie('food', food, 30);
+            setCookie('ammo', ammo, 30);
+        }
+
+        function generateMap(length) {
+            var text = '';
+            var possible = "                                       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*****************'''''''''''''''''''CCCC";
+
+            for (var i = 0; i < length; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+                if (text.endsWith(',')) {
+                    possible = "                 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,********''''''''''''''CCCC";
+                }
+                if (text.endsWith('*')) {
+                    possible = "           *********************************************************************,,,,,,,,,,''''''''CCCCCCC";
+                }
+                if (text.endsWith("'")) {
+                    possible = "              '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''',,,,,,,,,,,,,,,,*******CCCC";
+                }
+            }
+            return text;
+        }
+        if (getCookie('map') == "") {
+            var generatedMap = generateMap(625);
+        } else {
+            generatedMap = getCookie('map');
+        }
+        var mapHTML;
+        var textRows = generatedMap.match(/.{1,25}/g);
+        for (var j = 0; j < 25; j += 2) {
+            textRows[j] = textRows[j].split('').reverse().join('');
+        }
+        mapHTML = '<td>' + textRows.join('').split('').join('</td><td>') + '</td>';
+        mapHTML = '<table><tr>' + mapHTML.match(/.{1,250}/g).join('</tr><tr>') + '</tr></table>';
+        setCookie('map', generatedMap, 100);
+
+        document.querySelectorAll('td').forEach(function (element, index) {
+            element.id = 'c' + index;
+        });
+
+        setCookie('maxenergy', maxEnergy);
 
         checkCookie();
-
-        setCookie('maxenergy', maxEnergy, 30);
 
         function lootSpawn(chest) {
             this.ammo = Math.floor(Math.random() * 10);
@@ -185,41 +260,7 @@
                 this.ammo *= 3;
                 this.food *= 3;
             }
-            this.take = function (item, amount) {
-                if (item == 'ammo') {
-                    if (amount == 'all') {
-                        ammo += this.ammo;
-                        this.ammo = 0;
-                    } else {
-                        this.ammo--;
-                        ammo++;
-                    }
-                }
-                if (item == 'food') {
-                    if (amount == 'all') {
-                        food += this.food;
-                        this.food = 0;
-                    } else {
-                        this.food--;
-                        food++;
-                    }
-                }
-                ammoEl.innerHTML = 'Ammo: ' + ammo;
-                foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
-                lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
-                    " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
-                    ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
-                        " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
-                document.querySelectorAll('.take').forEach(function (element) {
-                    var x = element.id.slice(0, 3);
-                    var y = element.id.slice(3);
-                    element.addEventListener('click', function () {
-                        lootArray[currentCell].take(y, x);
-                    });
-                });
-                setCookie('loot', lootArray, 30);
-            }
-            setCookie('loot', lootArray, 30);
+            setCookie('loot', JSON.stringify(lootArray));
         }
 
         function move(direction) {
@@ -245,15 +286,19 @@
                 facing = direction;
                 steps++;
                 stepsEl.innerHTML = 'Steps taken: ' + steps;
+                setCookie('steps', steps, 30);
                 energy -= 0.4;
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                setCookie('energy', energy, 30);
+                setCookie('maxenergy', maxEnergy, 30);
                 if (lootArray[currentCell] == undefined)
                     lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
-                setCookie('loot', lootArray, 30);
+                setCookie('loot', JSON.stringify(lootArray));
                 lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
                     " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
                     ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
                         " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+                lootArray[currentCell].take = takeF;
                 document.querySelectorAll('.take').forEach(function (element) {
                     var x = element.id.slice(0, 2);
                     var y = element.id.slice(3, 0);
@@ -301,44 +346,30 @@
                 }
             }
         }
-
-        function generateMap(length) {
-            var text = '';
-            var possible = "                                       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*****************'''''''''''''''''''CCCC";
-
-            for (var i = 0; i < length; i++) {
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-                if (text.endsWith(',')) {
-                    possible = "                 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,********''''''''''''''CCCC";
-                }
-                if (text.endsWith('*')) {
-                    possible = "           *********************************************************************,,,,,,,,,,''''''''CCCCCCC";
-                }
-                if (text.endsWith("'")) {
-                    possible = "              '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''',,,,,,,,,,,,,,,,*******CCCC";
-                }
+        if (getCookie('map') == "") {
+            var mapHTML;
+            var textRows = generatedMap.match(/.{1,25}/g);
+            for (var j = 0; j < 25; j += 2) {
+                textRows[j] = textRows[j].split('').reverse().join('');
             }
-            return text;
+            mapHTML = '<td>' + textRows.join('').split('').join('</td><td>') + '</td>';
+            mapHTML = '<table><tr>' + mapHTML.match(/.{1,250}/g).join('</tr><tr>') + '</tr></table>';
+            setCookie('map', generatedMap, 100);
+        } else {
+            mapHTML = getCookie('map');
+            mapHTML = '<td>' + textRows.join('').split('').join('</td><td>') + '</td>';
+            mapHTML = '<table><tr>' + mapHTML.match(/.{1,250}/g).join('</tr><tr>') + '</tr></table>';
+            setCookie('map', generatedMap, 100);
         }
-        var generatedMap = generateMap(625);
-        var mapHTML;
-        var textRows = generatedMap.match(/.{1,25}/g);
-        for (var j = 0; j < 25; j += 2) {
-            textRows[j] = textRows[j].split('').reverse().join('');
-        }
-        mapHTML = '<td>' + textRows.join('').split('').join('</td><td>') + '</td>';
-        mapHTML = '<table><tr>' + mapHTML.match(/.{1,250}/g).join('</tr><tr>') + '</tr></table>';
-        setCookie('map', generatedMap, 100);
         box.innerHTML = mapHTML;
-
         document.querySelectorAll('td').forEach(function (element, index) {
             element.id = 'c' + index;
         });
 
-
         if (lootArray[currentCell] == undefined)
             lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
-        setCookie('loot', lootArray, 30);
+        setCookie('loot', JSON.stringify(lootArray));
+        lootArray[currentCell].take = takeF;
         lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
             " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
             ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
@@ -382,11 +413,11 @@
                 ammoUsed++;
                 ammoEl.innerHTML = 'Ammo: ' + ammo;
                 ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
-                setCookie('ammo', ammo, 30);
-                setCookie('ammoused', ammoUsed, 30);
+                setCookie('ammo', ammo);
+                setCookie('ammoused', ammoUsed);
                 energy -= 0.2;
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-                setCookie('energy', energy, 30);
+                setCookie('energy', energy);
                 setTimeout(function () {
                     clearInterval(x);
                     bullet.parentNode.removeChild(bullet);
@@ -410,7 +441,8 @@
                 document.body.innerHTML = "<image src='https://media3.giphy.com/media/26tPdwMm4jyClgxTq/giphy.gif?cid=3640f6095c3bba5f346334425581de61' height='600px'>"
             energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
             healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-            setCookie('energy', energy, 30);
+            setCookie('energy', energy);
+            setCookie('health', health);
         }, 5000);
 
         function log(message) {
@@ -419,7 +451,7 @@
 
         setInterval(function () {
             name = nameEl.innerHTML;
-            setCookie('name', name, 30);
+            setCookie('name', name);
         }, 1000)
 
         function eat(amount) {
@@ -430,8 +462,8 @@
                     energy = maxEnergy;
                 foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-                setCookie('food', food, 30);
-                setCookie('energy', energy, 30);
+                setCookie('food', food);
+                setCookie('energy', energy);
             } else if (energy < maxEnergy && food < amount) {
                 log('Not enough food!')
             } else if (energy = maxEnergy) {
@@ -479,18 +511,19 @@
                 name = getCookie('name');
                 health = getCookie('health');
                 maxHealth = getCookie('maxhealth');
-                ammo = getCookie('ammo');
+                ammo = Number(getCookie('ammo'));
                 energy = getCookie('energy');
                 maxEnergy = getCookie('maxenergy');
-                food = getCookie('food')
+                food = Number(getCookie('food'));
                 steps = getCookie('steps');
                 ammoUsed = getCookie('ammoused');
                 generatedMap = getCookie('map');
-                lootArray = getCookie('loot');
+                lootArray = JSON.parse(getCookie('loot'));
+                steps = getCookie('steps');
             }
         }
 
-        setCookie('checker', 'yup', 30);
+        setCookie('checker', 'yup');
 
         nameEl.innerHTML = name;
         healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
@@ -501,10 +534,17 @@
         stepsEl.innerHTML = 'Steps taken: ' + steps;
         document.querySelector('#log-heading').innerHTML = 'Log';
         logEl.innerHTML = 'You spawn into a strange world.';
-        box.innerHTML = mapHTML;
-
-        document.querySelectorAll('td').forEach(function (element, index) {
-            element.id = 'c' + index;
+        lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
+            " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
+            ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
+                " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+        lootArray[currentCell].take = takeF;
+        document.querySelectorAll('.take').forEach(function (element) {
+            var x = element.id.slice(0, 3);
+            var y = element.id.slice(3);
+            element.addEventListener('click', function () {
+                lootArray[currentCell].take(y, x);
+            });
         });
     </script>
 </body>
