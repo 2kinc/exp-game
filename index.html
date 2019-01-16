@@ -511,7 +511,7 @@
 
         function checkCookie() {
             var checker = getCookie('checker');
-            if (checker != "") {
+            if (checker == "yup") {
                 name = getCookie('name');
                 health = getCookie('health');
                 maxHealth = getCookie('maxhealth');
@@ -527,7 +527,7 @@
             }
         }
 
-        setCookie('checker', 'yup');
+        setCookie('checker', 'yup', 30);
 
         nameEl.innerHTML = name;
         healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
