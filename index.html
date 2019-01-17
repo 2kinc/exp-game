@@ -208,14 +208,6 @@
             lootFood.innerHTML = lootArray[currentCell].food;
             lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
             lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
-            lootArray[currentCell].take = takeF;
-            document.querySelectorAll('.take').forEach(function (element) {
-                var x = element.id.slice(0, 3);
-                var y = element.id.slice(3);
-                element.addEventListener('click', function () {
-                    lootArray[currentCell].take(y, x);
-                });
-            });
             setCookie('loot', JSON.stringify(lootArray));
             setCookie('food', food, 30);
             setCookie('ammo', ammo, 30);
