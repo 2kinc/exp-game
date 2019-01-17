@@ -427,7 +427,7 @@
                     bullet.parentNode.removeChild(bullet);
                 }, 500);
             } else {
-                log('You do not have anything to shoot! Reload.');
+                log('Out of ammo! Reload.');
             }
         }
         var regenDegenInterval = setInterval(function () {
@@ -469,9 +469,9 @@
                 setCookie('food', food);
                 setCookie('energy', energy);
             } else if (energy < maxEnergy && food < amount) {
-                log('If it was possible to eat nothing, no one would starve.')
+                log('You have no food!')
             } else if (energy = maxEnergy) {
-                log("You are up and running! You do not need to eat anything.");
+                log("Your energy is full. No need to eat.");
             }
         }
 
