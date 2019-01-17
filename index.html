@@ -122,7 +122,8 @@
             </div>
             <hr>
             <div id="loot">
-                Loading...
+                <span id='lootammo'><span id='ammotakes'><span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span></span></span>
+                <span id='lootfood'><span id='foodtakes'><span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span></span><span>
             </div>
         </div>
     </div>
@@ -174,6 +175,10 @@
         var ammoUsedEl = document.querySelector('#ammo-used');
         var stepsEl = document.querySelector('#steps-taken');
         var generatedMap;
+        var ammoTakes = document.querySelector('#ammotakes');
+        var foodTakes = document.querySelector('#foodtakes');
+        var lootAmmo = document.querySelector('#lootammo');
+        var lootFood = document.querySelector('#lootfood');
 
         var takeF = function (item, amount) {
             if (item == 'ammo') {
@@ -549,10 +554,8 @@
         ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
         stepsEl.innerHTML = 'Steps taken: ' + steps;
         document.querySelector('#log-heading').innerHTML = 'Log';
-        lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
-            " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
-            ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
-                " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+        lootAmmo.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes;
+        lootFood.innerHTML = lootArray[currentCell].food + 'food ' + foodTakes;
         lootArray[currentCell].take = takeF;
         document.querySelectorAll('.take').forEach(function (element) {
             var x = element.id.slice(0, 3);
@@ -561,7 +564,8 @@
                 lootArray[currentCell].take(y, x);
             });
         });
-        logEl.innerHTML = '';
+        ammoTakes.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes.innerHTML;
+        ammoTakes.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes.innerHTML;
         log('You awake into a strange world.');
         setTimeout(function(){log('Your memories are a messy blur.')}, 1500);
         setTimeout(function(){log('Distant flashbacks of the battlefield swirl through your mind.')}, 3000);
