@@ -447,11 +447,11 @@
                 energy = maxEnergy;
                 health += 3;
             }
-            if (Math.round(energy) == 0){
+            if (Math.round(energy) == 0) {
                 health -= Math.floor(maxHealth / 3);
                 healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
             }
-            if (health < 0){
+            if (health < 0) {
                 var saveHTML = document.body.innerHTML;
                 document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
                 setTimeout(function(){document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
@@ -533,17 +533,16 @@
             var checker = getCookie('checker');
             if (checker == "yup") {
                 name = getCookie('name');
-                health = getCookie('health');
-                maxHealth = getCookie('maxhealth');
+                health = Number(getCookie('health'));
+                maxHealth = Number(getCookie('maxhealth'));
                 ammo = Number(getCookie('ammo'));
-                energy = getCookie('energy');
-                maxEnergy = getCookie('maxenergy');
+                energy = Number(getCookie('energy'));
+                maxEnergy = Number(getCookie('maxenergy'));
                 food = Number(getCookie('food'));
-                steps = getCookie('steps');
-                ammoUsed = getCookie('ammoused');
+                steps = Number(getCookie('steps'));
+                ammoUsed = Number(getCookie('ammoused'));
                 generatedMap = getCookie('map');
                 lootArray = JSON.parse(getCookie('loot'));
-                steps = getCookie('steps');
             }
         }
 
