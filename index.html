@@ -76,7 +76,7 @@
         #log {
             overflow: hidden;
             max-height: 100px;
-            max-width: 300px;
+            max-width: 250px;
         }
 
         #name:hover {
@@ -549,6 +549,7 @@
                 lootArray[currentCell].take(y, x);
             });
         });
+        logEl.innerHTML = '';
         log('You awake into a strange world.');
         setTimeout(log('Your memories are a messy blur.'), 1000);
         setTimeout(log('Distant flashbacks of the battlefield swirl through your mind.'), 1000);
