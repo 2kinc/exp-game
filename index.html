@@ -537,7 +537,6 @@
         ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
         stepsEl.innerHTML = 'Steps taken: ' + steps;
         document.querySelector('#log-heading').innerHTML = 'Log';
-        logEl.innerHTML = 'You awake into a very strange world. The sky above is filled with stars. The gun on your chest shines in the moonlight.';
         lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
             " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
             ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
@@ -550,6 +549,9 @@
                 lootArray[currentCell].take(y, x);
             });
         });
+        log('You awake into a strange world.');
+        setTimeout(log('Your memories are a messy blur.'), 1000);
+        setTimeout(log('Distant flashbacks of the battlefield swirl through your mind.'), 1000);
     </script>
 </body>
 
