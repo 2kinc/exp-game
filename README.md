@@ -1,2 +1,4 @@
-# exp-game
+<img src="https://iamcev.github.io/exp-game/favicon.png" width=50>
+
+# E. X. P.
 a game by 2K inc.
