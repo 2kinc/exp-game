@@ -441,7 +441,7 @@
             }
             if (Math.round(energy) == 0)
                 health -= Math.floor(maxHealth / 3);
-            if (health < 0)
+            if (health < 0){
                 var saveHTML = document.body.innerHTML;
                 console.log(saveHTML);
                 console.log(document.body.innerHTML);
@@ -458,6 +458,7 @@
                 healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
                 setCookie('energy', energy);
                 setCookie('health', health);
+            }
         }, 5000);
 
         function log(message) {
