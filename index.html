@@ -201,10 +201,10 @@
             }
             ammoEl.innerHTML = 'Ammo: ' + ammo;
             foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
-            lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
-                " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
-                ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
-                    " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+            lootAmmo.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes;
+            lootFood.innerHTML = lootArray[currentCell].food + 'food ' + foodTakes;
+            lootAmmo.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
+            lootFood.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
             lootArray[currentCell].take = takeF;
             document.querySelectorAll('.take').forEach(function (element) {
                 var x = element.id.slice(0, 3);
@@ -303,10 +303,10 @@
                 if (lootArray[currentCell] == undefined)
                     lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
                 setCookie('loot', JSON.stringify(lootArray));
-                lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
-                    " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
-                    ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
-                        " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+                lootAmmo.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes;
+                lootFood.innerHTML = lootArray[currentCell].food + 'food ' + foodTakes;
+                lootAmmo.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
+                lootFood.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
                 lootArray[currentCell].take = takeF;
                 document.querySelectorAll('.take').forEach(function (element) {
                     var x = element.id.slice(0, 2);
@@ -347,7 +347,7 @@
                     if (energy >= 0.2) {
                         shoot(facing);
                     } else {
-                        log("You are very tired. The only way you would be able to survive is if you ate food or rested for a bit...");
+                        log("You have no energy! Get food fast!");
                     }
                 }
                 if (e.keyCode == 69) {
@@ -379,10 +379,10 @@
             lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
         setCookie('loot', JSON.stringify(lootArray));
         lootArray[currentCell].take = takeF;
-        lootEl.innerHTML = ((lootArray[currentCell].ammo != 0) ? lootArray[currentCell].ammo + ' ammo' +
-            " <span id='oneammo' class='clickable take'>[Take 1]</span> <span id='allammo' class='clickable take'>[Take All]</span>" + '<br>' : '') +
-            ((lootArray[currentCell].food != 0) ? lootArray[currentCell].food + ' food' +
-                " <span id='onefood' class='clickable take'>[Take 1]</span> <span id='allfood' class='clickable take'>[Take All]</span>" + '<br>' : '');
+        lootAmmo.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes;
+        lootFood.innerHTML = lootArray[currentCell].food + 'food ' + foodTakes;
+        lootAmmo.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
+        lootFood.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
         document.querySelectorAll('.take').forEach(function (element) {
             var x = element.id.slice(0, 3);
             var y = element.id.slice(3, 0);
@@ -556,6 +556,8 @@
         document.querySelector('#log-heading').innerHTML = 'Log';
         lootAmmo.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes;
         lootFood.innerHTML = lootArray[currentCell].food + 'food ' + foodTakes;
+        lootAmmo.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
+        lootFood.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
         lootArray[currentCell].take = takeF;
         document.querySelectorAll('.take').forEach(function (element) {
             var x = element.id.slice(0, 3);
@@ -564,8 +566,6 @@
                 lootArray[currentCell].take(y, x);
             });
         });
-        ammoTakes.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes.innerHTML;
-        ammoTakes.innerHTML = lootArray[currentCell].ammo + 'ammo ' + ammoTakes.innerHTML;
         log('You awake into a strange world.');
         setTimeout(function(){log('Your memories are a messy blur.')}, 1500);
         setTimeout(function(){log('Distant flashbacks of the battlefield swirl through your mind.')}, 3000);
