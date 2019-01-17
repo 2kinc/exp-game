@@ -443,8 +443,6 @@
                 health -= Math.floor(maxHealth / 3);
             if (health < 0){
                 var saveHTML = document.body.innerHTML;
-                console.log(saveHTML);
-                console.log(document.body.innerHTML);
                 document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
                 setTimeout(function(){document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
 }, 1000);
