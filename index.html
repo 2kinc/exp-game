@@ -442,11 +442,20 @@
             if (Math.round(energy) == 0)
                 health -= Math.floor(maxHealth / 3);
             if (health < 0)
-                document.body.innerHTML = "<image src='https://media3.giphy.com/media/26tPdwMm4jyClgxTq/giphy.gif?cid=3640f6095c3bba5f346334425581de61' height='600px'>"
-            energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-            healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-            setCookie('energy', energy);
-            setCookie('health', health);
+                var saveHTML = document.body.innerHTML;
+                document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+                setTimeout(function(){document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+}, 1000);
+                setTimeout(function(){document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+}, 2000);
+                setTimeout(function(){document.body.innerHTML = saveHTML;
+}, 3000);
+                energy = maxEnergy;
+                health = maxHealth;
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                setCookie('energy', energy);
+                setCookie('health', health);
         }, 5000);
 
         function log(message) {
