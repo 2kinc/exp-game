@@ -475,7 +475,7 @@
 
         setInterval(function () {
             name = nameEl.innerHTML;
-            setCookie('name', name);
+            setCookie('name', name, 30);
         }, 1000)
 
         function eat(amount) {
