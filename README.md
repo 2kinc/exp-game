@@ -1,3 +1,4 @@
-<img src="https://iamcev.github.io/exp-game/favicon.png" width=60><h3 style="font-size:200%">E. X. P.</h3>
+<img src="https://iamcev.github.io/exp-game/favicon.png" width=60>
+###### E. X. P.
 A game by 2K inc.  
 Play it for **free** [here](https://iamcev.github.io/exp-game)!
