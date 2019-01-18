@@ -181,7 +181,7 @@
         var lootFood = document.querySelector('#lootfoodnum');
         var lootAmmoWrap = document.querySelector('#lootammo');
         var lootFoodWrap = document.querySelector('#lootfood');
-        
+        var fightingMode = false;
         
         var takeF = function (item, amount) {
             if (item == 'ammo') {
@@ -320,6 +320,10 @@
                     document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
                 if (document.querySelector('#c' + currentCell).innerHTML == " ")
                     document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
+                if (Math.random() >= 0.70){
+                    fightingMode = true;
+                    console.log('battle! clash! 🦆 vs 🐉')
+                }    
             } else {
                 log("You have no energy! Get food fast!")
             }
