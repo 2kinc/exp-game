@@ -463,6 +463,10 @@
                 setCookie('energy', energy);
                 setCookie('health', health);
             }
+            energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+            healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+            setCookie('energy', energy);
+            setCookie('health', health);
         }, 5000);
 
         function log(message) {
