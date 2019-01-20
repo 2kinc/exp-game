@@ -320,11 +320,11 @@
                     document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
                 if (document.querySelector('#c' + currentCell).innerHTML == " ")
                     document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
-                if (Math.random() >= 0.70) {
+                if (Math.random() >= 0.95) {
                     if (fightingMode == false)
                         saveBoxHTML = box.innerHTML;
                     fightingMode = true;
-                    console.log('battle! clash! 🦆 vs 🐉');
+                    console.log('battle! clash! 🦆 vs 🐉. ');
                     box.innerHTML = '';
                     player.style.transform = 'rotate(0deg)';
                     facing = 'up';
