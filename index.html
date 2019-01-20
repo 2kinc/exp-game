@@ -345,28 +345,34 @@
             }
         }
         document.body.onkeyup = function (e) {
+            e.key=e.key.toLowerCase();
             if (document.activeElement != nameEl) {
-                if (e.keyCode == 38 || e.keyCode == 87) {
+                if (e.key=="w" || e.key=="arrowup") {
                     move('up');
                 }
-                if (e.keyCode == 39 || e.keyCode == 68) {
+                if (e.key == "d" || e.key == "arrowright") {
                     move('right');
                 }
-                if (e.keyCode == 37 || e.keyCode == 65) {
+                if (e.key == "a" || e.key=="arrowleft") {
                     move('left');
                 }
-                if (e.keyCode == 40 || e.keyCode == 83) {
+                if (e.key == "s" || e.key=="arrowdown") {
                     move('down');
                 }
-                if (e.keyCode == 32) {
+                if (e.key == " ") {
                     if (energy >= 0.2) {
                         shoot(facing);
                     } else {
                         log("You have no energy! Get food fast!");
                     }
                 }
-                if (e.keyCode == 69) {
+                if (e.key == "e") {
                     eat(1);
+                }
+                if (fightingMode==true&&energy>=0.4) {
+                    if (e.key=="escape") {
+                        fightingMode=false;
+                    }
                 }
             }
         }
