@@ -4,7 +4,6 @@
 <head>
     <title>E. X. P.</title>
     <meta charset="utf-8">
-    <meta name="description" content="E. X. P. is an text-based exploration game by 2K inc. Build your infinite world while trying not to starve!">
     <link rel="shortcut icon" href="/exp-game/favicon.png" type="image/x-icon">
     <link rel="icon" href="/exp-game/favicon.png" type="image/x-icon">
     <style>
@@ -22,8 +21,8 @@
         #player {
             color: #fff;
             position: absolute;
-            height: 18px;
-            width: 18px;
+            height: 20px;
+            width: 20px;
             z-index: 2;
         }
 
@@ -32,6 +31,9 @@
             width: 500px;
             height: 500px;
             margin: auto;
+            transition: all 1.5s;
+            transition-timing-function: ease-in-out;
+            transform-origin: 50% 50%;
         }
 
         td {
@@ -186,6 +188,7 @@
         var lootFoodWrap = document.querySelector('#lootfood');
         var fightingMode = false;
         var saveBoxHTML;
+        var playerFightingOrigin;
 
         var takeF = function (item, amount) {
             if (item == 'ammo') {
@@ -215,7 +218,7 @@
             setCookie('loot', JSON.stringify(lootArray));
             setCookie('food', food, 30);
             setCookie('ammo', ammo, 30);
-        }
+        };
 
         function generateMap(length) {
             var text = '';
@@ -325,6 +328,10 @@
                     box.innerHTML = '';
                     player.style.transform = 'rotate(0deg)';
                     facing = 'up';
+                    player.style.left = 'calc(50% - 10px)';
+                    box.style.transform = 'scale(0.40)';
+                    box.style.borderWidth = '5px';
+                    player.style.top = box.offsetHeight - 140 + 'px';
                 }
             } else if (fightingMode == true && energy >= 0.4) {
                 if (direction == 'right') {
