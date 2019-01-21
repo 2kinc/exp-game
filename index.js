@@ -162,7 +162,7 @@ function move(direction) {
             document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
         if (document.querySelector('#c' + currentCell).innerHTML == " ")
             document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
-        if (Math.random() >= 0.95) {
+        if (Math.random() >= 0.70) {
             if (fightingMode == false)
                 saveBoxHTML = box.innerHTML;
             fightingMode = true;
@@ -211,7 +211,7 @@ document.body.onkeyup = function (e) {
             eat(1);
         }
         else if (e.key == "Escape") {
-            if (fightingMode == true && energy >= 0.4) {
+            if (fightingMode == true && energy >= 2) {
                 fightingMode = false;
                 box.innerHTML = saveBoxHTML;
                 box.style.transform = 'scale(1.0)';
@@ -220,6 +220,8 @@ document.body.onkeyup = function (e) {
                     player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
                     player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
                 }, 1500);
+                energy -= 2;
+                setCookie('energy', energy, 30);
             }
         }
     }
