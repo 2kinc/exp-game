@@ -333,17 +333,15 @@ var regenDegenInterval = setInterval(function () {
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
         }, 1000);
         setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
         }, 2000);
         setTimeout(function () {
-            document.body.innerHTML = saveHTML;
+            energy = maxEnergy;
+            health = maxHealth;
+            setCookie('energy', energy);
+            setCookie('health', health);
+            location.reload();
         }, 3000);
-        energy = maxEnergy;
-        health = maxHealth;
-        energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-        setCookie('energy', energy);
-        setCookie('health', health);
     }
     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
     healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
