@@ -32,7 +32,7 @@ var fightingMode = false;
 var saveBoxHTML;
 var playerFightingOrigin;
 
-var takeF = function(item, amount) {
+var takeF = function (item, amount) {
     if (item == 'ammo') {
         if (amount == 'all') {
             ammo += lootArray[currentCell].ammo;
@@ -96,7 +96,7 @@ mapHTML = '<td>' + textRows.join('').split('').join('</td><td>') + '</td>';
 mapHTML = '<table><tr>' + mapHTML.match(/.{1,250}/g).join('</tr><tr>') + '</tr></table>';
 setCookie('map', generatedMap, 100);
 
-document.querySelectorAll('td').forEach(function(element, index) {
+document.querySelectorAll('td').forEach(function (element, index) {
     element.id = 'c' + index;
 });
 
@@ -186,34 +186,40 @@ function move(direction) {
         log("You have no energy! Get food fast!");
     }
 }
-document.body.onkeyup = function(e) {
-    e.key = e.key.toLowerCase();
+document.body.onkeyup = function (e) {
     if (document.activeElement != nameEl) {
         if (e.key == "w" || e.key == "ArrowUp") {
             move('up');
         }
-        if (e.key == "d" || e.key == "ArrowRight") {
+        else if (e.key == "d" || e.key == "ArrowRight") {
             move('right');
         }
-        if (e.key == "a" || e.key == "ArrowLeft") {
+        else if (e.key == "a" || e.key == "ArrowLeft") {
             move('left');
         }
-        if (e.key == "s" || e.key == "ArrowDown") {
+        else if (e.key == "s" || e.key == "ArrowDown") {
             move('down');
         }
-        if (e.key == " ") {
+        else if (e.key == " ") {
             if (energy >= 0.2) {
                 shoot(facing);
             } else {
                 log("You have no energy! Get food fast!");
             }
         }
-        if (e.key == "e") {
+        else if (e.key == "e") {
             eat(1);
         }
-        if (fightingMode == true && energy >= 0.4) {
-            if (e.key == "escape") {
+        else if (e.key == "Escape") {
+            if (fightingMode == true && energy >= 0.4) {
                 fightingMode = false;
+                box.innerHTML = saveBoxHTML;
+                box.style.transform = 'scale(1.0)';
+                box.style.borderWidth = '2px';
+                setTimeout(function () {
+                    player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                    player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                }, 1500);
             }
         }
     }
@@ -234,7 +240,7 @@ if (getCookie('map') == "") {
     setCookie('map', generatedMap, 100);
 }
 box.innerHTML = mapHTML;
-document.querySelectorAll('td').forEach(function(element, index) {
+document.querySelectorAll('td').forEach(function (element, index) {
     element.id = 'c' + index;
 });
 
@@ -246,10 +252,10 @@ lootAmmo.innerHTML = lootArray[currentCell].ammo;
 lootFood.innerHTML = lootArray[currentCell].food;
 lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
 lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
-document.querySelectorAll('.take').forEach(function(element) {
+document.querySelectorAll('.take').forEach(function (element) {
     var x = element.id.slice(0, 3);
     var y = element.id.slice(3, 0);
-    element.addEventListener('click', function() {
+    element.addEventListener('click', function () {
         lootArray[currentCell].take(y, x);
     });
 });
@@ -268,7 +274,7 @@ function shoot(direction) {
         var playerY = player.getBoundingClientRect().y;
         document.body.appendChild(bullet);
         var i = 0;
-        var x = setInterval(function() {
+        var x = setInterval(function () {
             if (direction == 'up') {
                 bullet.style.top = playerY - i + 'px';
             } else if (direction == 'right') {
@@ -289,7 +295,7 @@ function shoot(direction) {
         energy -= 0.2;
         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
         setCookie('energy', energy);
-        setTimeout(function() {
+        setTimeout(function () {
             clearInterval(x);
             bullet.parentNode.removeChild(bullet);
         }, 500);
@@ -297,7 +303,7 @@ function shoot(direction) {
         log('Out of ammo! Reload.');
     }
 }
-var regenDegenInterval = setInterval(function() {
+var regenDegenInterval = setInterval(function () {
     if (Math.round(energy) > 0)
         energy++;
     if (energy > maxEnergy)
@@ -313,13 +319,13 @@ var regenDegenInterval = setInterval(function() {
     if (health < 0) {
         var saveHTML = document.body.innerHTML;
         document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-        setTimeout(function() {
+        setTimeout(function () {
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
         }, 1000);
-        setTimeout(function() {
+        setTimeout(function () {
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
         }, 2000);
-        setTimeout(function() {
+        setTimeout(function () {
             document.body.innerHTML = saveHTML;
         }, 3000);
         energy = maxEnergy;
@@ -339,7 +345,7 @@ function log(message) {
     logEl.innerHTML = message + '<br>' + logEl.innerHTML;
 }
 
-setInterval(function() {
+setInterval(function () {
     name = nameEl.innerHTML;
     setCookie('name', name, 30);
 }, 1000)
@@ -427,17 +433,17 @@ lootFood.innerHTML = lootArray[currentCell].food;
 lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
 lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
 lootArray[currentCell].take = takeF;
-document.querySelectorAll('.take').forEach(function(element) {
+document.querySelectorAll('.take').forEach(function (element) {
     var x = element.id.slice(0, 3);
     var y = element.id.slice(3);
-    element.addEventListener('click', function() {
+    element.addEventListener('click', function () {
         lootArray[currentCell].take(y, x);
     });
 });
 logEl.innerHTML = 'You awake into a strange world.';
-setTimeout(function() {
+setTimeout(function () {
     log('Your memories are a messy blur.')
 }, 1500);
-setTimeout(function() {
+setTimeout(function () {
     log('Distant flashbacks of the battlefield swirl through your mind.')
 }, 3000);
