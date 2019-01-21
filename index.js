@@ -31,6 +31,9 @@ var lootFoodWrap = document.querySelector('#lootfood');
 var fightingMode = false;
 var saveBoxHTML;
 var playerFightingOrigin;
+var enemy = document.querySelector('#enemy');
+var enemyHealth = 10;
+var enemyMaxHealth = 10;
 
 var takeF = function (item, amount) {
     if (item == 'ammo') {
@@ -174,6 +177,9 @@ function move(direction) {
             box.style.transform = 'scale(0.40)';
             box.style.borderWidth = '5px';
             player.style.top = box.offsetHeight - 140 + 'px';
+            enemy.style.top = box.offsetHeight - 300 + 'px';
+            enemy.style.left = 'calc(50% - 10px)';
+            enemy.style.display = 'block';
         }
     } else if (fightingMode == true && energy >= 0.4) {
         if (direction == 'right') {
@@ -223,6 +229,7 @@ document.body.onkeyup = function (e) {
                 energy -= 2;
                 setCookie('energy', energy, 30);
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                enemy.style.display = 'none';
             }
         }
     }
@@ -301,7 +308,7 @@ function shoot(direction) {
         setTimeout(function () {
             clearInterval(x);
             bullet.parentNode.removeChild(bullet);
-        }, 500);
+        }, 600);
     } else {
         log('Out of ammo! Reload.');
     }
