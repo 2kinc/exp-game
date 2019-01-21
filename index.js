@@ -307,8 +307,8 @@ function shoot(direction) {
     }
 }
 var regenDegenInterval = setInterval(function () {
-    if (Math.round(energy) > 0)
-        energy++;
+    if (Math.round(energy) > 0 && health == maxHealth)
+        energy--;
     if (energy > maxEnergy)
         energy = maxEnergy;
     if (Math.round(energy) == maxEnergy && health < maxHealth) {
@@ -321,9 +321,9 @@ var regenDegenInterval = setInterval(function () {
     }
     if (health < 0) {
         var saveHTML = document.body.innerHTML;
-        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
         setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
         }, 1000);
         setTimeout(function () {
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 50%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
