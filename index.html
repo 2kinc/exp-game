@@ -19,7 +19,6 @@
         }
 
         #player {
-            color: #fff;
             position: absolute;
             height: 20px;
             width: 20px;
@@ -91,6 +90,14 @@
             background: #fff;
             color: #333;
         }
+
+        #enemy {
+            position: absolute;
+            display: none;
+            height: 20px;
+            width: 20px;
+            z-index: 2;
+        }
     </style>
 </head>
 
@@ -152,8 +159,10 @@
             height="20px" width="20px">
     </div>
 
-    <img src='https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=720&amp;h=719'
-        height='18px' width='18px' style='display:none;'>
+    <div id="enemy">
+        <img src="https://docs.google.com/drawings/d/e/2PACX-1vTSQmf14bRiS-g3ad5XW6F9L53FEkkcbU1g9feOmXK40-aSN3P9jpYbWd_nxXPD8MbtxJQDEKZ3nNN8/pub?w=382&amp;h=360"
+            height="20px" width="20px">
+    </div>
 
     <script src="/exp-game/index.js">
     </script>
