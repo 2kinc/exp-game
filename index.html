@@ -98,6 +98,14 @@
             width: 20px;
             z-index: 2;
         }
+        img {
+            user-drag: none; 
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-drag: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
     </style>
 </head>
 
@@ -156,16 +164,15 @@
 
     <div id="player">
         <img src="https://docs.google.com/drawings/d/e/2PACX-1vSq_-3Lh0dtFvHeJ5Iv_FmlgLDjTY8IREBXBssBikosM59-ro2JYe20cZlJZbVu5DOr6tCoh3fNfH4e/pub?w=209&amp;h=197"
-            height="20px" width="20px">
+            height="20px" width="20px" draggable="false">
     </div>
 
     <div id="enemy">
         <img src="https://docs.google.com/drawings/d/e/2PACX-1vTSQmf14bRiS-g3ad5XW6F9L53FEkkcbU1g9feOmXK40-aSN3P9jpYbWd_nxXPD8MbtxJQDEKZ3nNN8/pub?w=382&amp;h=360"
-            height="20px" width="20px">
+            height="20px" width="20px" draggable="false">
     </div>
 
-    <script src="/exp-game/index.js">
-    </script>
+    <script src="/exp-game/index.js"></script>
 </body>
 
 </html>
