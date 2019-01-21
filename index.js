@@ -222,6 +222,7 @@ document.body.onkeyup = function (e) {
                 }, 1500);
                 energy -= 2;
                 setCookie('energy', energy, 30);
+                energyEl.innerHTML = 'Energy: ' + energy + '/' + maxEnergy;
             }
         }
     }
