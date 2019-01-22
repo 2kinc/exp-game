@@ -201,12 +201,13 @@ function move(direction) {
                     } else if (enemy.getBoundingClientRect().left - 20 == player.getBoundingClientRect().left) {
                         enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
                     }
+                } else if (enemy.getBoundingClientRect().left == player.getBoundingClientRect().left) {
+                    enemyShoot();
+                    enemy.getBoundingClientRect().left = player.getBoundingClientRect().left;
                 } else if (enemy.getBoundingClientRect().left < player.getBoundingClientRect().left) {
                     enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
                 } else if (enemy.getBoundingClientRect().left > player.getBoundingClientRect().left) {
                     enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
-                } else if (enemy.getBoundingClientRect().left == player.getBoundingClientRect().left) {
-                    enemyShoot();
                 }
                 if (enemy.getBoundingClientRect().left <= box.getBoundingClientRect().left + 12)
                     enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
