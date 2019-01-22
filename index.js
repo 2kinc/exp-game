@@ -39,7 +39,7 @@ var enemyDecisionInterval;
 
 function detectHit(bulletEl, target) {
     if (bulletEl.getBoundingClientRect().top < target.getBoundingClientRect().top + 20 
-        && bulletEl.getBoundingClientRect().top > target.getBoundignClientRect().top - 20
+        && bulletEl.getBoundingClientRect().top > target.getBoundingClientRect().top - 20
         && target.style.display == 'block'
         && bulletEl.getBoundingClientRect().left >= target.getBoundingClientRect().left - 20
         && bulletEl.getBoundingClientRect().left <= target.getBoundingClientRect().left + 20) {
