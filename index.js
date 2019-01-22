@@ -191,7 +191,7 @@ function move(direction) {
             box.style.borderWidth = '5px';
             player.style.top = box.offsetHeight - 140 + 'px';
             enemy.style.top = box.offsetHeight - 300 + 'px';
-            enemy.style.left = 'calc(50% - 10px)';
+            enemy.style.left = player.getBoundingClientRect().x + 'px';
             enemy.style.display = 'block';
             enemyHealth = enemyMaxHealth;
             enemyDecisionInterval = setInterval(function () {
