@@ -200,17 +200,17 @@ function move(direction) {
                         enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
                     } else if (enemy.getBoundingClientRect().left - 20 == player.getBoundingClientRect().left) {
                         enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
-                    } else {
-                        enemy.style.left = enemy.getBoundingClientRect().left + ((Math.random() >= 0.5) ? 20 : (-20)) + 'px';
                     }
                 } else if (enemy.getBoundingClientRect().left < player.getBoundingClientRect().left) {
                     enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
                 } else if (enemy.getBoundingClientRect().left > player.getBoundingClientRect().left) {
                     enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
+                } else if (enemy.getBoundingClientRect().left == player.getBoundingClientRect().left) {
+                    enemyShoot();
                 }
-                if (enemy.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
+                if (enemy.getBoundingClientRect().left <= box.getBoundingClientRect().left + 12)
                     enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
-                if (enemy.getBoundingClientRect().left > box.getBoundingClientRect().left + 182)
+                if (enemy.getBoundingClientRect().left >= box.getBoundingClientRect().left + 182)
                     enemy.style.left = box.getBoundingClientRect().left + 182 + 'px';
                 if (enemyHealth <= 0)
                     clearInterval(enemyDecisionInterval);
@@ -424,6 +424,7 @@ function enemyShoot() {
                 }, 3000);
             }
             health.innerHTML = 'Health: ' + health + '/' + maxHealth;
+            clearInterval(x);
         }
     }, 33);
     setTimeout(function () {
