@@ -192,10 +192,10 @@ function move(direction) {
             box.style.borderWidth = '5px'; 
             player.style.top = box.offsetHeight - 140 + 'px';
             enemy.style.top = box.offsetHeight - 300 + 'px';
-            enemy.style.display = 'block';
             enemyHealth = enemyMaxHealth;
             setTimeout(function(){
                 enemy.style.left = player.style.left;
+                enemy.style.display = 'block';
             }, 1500);
             enemyDecisionInterval = setInterval(function () {
                 if (playerIsShooting) {
@@ -432,6 +432,8 @@ function enemyShoot() {
             health.innerHTML = 'Health: ' + health + '/' + maxHealth;
             clearInterval(x);
         }
+        health.innerHTML = 'Health: ' + health + '/' + maxHealth;
+        setCookie('health', health, 30);
     }, 33);
     setTimeout(function () {
         clearInterval(x);
