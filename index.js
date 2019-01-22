@@ -212,6 +212,8 @@ function move(direction) {
                     enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
                 if (enemy.getBoundingClientRect().left > box.getBoundingClientRect().left + 182)
                     enemy.style.left = box.getBoundingClientRect().left + 182 + 'px';
+                if (enemyHealth <= 0)
+                    clearInterval(enemyDecisionInterval);
             }, 320);
         }
     } else if (fightingMode == true && energy >= 0.4) {
