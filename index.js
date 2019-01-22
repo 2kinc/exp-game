@@ -178,9 +178,8 @@ function move(direction) {
             document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
         if (document.querySelector('#c' + currentCell).innerHTML == " ")
             document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
-        if (Math.random() >= 0.70) {
-            if (fightingMode == false)
-                saveBoxHTML = box.innerHTML;
+        if (Math.random() >= 0.70 && fightingMode == false) {
+            saveBoxHTML = box.innerHTML;
             fightingMode = true;
             box.innerHTML = '';
             player.style.transform = 'rotate(0deg)';
@@ -207,6 +206,10 @@ function move(direction) {
                 } else if (enemy.getBoundingClientRect().left > player.getBoundingClientRect().left) {
                     enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
                 }
+                if (enemy.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
+                    enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
+                if (enemy.getBoundingClientRect().left > box.getBoundingClientRect().left + 182)
+                    enemy.style.left = box.getBoundingClientRect().left + 182 + 'px';
             }, 320);
         }
     } else if (fightingMode == true && energy >= 0.4) {
@@ -216,6 +219,10 @@ function move(direction) {
         if (direction == 'left') {
             player.style.left = player.getBoundingClientRect().x - 20 + 'px';
         }
+        if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
+            player.style.left = box.getBoundingClientRect().left + 12 + 'px';
+        if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 182)
+            player.style.left = box.getBoundingClientRect().left + 182 + 'px';
     } else {
         log("You have no energy! Get food fast!");
     }
