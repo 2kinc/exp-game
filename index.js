@@ -380,10 +380,10 @@ function enemyShoot() {
     var bullet = document.createElement('div');
     bullet.className = 'bullet';
     bullet.innerHTML = "<img src='https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=720&amp;h=719' height='18px' width='18px'>"
-    bullet.style.top = player.getBoundingClientRect().y + 'px';
-    bullet.style.left = player.getBoundingClientRect().x + 'px';
-    var enemyX = player.getBoundingClientRect().x;
-    var enemyY = player.getBoundingClientRect().y;
+    bullet.style.top = enemy.getBoundingClientRect().y + 'px';
+    bullet.style.left = enemy.getBoundingClientRect().x + 'px';
+    var enemyX = enemy.getBoundingClientRect().x;
+    var enemyY = enemy.getBoundingClientRect().y;
     document.body.appendChild(bullet);
     var i = 0;
     var x = setInterval(function () {
@@ -395,7 +395,7 @@ function enemyShoot() {
             clearInterval(x);
             bullet.parentNode.removeChild(bullet);
             playerHealth--;
-            if (enemyHealth <= 0) {
+            if (health <= 0) {
                 fightingMode = false;
                 box.innerHTML = saveBoxHTML;
                 box.style.transform = 'scale(1.0)';
@@ -408,13 +408,27 @@ function enemyShoot() {
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                 enemy.style.display = 'none';
                 clearInterval(x);
+                        var saveHTML = document.body.innerHTML;
+        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+        setTimeout(function () {
+            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+        }, 1000);
+        setTimeout(function () {
+            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+        }, 2000);
+        setTimeout(function () {
+            energy = maxEnergy;
+            health = maxHealth;
+            setCookie('energy', energy);
+            setCookie('health', health);
+            location.reload();
+        }, 3000);
             }
             health.innerHTML = 'Health: ' + health + '/' + maxHealth;
         }
     }, 33);
     setTimeout(function () {
         clearInterval(x);
-        playerIsShooting = false;
         if (bullet.parentNode != null) {
             bullet.parentNode.removeChild(bullet);
         }
