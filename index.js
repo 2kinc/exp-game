@@ -34,10 +34,13 @@ var playerFightingOrigin;
 var enemy = document.querySelector('#enemy');
 var enemyMaxHealth = 10;
 var enemyHealth = enemyMaxHealth;
-
+var playerIsShooting = false;
+var enemyDecisionInterval;
 
 function detectHitEnemy(bulletEl) {
-    if (bulletEl.getBoundingClientRect().top <= 224 && enemy.style.display == 'block') {
+    if (bulletEl.getBoundingClientRect().top <= 224 && enemy.style.display == 'block'
+        && bulletEl.getBoundingClientRect().left >= enemy.getBoundingClientRect().left - 20
+        && bulletEl.getBoundingClientRect().left <= enemy.getBoundingClientRect().left + 20) {
         return true;
     } else {
         return false;
@@ -190,6 +193,21 @@ function move(direction) {
             enemy.style.left = 'calc(50% - 10px)';
             enemy.style.display = 'block';
             enemyHealth = enemyMaxHealth;
+            enemyDecisionInterval = setInterval(function () {
+                if (playerIsShooting) {
+                    if (enemy.getBoundingClientRect().left + 20 == player.getBoundingClientRect().left) {
+                        enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
+                    } else if (enemy.getBoundingClientRect().left - 20 == player.getBoundingClientRect().left) {
+                        enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
+                    } else {
+                        enemy.style.left = enemy.getBoundingClientRect().left + ((Math.random() >= 0.5) ? 20 : (-20)) + 'px';
+                    }
+                } else if (enemy.getBoundingClientRect().left < player.getBoundingClientRect().left) {
+                    enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
+                } else if (enemy.getBoundingClientRect().left > player.getBoundingClientRect().left) {
+                    enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
+                }
+            }, 320);
         }
     } else if (fightingMode == true && energy >= 0.4) {
         if (direction == 'right') {
@@ -305,6 +323,7 @@ function shoot(direction) {
                 bullet.style.top = playerY + i + 'px';
             }
             i += 10;
+            playerIsShooting = true;
             if (detectHitEnemy(bullet) == true) {
                 console.log('yay!');
                 clearInterval(x);
@@ -323,6 +342,7 @@ function shoot(direction) {
                     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                     enemy.style.display = 'none';
                     clearInterval(x);
+                    playerIsShooting = false;
                 }
             }
         }, 33);
@@ -337,6 +357,7 @@ function shoot(direction) {
         setCookie('energy', energy);
         setTimeout(function () {
             clearInterval(x);
+            playerIsShooting = false;
             if (bullet.parentNode != null) {
                 bullet.parentNode.removeChild(bullet);
             }
@@ -364,21 +385,21 @@ var regenDegenInterval = setInterval(function () {
         setTimeout(function () {
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
         }, 1000);
-        setTimeout(function () {            
+        setTimeout(function () {
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
         }, 2000);
         setTimeout(function () {
-        energy = maxEnergy;
-        health = maxHealth;
-        setCookie('energy', energy);
-        setCookie('health', health);
-        location.reload();
-    }, 3000);
-}
-energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-setCookie('energy', energy);
-setCookie('health', health);
+            energy = maxEnergy;
+            health = maxHealth;
+            setCookie('energy', energy);
+            setCookie('health', health);
+            location.reload();
+        }, 3000);
+    }
+    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+    setCookie('energy', energy);
+    setCookie('health', health);
 }, 5000);
 
 function log(message) {
