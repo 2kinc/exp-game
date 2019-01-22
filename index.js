@@ -32,8 +32,17 @@ var fightingMode = false;
 var saveBoxHTML;
 var playerFightingOrigin;
 var enemy = document.querySelector('#enemy');
-var enemyHealth = 10;
 var enemyMaxHealth = 10;
+var enemyHealth = enemyMaxHealth;
+
+
+function detectHitEnemy(bulletEl) {
+    if (bulletEl.getBoundingClientRect().top <= 224 && enemy.style.display == 'block') {
+        return true;
+    } else {
+        return false;
+    }
+};
 
 var takeF = function (item, amount) {
     if (item == 'ammo') {
@@ -103,9 +112,10 @@ document.querySelectorAll('td').forEach(function (element, index) {
     element.id = 'c' + index;
 });
 
-setCookie('maxenergy', maxEnergy);
-
 checkCookie();
+
+setCookie('maxenergy', maxEnergy);
+setCookie('loot', JSON.stringify(lootArray), 30);
 
 function lootSpawn(chest) {
     this.ammo = Math.floor(Math.random() * 10);
@@ -169,7 +179,6 @@ function move(direction) {
             if (fightingMode == false)
                 saveBoxHTML = box.innerHTML;
             fightingMode = true;
-            console.log('battle! clash! 🦆 vs 🐉. ');
             box.innerHTML = '';
             player.style.transform = 'rotate(0deg)';
             facing = 'up';
@@ -180,6 +189,7 @@ function move(direction) {
             enemy.style.top = box.offsetHeight - 300 + 'px';
             enemy.style.left = 'calc(50% - 10px)';
             enemy.style.display = 'block';
+            enemyHealth = enemyMaxHealth;
         }
     } else if (fightingMode == true && energy >= 0.4) {
         if (direction == 'right') {
@@ -295,6 +305,26 @@ function shoot(direction) {
                 bullet.style.top = playerY + i + 'px';
             }
             i += 10;
+            if (detectHitEnemy(bullet) == true) {
+                console.log('yay!');
+                clearInterval(x);
+                bullet.parentNode.removeChild(bullet);
+                enemyHealth--;
+                if (enemyHealth <= 0) {
+                    fightingMode = false;
+                    box.innerHTML = saveBoxHTML;
+                    box.style.transform = 'scale(1.0)';
+                    box.style.borderWidth = '2px';
+                    setTimeout(function () {
+                        player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                        player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                    }, 1500);
+                    setCookie('energy', energy, 30);
+                    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                    enemy.style.display = 'none';
+                    clearInterval(x);
+                }
+            }
         }, 33);
         ammo--;
         ammoUsed++;
@@ -307,7 +337,9 @@ function shoot(direction) {
         setCookie('energy', energy);
         setTimeout(function () {
             clearInterval(x);
-            bullet.parentNode.removeChild(bullet);
+            if (bullet.parentNode != null) {
+                bullet.parentNode.removeChild(bullet);
+            }
         }, 600);
     } else {
         log('Out of ammo! Reload.');
@@ -332,21 +364,21 @@ var regenDegenInterval = setInterval(function () {
         setTimeout(function () {
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
         }, 1000);
-        setTimeout(function () {
+        setTimeout(function () {            
             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
         }, 2000);
         setTimeout(function () {
-            energy = maxEnergy;
-            health = maxHealth;
-            setCookie('energy', energy);
-            setCookie('health', health);
-            location.reload();
-        }, 3000);
-    }
-    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-    setCookie('energy', energy);
-    setCookie('health', health);
+        energy = maxEnergy;
+        health = maxHealth;
+        setCookie('energy', energy);
+        setCookie('health', health);
+        location.reload();
+    }, 3000);
+}
+energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+setCookie('energy', energy);
+setCookie('health', health);
 }, 5000);
 
 function log(message) {
@@ -423,6 +455,8 @@ function checkCookie() {
         ammoUsed = Number(getCookie('ammoused'));
         generatedMap = getCookie('map');
         lootArray = JSON.parse(getCookie('loot'));
+    } else {
+        setCookie('loot', JSON.stringify(lootArray), 30);
     }
 }
 
