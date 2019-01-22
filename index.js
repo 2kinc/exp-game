@@ -189,10 +189,10 @@ function move(direction) {
             player.style.left = 'calc(50% - 10px)';
             player.style.left = player.getBoundingClientRect().left + 'px';
             box.style.transform = 'scale(0.40)';
-            box.style.borderWidth = '5px';
+            box.style.borderWidth = '5px'; 
             player.style.top = box.offsetHeight - 140 + 'px';
             enemy.style.top = box.offsetHeight - 300 + 'px';
-            enemy.style.left = player.getBoundingClientRect().x + 'px';
+            enemy.style.left = player.style.left;
             enemy.style.display = 'block';
             enemyHealth = enemyMaxHealth;
             enemyDecisionInterval = setInterval(function () {
