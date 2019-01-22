@@ -195,6 +195,9 @@ function move(direction) {
             enemy.style.left = Math.floor(player.getBoundingClientRect().left) + 'px';
             enemy.style.display = 'block';
             enemyHealth = enemyMaxHealth;
+            setTimeout(function(){
+                enemy.style.left = player.style.left;
+            }, 1500);
             enemyDecisionInterval = setInterval(function () {
                 if (playerIsShooting) {
                     if (enemy.getBoundingClientRect().left + 20 == player.getBoundingClientRect().left) {
