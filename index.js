@@ -40,7 +40,7 @@ var enemyDecisionInterval;
 function detectHit(bulletEl, target) {
     if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20 
         && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
-        && target.style.display == 'block'
+        && target.style.display != 'none'
         && bulletEl.getBoundingClientRect().left >= target.getBoundingClientRect().left - 20
         && bulletEl.getBoundingClientRect().left <= target.getBoundingClientRect().left + 20) {
         return true;
@@ -187,12 +187,11 @@ function move(direction) {
             player.style.transform = 'rotate(0deg)';
             facing = 'up';
             player.style.left = 'calc(50% - 10px)';
-            player.style.left = Math.floor(player.getBoundingClientRect().left) + 'px';
+            player.style.left = player.getBoundingClientRect().left + 'px';
             box.style.transform = 'scale(0.40)';
             box.style.borderWidth = '5px'; 
             player.style.top = box.offsetHeight - 140 + 'px';
             enemy.style.top = box.offsetHeight - 300 + 'px';
-            enemy.style.left = Math.floor(player.getBoundingClientRect().left) + 'px';
             enemy.style.display = 'block';
             enemyHealth = enemyMaxHealth;
             setTimeout(function(){
