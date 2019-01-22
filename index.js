@@ -200,6 +200,8 @@ function move(direction) {
                         enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
                     } else if (enemy.getBoundingClientRect().left - 20 == player.getBoundingClientRect().left) {
                         enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
+                    } else {
+                        enemy.style.left = enemy.getBoundingClientRect().left + ((Math.random() >= .50) ? 20 : (-20)) + 'px';
                     }
                 } else if (enemy.getBoundingClientRect().left == player.getBoundingClientRect().left) {
                     enemyShoot();
