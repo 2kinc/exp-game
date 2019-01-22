@@ -38,8 +38,8 @@ var playerIsShooting = false;
 var enemyDecisionInterval;
 
 function detectHit(bulletEl, target) {
-    if (bulletEl.getBoundingClientRect().top < target.getBoundingClientRect().top + 20 
-        && bulletEl.getBoundingClientRect().top > target.getBoundingClientRect().top - 20
+    if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20 
+        && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
         && target.style.display == 'block'
         && bulletEl.getBoundingClientRect().left >= target.getBoundingClientRect().left - 20
         && bulletEl.getBoundingClientRect().left <= target.getBoundingClientRect().left + 20) {
@@ -389,12 +389,10 @@ function enemyShoot() {
     var x = setInterval(function () {
         bullet.style.top = enemyY + i + 'px';
         i += 10;
-        playerIsShooting = true;
-        if (detectHit(bullet, player) == true) {
+        if (detectHit(bullet, player)) {
             console.log('boo!');
-            clearInterval(x);
             bullet.parentNode.removeChild(bullet);
-            playerHealth--;
+            health--;
             if (health <= 0) {
                 fightingMode = false;
                 box.innerHTML = saveBoxHTML;
@@ -408,21 +406,20 @@ function enemyShoot() {
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                 enemy.style.display = 'none';
                 clearInterval(x);
-                        var saveHTML = document.body.innerHTML;
-        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-        setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
-        }, 1000);
-        setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
-        }, 2000);
-        setTimeout(function () {
-            energy = maxEnergy;
-            health = maxHealth;
-            setCookie('energy', energy);
-            setCookie('health', health);
-            location.reload();
-        }, 3000);
+                document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+                setTimeout(function () {
+                    document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+                }, 1000);
+                setTimeout(function () {
+                    document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+                }, 2000);
+                setTimeout(function () {
+                    energy = maxEnergy;
+                    health = maxHealth;
+                    setCookie('energy', energy);
+                    setCookie('health', health);
+                    location.reload();
+                }, 3000);
             }
             health.innerHTML = 'Health: ' + health + '/' + maxHealth;
         }
