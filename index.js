@@ -37,10 +37,10 @@ var enemyHealth = enemyMaxHealth;
 var playerIsShooting = false;
 var enemyDecisionInterval;
 
-function detectHitEnemy(bulletEl) {
-    if (bulletEl.getBoundingClientRect().top <= 224 && enemy.style.display == 'block'
-        && bulletEl.getBoundingClientRect().left >= enemy.getBoundingClientRect().left - 20
-        && bulletEl.getBoundingClientRect().left <= enemy.getBoundingClientRect().left + 20) {
+function detectHit(bulletEl, target) {
+    if (bulletEl.getBoundingClientRect().top = target.getBoundingClientRect().top && target.style.display == 'block'
+        && bulletEl.getBoundingClientRect().left >= target.getBoundingClientRect().left - 20
+        && bulletEl.getBoundingClientRect().left <= target.getBoundingClientRect().left + 20) {
         return true;
     } else {
         return false;
@@ -331,7 +331,7 @@ function shoot(direction) {
             }
             i += 10;
             playerIsShooting = true;
-            if (detectHitEnemy(bullet) == true) {
+            if (detectHit(bullet, enemy) == true) {
                 console.log('yay!');
                 clearInterval(x);
                 bullet.parentNode.removeChild(bullet);
@@ -373,6 +373,53 @@ function shoot(direction) {
         log('Out of ammo! Reload.');
     }
 }
+
+function enemyShoot() {
+    var bullet = document.createElement('div');
+    bullet.className = 'bullet';
+    bullet.innerHTML = "<img src='https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=720&amp;h=719' height='18px' width='18px'>"
+    bullet.style.top = player.getBoundingClientRect().y + 'px';
+    bullet.style.left = player.getBoundingClientRect().x + 'px';
+    var enemyX = player.getBoundingClientRect().x;
+    var enemyY = player.getBoundingClientRect().y;
+    document.body.appendChild(bullet);
+    var i = 0;
+    var x = setInterval(function () {
+        bullet.style.top = enemyY + i + 'px';
+        i += 10;
+        playerIsShooting = true;
+        if (detectHit(bullet, player) == true) {
+            console.log('boo!');
+            clearInterval(x);
+            bullet.parentNode.removeChild(bullet);
+            playerHealth--;
+            if (enemyHealth <= 0) {
+                fightingMode = false;
+                box.innerHTML = saveBoxHTML;
+                box.style.transform = 'scale(1.0)';
+                box.style.borderWidth = '2px';
+                setTimeout(function () {
+                    player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                    player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                }, 1500);
+                setCookie('energy', energy, 30);
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                enemy.style.display = 'none';
+                clearInterval(x);
+            }
+            health.innerHTML = 'Health: ' + health + '/' + maxHealth;
+        }
+    }, 33);
+    setTimeout(function () {
+        clearInterval(x);
+        playerIsShooting = false;
+        if (bullet.parentNode != null) {
+            bullet.parentNode.removeChild(bullet);
+        }
+    }, 600);
+}
+
+
 var regenDegenInterval = setInterval(function () {
     if (Math.round(energy) > 0 && health == maxHealth)
         energy--;
