@@ -451,6 +451,8 @@ function enemyShoot() {
                 setTimeout(function () {
                     energy = maxEnergy;
                     health = maxHealth;
+                    ammo = 100;
+                    food = 10;
                     setCookie('energy', energy);
                     setCookie('health', health);
                     location.reload();
