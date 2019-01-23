@@ -182,7 +182,7 @@ function move(direction) {
             document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
         if (document.querySelector('#c' + currentCell).innerHTML == " ")
             document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
-        if (Math.random() >= 0.70 && fightingMode == false) {
+        if (Math.random() >= 0.80 && fightingMode == false) {
             saveBoxHTML = box.innerHTML;
             fightingMode = true;
             box.innerHTML = '';
