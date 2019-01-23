@@ -455,6 +455,8 @@ function enemyShoot() {
                     food = 10;
                     setCookie('energy', energy);
                     setCookie('health', health);
+                    setCookie('ammo', ammo, 30);
+                    setCookie('food', food, 30);
                     location.reload();
                 }, 3000);
             }
@@ -501,6 +503,8 @@ var regenDegenInterval = setInterval(function () {
             health = maxHealth;
             setCookie('energy', energy);
             setCookie('health', health);
+            setCookie('ammo', ammo, 30);
+            setCookie('food', food, 30);
             location.reload();
         }, 3000);
     }
