@@ -98,7 +98,7 @@
             width: 20px;
             z-index: 2;
         }
-        
+
         img {
             user-drag: none;
             user-select: none;
@@ -106,6 +106,18 @@
             -webkit-user-drag: none;
             -webkit-user-select: none;
             -ms-user-select: none;
+        }
+
+        #enemy-health {
+            position: absolute;
+            text-align: center;
+            display: none;
+        }
+
+        #fight-health {
+            position: absolute;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
@@ -172,6 +184,10 @@
         <img src="https://docs.google.com/drawings/d/e/2PACX-1vTSQmf14bRiS-g3ad5XW6F9L53FEkkcbU1g9feOmXK40-aSN3P9jpYbWd_nxXPD8MbtxJQDEKZ3nNN8/pub?w=382&amp;h=360"
             height="20px" width="20px" draggable="false">
     </div>
+
+    <div id="fight-health"></div>
+
+    <div id="enemy-health"></div>
 
     <script src="/exp-game/index.js"></script>
 </body>

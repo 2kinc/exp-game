@@ -36,9 +36,11 @@ var enemyMaxHealth = 10;
 var enemyHealth = enemyMaxHealth;
 var playerIsShooting = false;
 var enemyDecisionInterval;
+var fightHealthEl = document.querySelector('#fight-health');
+var enemyHealthEl = document.querySelector('#enemy-health');
 
 function detectHit(bulletEl, target) {
-    if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20 
+    if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
         && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
         && target.style.display != 'none'
         && bulletEl.getBoundingClientRect().left >= target.getBoundingClientRect().left - 20
@@ -189,12 +191,22 @@ function move(direction) {
             player.style.left = 'calc(50% - 10px)';
             player.style.left = player.getBoundingClientRect().left + 'px';
             box.style.transform = 'scale(0.40)';
-            box.style.borderWidth = '5px'; 
+            box.style.borderWidth = '5px';
             player.style.top = box.offsetHeight - 140 + 'px';
             enemy.style.top = box.offsetHeight - 300 + 'px';
             enemyHealth = enemyMaxHealth;
-            setTimeout(function(){
+            setTimeout(function () {
                 enemy.style.left = player.style.left;
+                enemyHealthEl.innerHTML = 'Enemy health: ' + enemyHealth + '/' + enemyMaxHealth;
+                fightHealthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                enemyHealthEl.style.left = box.getBoundingClientRect().left + 'px';
+                enemyHealthEl.style.top = box.getBoundingClientRect().top - 15 + 'px';
+                enemyHealthEl.style.width = box.getBoundingClientRect().width + 'px';
+                fightHealthEl.style.left = box.getBoundingClientRect().left + 'px';
+                fightHealthEl.style.top = box.getBoundingClientRect().top + 2 + box.getBoundingClientRect().height + 'px';
+                fightHealthEl.style.width = box.getBoundingClientRect().width + 'px';
+                fightHealthEl.style.display = 'block';
+                enemyHealthEl.style.display = 'block';
                 enemy.style.display = 'block';
             }, 1500);
             enemyDecisionInterval = setInterval(function () {
@@ -216,10 +228,13 @@ function move(direction) {
                 }
                 if (enemy.getBoundingClientRect().left <= box.getBoundingClientRect().left + 12)
                     enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
-                if (enemy.getBoundingClientRect().left >= box.getBoundingClientRect().left + 182)
-                    enemy.style.left = box.getBoundingClientRect().left + 182 + 'px';
+                if (enemy.getBoundingClientRect().left >= box.getBoundingClientRect().left + 172)
+                    enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
                 if (enemyHealth <= 0)
                     clearInterval(enemyDecisionInterval);
+                enemyHealthEl.innerHTML = 'Enemy health: ' + enemyHealth + '/' + enemyMaxHealth;
+                fightHealthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
             }, 320);
         }
     } else if (fightingMode == true && energy >= 0.4) {
@@ -231,8 +246,8 @@ function move(direction) {
         }
         if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
             player.style.left = box.getBoundingClientRect().left + 12 + 'px';
-        if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 182)
-            player.style.left = box.getBoundingClientRect().left + 182 + 'px';
+        if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
+            player.style.left = box.getBoundingClientRect().left + 172 + 'px';
     } else {
         log("You have no energy! Get food fast!");
     }
@@ -347,7 +362,9 @@ function shoot(direction) {
                 bullet.parentNode.removeChild(bullet);
                 enemyHealth--;
                 if (enemyHealth <= 0) {
-                    fightingMode = false;
+                    setTimeout(function () {
+                        fightingMode = false;
+                    }, 1500)
                     box.innerHTML = saveBoxHTML;
                     box.style.transform = 'scale(1.0)';
                     box.style.borderWidth = '2px';
@@ -360,6 +377,8 @@ function shoot(direction) {
                     enemy.style.display = 'none';
                     clearInterval(x);
                     playerIsShooting = false;
+                    fightHealthEl.style.display = 'none';
+                    enemyHealthEl.style.display = 'none';
                 }
             }
         }, 33);
@@ -402,10 +421,18 @@ function enemyShoot() {
             bullet.parentNode.removeChild(bullet);
             health--;
             if (health <= 0) {
-                fightingMode = false;
+                setTimeout(function () {
+                    fightingMode = false;
+                }, 1500)
                 box.innerHTML = saveBoxHTML;
                 box.style.transform = 'scale(1.0)';
                 box.style.borderWidth = '2px';
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                enemy.style.display = 'none';
+                clearInterval(x);
+                playerIsShooting = false;
+                fightHealthEl.style.display = 'none';
+                enemyHealthEl.style.display = 'none';
                 setTimeout(function () {
                     player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
                     player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
@@ -456,6 +483,7 @@ var regenDegenInterval = setInterval(function () {
     if (Math.round(energy) == 0) {
         health -= Math.floor(maxHealth / 3);
         healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+        log('You have no energy! Get food fast!');
     }
     if (health < 0) {
         var saveHTML = document.body.innerHTML;
@@ -474,6 +502,8 @@ var regenDegenInterval = setInterval(function () {
             location.reload();
         }, 3000);
     }
+    if (health > maxHealth)
+        health = maxHealth;
     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
     healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
     setCookie('energy', energy);
