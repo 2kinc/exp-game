@@ -626,11 +626,11 @@ setTimeout(function () {
 }, 3000);
 
 var glitchInterval = setInterval(function(){
-	$('html').css({'position': 'absolute', 'left': '229px'});
+	$('html').css({'position': 'absolute', 'left': '89px'});
 	setTimeout(function(){$('html').css('transform', 'scale(1.2), rotate(180deg)')}, 100);
 	setTimeout(function(){$('html').css({'filter': 'invert(1)', 'left': '0'})}, 150);
 	setTimeout(function(){$('html').css({'filter': 'none', 'transform': 'none', 'position': 'relative'})}, 200);
-}, 6300)
+}, 12000)
 
 /*$('body').mgGlitch({
     destroy: false,
