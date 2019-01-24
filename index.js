@@ -626,10 +626,15 @@ setTimeout(function () {
 }, 3000);
 
 var glitchInterval = setInterval(function(){
+	var savePlayerCoordinates = player.getBoundingClientRect();
 	$('html').css({'position': 'absolute', 'left': '89px'});
 	setTimeout(function(){$('html').css('transform', 'scale(1.2), rotate(180deg)')}, 100);
 	setTimeout(function(){$('html').css({'filter': 'invert(1)', 'left': '0'})}, 150);
-	setTimeout(function(){$('html').css({'filter': 'none', 'transform': 'none', 'position': 'relative'})}, 200);
+	setTimeout(function(){
+		$('html').css({'filter': 'none', 'transform': 'none', 'position': 'relative'}); 
+		player.style.left = savePlayerCoordinates.left + 'px';
+		player.style.top = savePlayerCoordinates.top + 'px';
+	}, 200);
 }, 12000)
 
 /*$('body').mgGlitch({
