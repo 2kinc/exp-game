@@ -38,6 +38,7 @@ var playerIsShooting = false;
 var enemyDecisionInterval;
 var fightHealthEl = document.querySelector('#fight-health');
 var enemyHealthEl = document.querySelector('#enemy-health');
+var gameProgression = 0;
 
 function detectHit(bulletEl, target) {
     if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
@@ -123,6 +124,10 @@ checkCookie();
 
 setCookie('maxenergy', maxEnergy);
 setCookie('loot', JSON.stringify(lootArray), 30);
+if(gameProgression == '')
+gameProgression = 0;
+setCookie('gameprogression', gameProgression, 30);
+
 
 function lootSpawn(chest) {
     this.ammo = Math.floor(Math.random() * 10);
@@ -164,6 +169,7 @@ function move(direction) {
         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
         setCookie('energy', energy, 30);
         setCookie('maxenergy', maxEnergy, 30);
+	gameProgression++;
         if (lootArray[currentCell] == undefined)
             lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
         setCookie('loot', JSON.stringify(lootArray));
@@ -248,6 +254,11 @@ function move(direction) {
             player.style.left = box.getBoundingClientRect().left + 12 + 'px';
         if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
             player.style.left = box.getBoundingClientRect().left + 172 + 'px';
+	steps++;
+        stepsEl.innerHTML = 'Steps taken: ' + steps;
+        setCookie('steps', steps, 30);
+	gameProgression++;
+	setCookie('gameprogression', gameProgression, 30);
     } else {
         log("You have no energy! Get food fast!");
     }
@@ -361,6 +372,7 @@ function shoot(direction) {
                 clearInterval(x);
                 bullet.parentNode.removeChild(bullet);
                 enemyHealth--;
+		gameProgression += 3;
                 if (enemyHealth <= 0) {
                     setTimeout(function () {
                         fightingMode = false;
@@ -379,6 +391,7 @@ function shoot(direction) {
                     playerIsShooting = false;
                     fightHealthEl.style.display = 'none';
                     enemyHealthEl.style.display = 'none';
+		    gameProgression += 100;
                 }
             }
         }, 33);
@@ -391,6 +404,7 @@ function shoot(direction) {
         energy -= 0.2;
         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
         setCookie('energy', energy);
+	gameProgression += 0.2;
         setTimeout(function () {
             clearInterval(x);
             playerIsShooting = false;
@@ -590,6 +604,7 @@ function checkCookie() {
         ammoUsed = Number(getCookie('ammoused'));
         generatedMap = getCookie('map');
         lootArray = JSON.parse(getCookie('loot'));
+	gameProgression = getCookie('gameprogression')
     } else {
         setCookie('loot', JSON.stringify(lootArray), 30);
     }
