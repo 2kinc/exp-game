@@ -624,6 +624,14 @@ setTimeout(function () {
 setTimeout(function () {
     log('Distant flashbacks of the battlefield swirl through your mind.')
 }, 3000);
+
+var glitchInterval = setInterval(function(){
+	$('html').css({'position': 'absolute', 'left': '229px'});
+	setTimeout(function(){$('html').css('transform', 'scale(1.2), rotate(180deg)')}, 100);
+	setTimeout(function(){$('html').css({'filter': 'invert(1)', 'left': '0'})}, 150);
+	setTimeout(function(){$('html').css({'filter': 'none', 'transform': 'none', 'position': 'relative'})}, 200);
+}, 6300)
+
 /*$('body').mgGlitch({
     destroy: false,
     glitch: true,
