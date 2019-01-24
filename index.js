@@ -624,7 +624,7 @@ setTimeout(function () {
 setTimeout(function () {
     log('Distant flashbacks of the battlefield swirl through your mind.')
 }, 3000);
-$(document).mgGlitch({
+$('body').mgGlitch({
     destroy: false,
     glitch: true,
     scale: false,
