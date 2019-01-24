@@ -170,6 +170,7 @@ function move(direction) {
         setCookie('energy', energy, 30);
         setCookie('maxenergy', maxEnergy, 30);
 	gameProgression++;
+	setCookie('gameprogression', gameProgression, 30);
         if (lootArray[currentCell] == undefined)
             lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
         setCookie('loot', JSON.stringify(lootArray));
@@ -288,20 +289,30 @@ document.body.onkeyup = function (e) {
             eat(1);
         }
         else if (e.key == "Escape") {
-            if (fightingMode == true && energy >= 2) {
-                fightingMode = false;
-                box.innerHTML = saveBoxHTML;
-                box.style.transform = 'scale(1.0)';
-                box.style.borderWidth = '2px';
-                setTimeout(function () {
-                    player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
-                    player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
-                }, 1500);
-                energy -= 2;
-                setCookie('energy', energy, 30);
-                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-                enemy.style.display = 'none';
-            }
+            if (fightingMode == true && energy >= 3) {
+                    setTimeout(function () {
+                        fightingMode = false;
+                    }, 1500)
+                    box.innerHTML = saveBoxHTML;
+                    box.style.transform = 'scale(1.0)';
+                    box.style.borderWidth = '2px';
+                    setTimeout(function () {
+                        player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                        player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                    }, 1500);
+                    setCookie('energy', energy, 30);
+                    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                    enemy.style.display = 'none';
+                    clearInterval(x);
+                    playerIsShooting = false;
+                    fightHealthEl.style.display = 'none';
+                    enemyHealthEl.style.display = 'none';
+		    gameProgression += 10;
+		    setCookie('gameprogression', gameProgression, 30);
+		    energy -= 3;
+		    setCookie('energy', energy, 30);
+		    energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
+	    }
         }
     }
 }
@@ -393,6 +404,7 @@ function shoot(direction) {
                     enemyHealthEl.style.display = 'none';
 		    gameProgression += 100;
                 }
+		setCookie('gameprogression', gameProgression, 30);
             }
         }, 33);
         ammo--;
@@ -405,6 +417,7 @@ function shoot(direction) {
         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
         setCookie('energy', energy);
 	gameProgression += 0.2;
+	setCookie('gameprogression', gameProgression, 30);
         setTimeout(function () {
             clearInterval(x);
             playerIsShooting = false;
@@ -604,7 +617,7 @@ function checkCookie() {
         ammoUsed = Number(getCookie('ammoused'));
         generatedMap = getCookie('map');
         lootArray = JSON.parse(getCookie('loot'));
-	gameProgression = getCookie('gameprogression')
+	gameProgression = Number(getCookie('gameprogression'));
     } else {
         setCookie('loot', JSON.stringify(lootArray), 30);
     }
@@ -640,17 +653,20 @@ setTimeout(function () {
     log('Distant flashbacks of the battlefield swirl through your mind.')
 }, 3000);
 
-var glitchInterval = setInterval(function(){
-	var savePlayerCoordinates = player.getBoundingClientRect();
-	$('html').css({'position': 'absolute', 'left': '89px'});
-	setTimeout(function(){$('html').css('transform', 'scale(1.2), rotate(180deg)')}, 100);
-	setTimeout(function(){$('html').css({'filter': 'invert(1)', 'left': '0'})}, 150);
+var count = 1;
+
+function glitchInterval() {
 	setTimeout(function(){
+		var savePlayerCoordinates = player.getBoundingClientRect();
+		$('html').css({'position': 'absolute', 'left': '89px'});
+		setTimeout(function(){$('html').css('transform', 'scale(1.2), rotate(180deg)')}, 100);
+		setTimeout(function(){$('html').css({'filter': 'invert(1)', 'left': '0'})}, 150);
+		setTimeout(function(){
 		$('html').css({'filter': 'none', 'transform': 'none', 'position': 'relative'}); 
 		player.style.left = savePlayerCoordinates.left + 'px';
 		player.style.top = savePlayerCoordinates.top + 'px';
-	}, 200);
-}, 12000)
+	}, (10000000 / gameProgression) * count);
+}
 
 /*$('body').mgGlitch({
     destroy: false,
