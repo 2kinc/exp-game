@@ -668,6 +668,8 @@ function glitchInterval() {
 	}, (10000000 / gameProgression) * count);
 }
 
+glitchInterval();  
+		 
 /*$('body').mgGlitch({
     destroy: false,
     glitch: true,
