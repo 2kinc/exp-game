@@ -664,7 +664,9 @@ function glitchInterval() {
 		setTimeout(function(){
 		$('html').css({'filter': 'none', 'transform': 'none', 'position': 'relative'}); 
 		player.style.left = savePlayerCoordinates.left + 'px';
-		player.style.top = savePlayerCoordinates.top + 'px';
+		player.style.top = savePlayerCoordinates.top + 'px
+		}, 200);
+		count++;
 	}, (10000000 / gameProgression) * count);
 }
 
