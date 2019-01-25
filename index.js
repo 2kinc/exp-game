@@ -40,7 +40,7 @@ var fightHealthEl = document.querySelector('#fight-health');
 var enemyHealthEl = document.querySelector('#enemy-health');
 var gameProgression = 0;
 var regenDegenInterval;
-
+var isTown = false;
 function detectHit(bulletEl, target) {
     if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
         && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
@@ -85,18 +85,18 @@ var takeF = function (item, amount) {
 
 function generateMap(length) {
     var text = '';
-    var possible = "                                       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*****************'''''''''''''''''''CCCCTT";
+    var possible = "                                       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*****************'''''''''''''''''''CCCCT";
 
     for (var i = 0; i < length; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
         if (text.endsWith(',')) {
-            possible = "                 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,********''''''''''''''CCCCTT";
+            possible = "                 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,********''''''''''''''CCCC";
         }
         if (text.endsWith('*')) {
-            possible = "           *********************************************************************,,,,,,,,,,''''''''CCCCCCCTT";
+            possible = "           *********************************************************************,,,,,,,,,,''''''''CCCCCCCT";
         }
         if (text.endsWith("'")) {
-            possible = "              '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''',,,,,,,,,,,,,,,,*******CCCCTT";
+            possible = "              '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''',,,,,,,,,,,,,,,,*******CCCCT";
         }
     }
     return text;
@@ -188,9 +188,13 @@ function move(direction) {
             document.querySelector('#loot-heading').innerHTML = "[,]" + ' Swamp';
         if (document.querySelector('#c' + currentCell).innerHTML == "C")
             document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
+	if (document.querySelector('#c' + currentCell).innerHTML == "T") {
+            document.querySelector('#loot-heading').innerHTML = "[T]" + ' Town';
+	    isTown = true;
+	}
         if (document.querySelector('#c' + currentCell).innerHTML == " ")
             document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
-        if (Math.random() >= 0.80 && fightingMode == false) {
+        if (Math.random() >= 0.80 && fightingMode == false && isTown == false) {
             saveBoxHTML = box.innerHTML;
             fightingMode = true;
             box.innerHTML = '';
@@ -216,7 +220,7 @@ function move(direction) {
                 fightHealthEl.style.display = 'block';
                 enemyHealthEl.style.display = 'block';
                 enemy.style.display = 'block';
-            }, 1500);
+            }, 1000);
             enemyDecisionInterval = setInterval(function () {
                 if (playerIsShooting) {
                     if (enemy.getBoundingClientRect().left + 20 == player.getBoundingClientRect().left) {
@@ -245,6 +249,17 @@ function move(direction) {
                 healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
             }, 320);
         }
+	if (isTown == true) {
+	    saveBoxHTML = box.innerHTML;
+	    box.innerHTML = '';
+            player.style.transform = 'rotate(0deg)';
+            facing = 'up';
+            player.style.left = 'calc(50% - 10px)';
+            player.style.left = player.getBoundingClientRect().left + 'px';
+            box.style.transform = 'scale(0.40)';
+            box.style.borderWidth = '5px';
+            player.style.top = box.offsetHeight - 140 + 'px';
+	}
     } else if (fightingMode == true && energy >= 0.4) {
         if (direction == 'right') {
             player.style.left = player.getBoundingClientRect().x + 20 + 'px';
