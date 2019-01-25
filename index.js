@@ -280,7 +280,7 @@ document.body.onkeyup = function (e) {
             move('down');
         }
         else if (e.key == " ") {
-            if (energy >= 0.2 && $('#startscreen').html() != '') {
+            if (energy >= 0.2 && $('#startscreen').html() == '') {
                 shoot(facing);
             } else {
                 log("You have no energy! Get food fast!");
