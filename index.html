@@ -123,10 +123,21 @@
             text-align: center;
             display: none;
         }
+        
+        #startscreen {
+            z-index: 99;
+        }
     </style>
 </head>
 
 <body>
+    <div id="startscreen">
+        <div style="font-size: 12em; position: absolute; width: 100%; text-align: center; left: calc(0px + 0.1em);" id="hugeheading" class="">E. X. P.</div>
+
+        <div style="position: absolute; left: 0; width: 100%; text-align: center; font-size: 5em; top: calc(4em);">By 2K inc.</div>
+
+	    <div style="position: absolute; left: 0; width: 100%; text-align: center; font-size: 3em; top: calc(10em);">[Space to play]</div>
+    </div>
     <div class="left-side">
         <div id="stats" class="card">
             <div id="name" class="heading" title="Click to edit name" contenteditable="true" autocomplete="off"
