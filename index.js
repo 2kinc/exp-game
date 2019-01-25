@@ -696,6 +696,8 @@ $('#hugeheading').mgGlitch({
           glitch2TimeMax : 1000, 
 });
 
+$('#by2kinc').css('clip', 'none!important');
+
 /*$('body').mgGlitch({
     destroy: false,
     glitch: true,
