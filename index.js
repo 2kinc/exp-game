@@ -327,6 +327,7 @@ document.body.onkeyup = function (e) {
     setCookie('health', health);
 }, 5000);
 				$('#startscreen').html('');
+				$('#startscreen').css('display', 'none');
 			}
         }
         else if (e.key == "e") {
