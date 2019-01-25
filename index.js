@@ -143,7 +143,7 @@ function lootSpawn(chest) {
 }
 
 function move(direction) {
-    if (fightingMode == false && energy >= 0.4) {
+    if (fightingMode == false && energy >= 0.4 && isTown == false) {
         if (direction == 'up') {
             currentCell = ((currentCell > 24) ? currentCell - 25 : currentCell);
             player.style.transform = 'rotate(0deg)';
