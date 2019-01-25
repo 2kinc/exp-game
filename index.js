@@ -39,6 +39,7 @@ var enemyDecisionInterval;
 var fightHealthEl = document.querySelector('#fight-health');
 var enemyHealthEl = document.querySelector('#enemy-health');
 var gameProgression = 0;
+var regenDegenInterval;
 
 function detectHit(bulletEl, target) {
     if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
@@ -284,6 +285,49 @@ document.body.onkeyup = function (e) {
             } else {
                 log("You have no energy! Get food fast!");
             }
+			if ($('#startscreen').html() != ''){
+				regenDegenInterval = setInterval(function () {
+    if (Math.round(energy) > 0 && health == maxHealth)
+        energy--;
+    if (energy > maxEnergy)
+        energy = maxEnergy;
+    if (Math.round(energy) == maxEnergy && health < maxHealth) {
+        energy = maxEnergy;
+        health += 3;
+    }
+    if (Math.round(energy) == 0) {
+        health -= Math.floor(maxHealth / 3);
+        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+        log('You have no energy! Get food fast!');
+    }
+    if (health < 0) {
+        var saveHTML = document.body.innerHTML;
+        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+        setTimeout(function () {
+            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+        }, 1000);
+        setTimeout(function () {
+            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+        }, 2000);
+        setTimeout(function () {
+            energy = maxEnergy;
+            health = maxHealth;
+            setCookie('energy', energy);
+            setCookie('health', health);
+            setCookie('ammo', ammo, 30);
+            setCookie('food', food, 30);
+            location.reload();
+        }, 3000);
+    }
+    if (health > maxHealth)
+        health = maxHealth;
+    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+    setCookie('energy', energy);
+    setCookie('health', health);
+}, 5000);
+				$('#startscreen').html('');
+			}
         }
         else if (e.key == "e") {
             eat(1);
@@ -501,48 +545,6 @@ function enemyShoot() {
     }, 600);
 }
 
-
-var regenDegenInterval = setInterval(function () {
-    if (Math.round(energy) > 0 && health == maxHealth)
-        energy--;
-    if (energy > maxEnergy)
-        energy = maxEnergy;
-    if (Math.round(energy) == maxEnergy && health < maxHealth) {
-        energy = maxEnergy;
-        health += 3;
-    }
-    if (Math.round(energy) == 0) {
-        health -= Math.floor(maxHealth / 3);
-        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-        log('You have no energy! Get food fast!');
-    }
-    if (health < 0) {
-        var saveHTML = document.body.innerHTML;
-        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-        setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
-        }, 1000);
-        setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
-        }, 2000);
-        setTimeout(function () {
-            energy = maxEnergy;
-            health = maxHealth;
-            setCookie('energy', energy);
-            setCookie('health', health);
-            setCookie('ammo', ammo, 30);
-            setCookie('food', food, 30);
-            location.reload();
-        }, 3000);
-    }
-    if (health > maxHealth)
-        health = maxHealth;
-    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-    setCookie('energy', energy);
-    setCookie('health', health);
-}, 5000);
-
 function log(message) {
     logEl.innerHTML = message + '<br>' + logEl.innerHTML;
 }
@@ -671,7 +673,28 @@ function glitchInterval() {
 }
 
 glitchInterval();  
-		 
+		
+$('#hugeheading').mgGlitch({
+          // set 'true' to stop the plugin
+		  destroy : false, 
+          // set 'false' to stop glitching
+          glitch: true, 
+          // set 'false' to stop scaling
+          scale: true, 
+          // set 'false' to stop glitch blending
+          blend : true, 
+          // select blend mode type
+          blendModeType : 'hue',
+          // set min time for glitch 1 elem
+          glitch1TimeMin : 100, 
+          // set max time for glitch 1 elem
+          glitch1TimeMax : 500,
+          // set min time for glitch 2 elem
+          glitch2TimeMin : 1000, 
+          // set max time for glitch 2 elem
+          glitch2TimeMax : 1000, 
+});
+
 /*$('body').mgGlitch({
     destroy: false,
     glitch: true,
