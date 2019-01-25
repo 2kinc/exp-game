@@ -259,6 +259,8 @@ function move(direction) {
             box.style.transform = 'scale(0.40)';
             box.style.borderWidth = '5px';
             player.style.top = box.offsetHeight - 140 + 'px';
+	    gameProgression+=5;
+	    setCookie('gameprogression', gameProgression, 30);
 	}
     } else if (fightingMode == true && energy >= 0.4) {
         if (direction == 'right') {
@@ -266,6 +268,28 @@ function move(direction) {
         }
         if (direction == 'left') {
             player.style.left = player.getBoundingClientRect().x - 20 + 'px';
+        }
+        if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
+            player.style.left = box.getBoundingClientRect().left + 12 + 'px';
+        if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
+            player.style.left = box.getBoundingClientRect().left + 172 + 'px';
+	steps++;
+        stepsEl.innerHTML = 'Steps taken: ' + steps;
+        setCookie('steps', steps, 30);
+	gameProgression++;
+	setCookie('gameprogression', gameProgression, 30);
+    } else if (isTown == true && energy >= 0.4) {
+    	if (direction == 'right') {
+            player.style.left = player.getBoundingClientRect().x + 20 + 'px';
+        }
+        if (direction == 'left') {
+            player.style.left = player.getBoundingClientRect().x - 20 + 'px';
+        }
+	if (direction == 'down') {
+            player.style.left = player.getBoundingClientRect().y + 20 + 'px';
+        }
+        if (direction == 'up') {
+            player.style.left = player.getBoundingClientRect().y - 20 + 'px';
         }
         if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
             player.style.left = box.getBoundingClientRect().left + 12 + 'px';
