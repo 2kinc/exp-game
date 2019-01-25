@@ -41,6 +41,7 @@ var enemyHealthEl = document.querySelector('#enemy-health');
 var gameProgression = 0;
 var regenDegenInterval;
 var isTown = false;
+
 function detectHit(bulletEl, target) {
     if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
         && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
@@ -125,8 +126,8 @@ checkCookie();
 
 setCookie('maxenergy', maxEnergy);
 setCookie('loot', JSON.stringify(lootArray), 30);
-if(gameProgression == '')
-gameProgression = 0;
+if (gameProgression == '')
+    gameProgression = 0;
 setCookie('gameprogression', gameProgression, 30);
 
 
@@ -170,8 +171,8 @@ function move(direction) {
         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
         setCookie('energy', energy, 30);
         setCookie('maxenergy', maxEnergy, 30);
-	gameProgression++;
-	setCookie('gameprogression', gameProgression, 30);
+        gameProgression++;
+        setCookie('gameprogression', gameProgression, 30);
         if (lootArray[currentCell] == undefined)
             lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
         setCookie('loot', JSON.stringify(lootArray));
@@ -188,10 +189,10 @@ function move(direction) {
             document.querySelector('#loot-heading').innerHTML = "[,]" + ' Swamp';
         if (document.querySelector('#c' + currentCell).innerHTML == "C")
             document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
-	if (document.querySelector('#c' + currentCell).innerHTML == "T") {
+        if (document.querySelector('#c' + currentCell).innerHTML == "T") {
             document.querySelector('#loot-heading').innerHTML = "[T]" + ' Town';
-	    isTown = true;
-	}
+            isTown = true;
+        }
         if (document.querySelector('#c' + currentCell).innerHTML == " ")
             document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
         if (Math.random() >= 0.80 && fightingMode == false && isTown == false) {
@@ -249,9 +250,9 @@ function move(direction) {
                 healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
             }, 320);
         }
-	if (isTown == true) {
-	    saveBoxHTML = box.innerHTML;
-	    box.innerHTML = '';
+        if (isTown == true) {
+            saveBoxHTML = box.innerHTML;
+            box.innerHTML = '';
             player.style.transform = 'rotate(0deg)';
             facing = 'up';
             player.style.left = 'calc(50% - 10px)';
@@ -259,9 +260,9 @@ function move(direction) {
             box.style.transform = 'scale(0.40)';
             box.style.borderWidth = '5px';
             player.style.top = box.offsetHeight - 140 + 'px';
-	    gameProgression+=5;
-	    setCookie('gameprogression', gameProgression, 30);
-	}
+            gameProgression += 5;
+            setCookie('gameprogression', gameProgression, 30);
+        }
     } else if (fightingMode == true && energy >= 0.4) {
         if (direction == 'right') {
             player.style.left = player.getBoundingClientRect().x + 20 + 'px';
@@ -273,19 +274,19 @@ function move(direction) {
             player.style.left = box.getBoundingClientRect().left + 12 + 'px';
         if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
             player.style.left = box.getBoundingClientRect().left + 172 + 'px';
-	steps++;
+        steps++;
         stepsEl.innerHTML = 'Steps taken: ' + steps;
         setCookie('steps', steps, 30);
-	gameProgression++;
-	setCookie('gameprogression', gameProgression, 30);
+        gameProgression++;
+        setCookie('gameprogression', gameProgression, 30);
     } else if (isTown == true && energy >= 0.4) {
-    	if (direction == 'right') {
+        if (direction == 'right') {
             player.style.left = player.getBoundingClientRect().x + 20 + 'px';
         }
         if (direction == 'left') {
             player.style.left = player.getBoundingClientRect().x - 20 + 'px';
         }
-	if (direction == 'down') {
+        if (direction == 'down') {
             player.style.left = player.getBoundingClientRect().y + 20 + 'px';
         }
         if (direction == 'up') {
@@ -295,11 +296,11 @@ function move(direction) {
             player.style.left = box.getBoundingClientRect().left + 12 + 'px';
         if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
             player.style.left = box.getBoundingClientRect().left + 172 + 'px';
-	steps++;
+        steps++;
         stepsEl.innerHTML = 'Steps taken: ' + steps;
         setCookie('steps', steps, 30);
-	gameProgression++;
-	setCookie('gameprogression', gameProgression, 30);
+        gameProgression++;
+        setCookie('gameprogression', gameProgression, 30);
     } else {
         log("You have no energy! Get food fast!");
     }
@@ -324,79 +325,79 @@ document.body.onkeyup = function (e) {
             } else {
                 log("You have no energy! Get food fast!");
             }
-			if ($('#startscreen').html() != ''){
-				regenDegenInterval = setInterval(function () {
-    if (Math.round(energy) > 0 && health == maxHealth)
-        energy--;
-    if (energy > maxEnergy)
-        energy = maxEnergy;
-    if (Math.round(energy) == maxEnergy && health < maxHealth) {
-        energy = maxEnergy;
-        health += 3;
-    }
-    if (Math.round(energy) == 0) {
-        health -= Math.floor(maxHealth / 3);
-        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-        log('You have no energy! Get food fast!');
-    }
-    if (health < 0) {
-        var saveHTML = document.body.innerHTML;
-        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-        setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
-        }, 1000);
-        setTimeout(function () {
-            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
-        }, 2000);
-        setTimeout(function () {
-            energy = maxEnergy;
-            health = maxHealth;
-            setCookie('energy', energy);
-            setCookie('health', health);
-            setCookie('ammo', ammo, 30);
-            setCookie('food', food, 30);
-            location.reload();
-        }, 3000);
-    }
-    if (health > maxHealth)
-        health = maxHealth;
-    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-    setCookie('energy', energy);
-    setCookie('health', health);
-}, 5000);
-				$('#startscreen').html('');
-				$('#startscreen').css('display', 'none');
-			}
+            if ($('#startscreen').html() != '') {
+                regenDegenInterval = setInterval(function () {
+                    if (Math.round(energy) > 0 && health == maxHealth)
+                        energy--;
+                    if (energy > maxEnergy)
+                        energy = maxEnergy;
+                    if (Math.round(energy) == maxEnergy && health < maxHealth) {
+                        energy = maxEnergy;
+                        health += 3;
+                    }
+                    if (Math.round(energy) == 0) {
+                        health -= Math.floor(maxHealth / 3);
+                        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                        log('You have no energy! Get food fast!');
+                    }
+                    if (health < 0) {
+                        var saveHTML = document.body.innerHTML;
+                        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+                        setTimeout(function () {
+                            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+                        }, 1000);
+                        setTimeout(function () {
+                            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+                        }, 2000);
+                        setTimeout(function () {
+                            energy = maxEnergy;
+                            health = maxHealth;
+                            setCookie('energy', energy);
+                            setCookie('health', health);
+                            setCookie('ammo', ammo, 30);
+                            setCookie('food', food, 30);
+                            location.reload();
+                        }, 3000);
+                    }
+                    if (health > maxHealth)
+                        health = maxHealth;
+                    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                    setCookie('energy', energy);
+                    setCookie('health', health);
+                }, 5000);
+                $('#startscreen').html('');
+                $('#startscreen').css('display', 'none');
+            }
         }
         else if (e.key == "e") {
             eat(1);
         }
         else if (e.key == "Escape") {
             if (fightingMode == true && energy >= 3) {
-                    setTimeout(function () {
-                        fightingMode = false;
-                    }, 1500)
-                    box.innerHTML = saveBoxHTML;
-                    box.style.transform = 'scale(1.0)';
-                    box.style.borderWidth = '2px';
-                    setTimeout(function () {
-                        player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
-                        player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
-                    }, 1500);
-                    setCookie('energy', energy, 30);
-                    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-                    enemy.style.display = 'none';
-                    clearInterval(x);
-                    playerIsShooting = false;
-                    fightHealthEl.style.display = 'none';
-                    enemyHealthEl.style.display = 'none';
-		    gameProgression += 10;
-		    setCookie('gameprogression', gameProgression, 30);
-		    energy -= 3;
-		    setCookie('energy', energy, 30);
-		    energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
-	    }
+                setTimeout(function () {
+                    fightingMode = false;
+                }, 1500)
+                box.innerHTML = saveBoxHTML;
+                box.style.transform = 'scale(1.0)';
+                box.style.borderWidth = '2px';
+                setTimeout(function () {
+                    player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                    player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                }, 1500);
+                setCookie('energy', energy, 30);
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                enemy.style.display = 'none';
+                clearInterval(x);
+                playerIsShooting = false;
+                fightHealthEl.style.display = 'none';
+                enemyHealthEl.style.display = 'none';
+                gameProgression += 10;
+                setCookie('gameprogression', gameProgression, 30);
+                energy -= 3;
+                setCookie('energy', energy, 30);
+                energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
+            }
         }
     }
 }
@@ -467,7 +468,7 @@ function shoot(direction) {
                 clearInterval(x);
                 bullet.parentNode.removeChild(bullet);
                 enemyHealth--;
-		gameProgression += 3;
+                gameProgression += 3;
                 if (enemyHealth <= 0) {
                     setTimeout(function () {
                         fightingMode = false;
@@ -486,9 +487,9 @@ function shoot(direction) {
                     playerIsShooting = false;
                     fightHealthEl.style.display = 'none';
                     enemyHealthEl.style.display = 'none';
-		    gameProgression += 100;
+                    gameProgression += 100;
                 }
-		setCookie('gameprogression', gameProgression, 30);
+                setCookie('gameprogression', gameProgression, 30);
             }
         }, 33);
         ammo--;
@@ -500,8 +501,8 @@ function shoot(direction) {
         energy -= 0.2;
         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
         setCookie('energy', energy);
-	gameProgression += 0.2;
-	setCookie('gameprogression', gameProgression, 30);
+        gameProgression += 0.2;
+        setCookie('gameprogression', gameProgression, 30);
         setTimeout(function () {
             clearInterval(x);
             playerIsShooting = false;
@@ -659,7 +660,7 @@ function checkCookie() {
         ammoUsed = Number(getCookie('ammoused'));
         generatedMap = getCookie('map');
         lootArray = JSON.parse(getCookie('loot'));
-	gameProgression = Number(getCookie('gameprogression'));
+        gameProgression = Number(getCookie('gameprogression'));
     } else {
         setCookie('loot', JSON.stringify(lootArray), 30);
     }
@@ -698,40 +699,40 @@ setTimeout(function () {
 var count = 1;
 
 function glitchInterval() {
-	setTimeout(function(){
-		var savePlayerCoordinates = player.getBoundingClientRect();
-		$('html').css({'position': 'absolute', 'left': '89px'});
-		setTimeout(function(){$('html').css('transform', 'scale(1.2), rotate(180deg)')}, 100);
-		setTimeout(function(){$('html').css({'filter': 'invert(1)', 'left': '0'})}, 150);
-		setTimeout(function(){
-		$('html').css({'filter': 'none', 'transform': 'none', 'position': 'relative'}); 
-		player.style.left = savePlayerCoordinates.left + 'px';
-		player.style.top = savePlayerCoordinates.top + 'px';
-		}, 200);
-		count++;
-	}, (10000000 / gameProgression) * count);
+    setTimeout(function () {
+        var savePlayerCoordinates = player.getBoundingClientRect();
+        $('html').css({ 'position': 'absolute', 'left': '89px' });
+        setTimeout(function () { $('html').css('transform', 'scale(1.2), rotate(180deg)') }, 100);
+        setTimeout(function () { $('html').css({ 'filter': 'invert(1)', 'left': '0' }) }, 150);
+        setTimeout(function () {
+            $('html').css({ 'filter': 'none', 'transform': 'none', 'position': 'relative' });
+            player.style.left = savePlayerCoordinates.left + 'px';
+            player.style.top = savePlayerCoordinates.top + 'px';
+        }, 200);
+        count++;
+    }, (10000000 / gameProgression) * count);
 }
 
-glitchInterval();  
-		
+glitchInterval();
+
 $('#hugeheading').mgGlitch({
-          // set 'true' to stop the plugin
-		  destroy : false, 
-          // set 'false' to stop glitching
-          glitch: true, 
-          // set 'false' to stop scaling
-          scale: true, 
-          // set 'false' to stop glitch blending
-          blend : true, 
-          // select blend mode type
-          blendModeType : 'hue',
-          // set min time for glitch 1 elem
-          glitch1TimeMin : 100, 
-          // set max time for glitch 1 elem
-          glitch1TimeMax : 500,
+    // set 'true' to stop the plugin
+    destroy: false,
+    // set 'false' to stop glitching
+    glitch: true,
+    // set 'false' to stop scaling
+    scale: true,
+    // set 'false' to stop glitch blending
+    blend: true,
+    // select blend mode type
+    blendModeType: 'hue',
+    // set min time for glitch 1 elem
+    glitch1TimeMin: 100,
+    // set max time for glitch 1 elem
+    glitch1TimeMax: 500,
 });
 
-$('#by2kinc').css({'clip': 'unset', 'left': '0'});
+$('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
 
 /*$('body').mgGlitch({
     destroy: false,
