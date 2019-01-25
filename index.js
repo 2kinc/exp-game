@@ -690,13 +690,9 @@ $('#hugeheading').mgGlitch({
           glitch1TimeMin : 100, 
           // set max time for glitch 1 elem
           glitch1TimeMax : 500,
-          // set min time for glitch 2 elem
-          glitch2TimeMin : 1000, 
-          // set max time for glitch 2 elem
-          glitch2TimeMax : 1000, 
 });
 
-$('#by2kinc').css('clip', 'unset!important');
+$('#by2kinc').css('clip', 'unset');
 
 /*$('body').mgGlitch({
     destroy: false,
