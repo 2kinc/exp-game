@@ -783,7 +783,7 @@ for (var x = 0; x < 2500; x += 100) {
         } else {
             value = '.';
         }
-        var cell = Math.floor(((x + y * 25) / 100)) - 1;
+        var cell = Math.floor(((x + y * 25) / 100));
         if (cell < 0)
             cell = 0;
         console.log(cell);
@@ -794,15 +794,6 @@ for (var x = 0; x < 2500; x += 100) {
         if(cell<tds.length-3) tds[cell + 3].innerHTML = value;
     }
 }
-
-document.querySelectorAll('td').forEach(function (element) {
-    element.innerHTML = element.innerHTML.slice(1);
-});
-
-
-document.querySelectorAll('td').forEach(function (element) {
-    element.innerHTML = element.innerHTML.slice(1);
-});
 
 document.querySelectorAll('td').forEach(function (element) {
     element.innerHTML = element.innerHTML.slice(1);
