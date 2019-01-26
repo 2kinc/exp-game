@@ -84,43 +84,22 @@ var takeF = function (item, amount) {
     setCookie('ammo', ammo, 30);
 };
 
-function generateMap(length) {
-    var text = '';
-    var possible = "                                       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*****************'''''''''''''''''''CCCCT";
-
-    for (var i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-        if (text.endsWith(',')) {
-            possible = "                 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,********''''''''''''''CCCC";
-        }
-        if (text.endsWith('*')) {
-            possible = "           *********************************************************************,,,,,,,,,,''''''''CCCCCCCT";
-        }
-        if (text.endsWith("'")) {
-            possible = "              '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''',,,,,,,,,,,,,,,,*******CCCCT";
-        }
-    }
-    return text;
-}
 setCookie('maxhealth', maxHealth, 30);
 
-if (getCookie('map') == "") {
-    var generatedMap = generateMap(625);
-} else {
-    generatedMap = getCookie('map');
-}
-var mapHTML;
-var textRows = generatedMap.match(/.{1,25}/g);
-for (var j = 0; j < 25; j += 2) {
-    textRows[j] = textRows[j].split('').reverse().join('');
-}
-mapHTML = '<td>' + textRows.join('').split('').join('</td><td>') + '</td>';
-mapHTML = '<table><tr>' + mapHTML.match(/.{1,250}/g).join('</tr><tr>') + '</tr></table>';
-setCookie('map', generatedMap, 100);
+var tbl = ['<table><tr>'];
 
-document.querySelectorAll('td').forEach(function (element, index) {
-    element.id = 'c' + index;
-});
+for (var i = 0; i < 25; i++) {
+    for(var j = 0; j<25; j++)
+        tbl.push("<td id='c" + i*j + "'></td>");
+    tbl.push('</tr><tr>');
+}
+
+tbl.push('</tr></table>');
+box.innerHTML = tbl.join('');
+
+var tds = document.querySelectorAll('td');
+
+setCookie('map', generatedMap, 100);
 
 checkCookie();
 
@@ -401,7 +380,7 @@ document.body.onkeyup = function (e) {
         }
     }
 }
-if (getCookie('map') == "") {
+/*if (getCookie('map') == "") {
     var mapHTML;
     var textRows = generatedMap.match(/.{1,25}/g);
     for (var j = 0; j < 25; j += 2) {
@@ -419,7 +398,7 @@ if (getCookie('map') == "") {
 box.innerHTML = mapHTML;
 document.querySelectorAll('td').forEach(function (element, index) {
     element.id = 'c' + index;
-});
+});*/
 
 if (lootArray[currentCell] == undefined)
     lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
@@ -437,8 +416,11 @@ document.querySelectorAll('.take').forEach(function (element) {
     });
 });
 
-player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
-player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+var cc = document.querySelector('#c' + currentCell);
+
+player.style.top = cc.getBoundingClientRect().y + 'px';
+player.style.left = cc.getBoundingClientRect().x + 'px';
+
 
 function shoot(direction) {
     if (ammo > 0) {
@@ -612,16 +594,20 @@ function eat(amount) {
     }
 }
 
-if (document.querySelector('#c' + currentCell).innerHTML == "'")
-    document.querySelector('#loot-heading').innerHTML = "[']" + ' Plains';
-if (document.querySelector('#c' + currentCell).innerHTML == "*")
-    document.querySelector('#loot-heading').innerHTML = "[*]" + ' Forest';
-if (document.querySelector('#c' + currentCell).innerHTML == ",")
-    document.querySelector('#loot-heading').innerHTML = "[,]" + ' Swamp';
-if (document.querySelector('#c' + currentCell).innerHTML == "C")
-    document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
-if (document.querySelector('#c' + currentCell).innerHTML == " ")
-    document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
+var cc2 = document.querySelector('#c' + currentCell);
+var lh = document.querySelector('#loot-heading');
+if(cc2){
+    if (cc2.innerHTML == "'")
+        lh.innerHTML = "[']" + ' Plains';
+    if (cc2.innerHTML == "*")
+        lh.innerHTML = "[*]" + ' Forest';
+    if (cc2.innerHTML == ",")
+        lh.innerHTML = "[,]" + ' Swamp';
+    if (cc2.innerHTML == "C")
+        lh.innerHTML = "[C]" + ' Chest';
+    if (cc2.innerHTML == " ")
+        lh.innerHTML = "[ ]" + ' Empty';
+}
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -736,37 +722,6 @@ $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
 
 noise.seed(Math.random());
 
-/*for (var x = 0; x < 2500; x += 100) {
-    for (var y = 0; y < 2500; y += 100) {
-        var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
-        value *= 4;
-
-        if (value >= 0.75) {
-            value = " ";
-        } else if (value >= 0.45) {
-            value = ",";
-        } else if (value >= 0.25) {
-            value = "'";
-        } else if (value >= 0) {
-            value = "*";
-        } else {
-            value = '.';
-        }
-        var cell = ((x + y) / 100) - 1;
-        if (cell < 0)
-            cell = 0;
-        document.querySelectorAll('td')[cell].innerHTML
-            = document.querySelectorAll('td')[cell + 1].innerHTML
-            = document.querySelectorAll('td')[cell + 2].innerHTML
-            = value;
-        document.querySelectorAll('td')[cell].innerHTML += value
-        document.querySelectorAll('td')[cell + 3].innerHTML = value;
-    }
-}*/
-
-var tds = document.querySelectorAll('td');
-console.log(tds);
-
 for (var x = 0; x < 2500; x += 100) {
     for (var y = 0; y < 2500; y += 100) {
         var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
@@ -795,9 +750,9 @@ for (var x = 0; x < 2500; x += 100) {
     }
 }
 
-/*document.querySelectorAll('td').forEach(function (element) {
-    element.innerHTML = element.innerHTML.slice(1);
-});*/
+generatedMap = tbl.join('');
+
+setCookie('map', generatedMap, 30);
 
 for (var i = 0; i < 625; i++) {
     var randomNum = Math.random();
