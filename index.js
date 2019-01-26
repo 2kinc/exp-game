@@ -1,5 +1,7 @@
 (function (global) {
-    var qs = document.querySelector;
+    var qs = function(selector){
+        return document.querySelector(selector);
+    };
     var player = qs('#player');
     var box = qs('#box');
     var logEl = qs('#log');
