@@ -171,7 +171,7 @@ function move(direction) {
         if (currentCellEl.innerHTML == ",")
             lootHeading.innerHTML = "[,]" + ' Swamp';
         if (currentCellEl.innerHTML == "C")
-            currentCellEl.innerHTML = "[C]" + ' Chest';
+            lootHeading.innerHTML = "[C]" + ' Chest';
         if (currentCellEl.innerHTML == "T") {
             lootHeading.innerHTML = "[T]" + ' Town';
             isTown = true;
