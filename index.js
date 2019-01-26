@@ -41,6 +41,7 @@ var enemyHealthEl = document.querySelector('#enemy-health');
 var gameProgression = 0;
 var regenDegenInterval;
 var isTown = false;
+var lootHeading = document.querySelector('#loot-heading');
 
 function detectHit(bulletEl, target) {
     if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
@@ -88,10 +89,10 @@ setCookie('maxhealth', maxHealth, 30);
 
 var tbl = ['<table><tr>'];
 
-for (var i = 0; i < 25; i++) {
-    for(var j = 0; j<25; j++)
-        tbl.push("<td id='c" + i*j + "'></td>");
-    tbl.push('</tr><tr>');
+for (var i = 0; i < 625; i++) {
+    tbl.push("<td id='c" + i + "'></td>");
+    if ((i + 1) % 25 == 0)
+        tbl.push('</tr><tr>');
 }
 
 tbl.push('</tr></table>');
@@ -152,28 +153,31 @@ function move(direction) {
         setCookie('maxenergy', maxEnergy, 30);
         gameProgression++;
         setCookie('gameprogression', gameProgression, 30);
+        var currentCellEl = document.querySelector('#c' + currentCell);
         if (lootArray[currentCell] == undefined)
-            lootArray[currentCell] = new lootSpawn((document.querySelector('#c' + currentCell).innerHTML == 'C'));
+            lootArray[currentCell] = new lootSpawn((currentCellEl.innerHTML == 'C'));
         setCookie('loot', JSON.stringify(lootArray));
-        lootAmmo.innerHTML = lootArray[currentCell].ammo;
-        lootFood.innerHTML = lootArray[currentCell].food;
-        lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
-        lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
+        var currentLoot = lootArray[currentCell];
+        
+        lootAmmo.innerHTML = currentLoot.ammo;
+        lootFood.innerHTML = currentLoot.food;
+        lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
+        lootFoodWrap.style.display = ((currentLoot.food == 0) ? 'none' : 'block');
         lootArray[currentCell].take = takeF;
-        if (document.querySelector('#c' + currentCell).innerHTML == "'")
-            document.querySelector('#loot-heading').innerHTML = "[']" + ' Plains';
-        if (document.querySelector('#c' + currentCell).innerHTML == "*")
-            document.querySelector('#loot-heading').innerHTML = "[*]" + ' Forest';
-        if (document.querySelector('#c' + currentCell).innerHTML == ",")
-            document.querySelector('#loot-heading').innerHTML = "[,]" + ' Swamp';
-        if (document.querySelector('#c' + currentCell).innerHTML == "C")
-            document.querySelector('#loot-heading').innerHTML = "[C]" + ' Chest';
-        if (document.querySelector('#c' + currentCell).innerHTML == "T") {
-            document.querySelector('#loot-heading').innerHTML = "[T]" + ' Town';
+        if (currentCellEl.innerHTML == "'")
+            lootHeading.innerHTML = "[']" + ' Plains';
+        if (currentCellEl.innerHTML == "*")
+            lootHeading.innerHTML = "[*]" + ' Forest';
+        if (currentCellEl.innerHTML == ",")
+            lootHeading.innerHTML = "[,]" + ' Swamp';
+        if (currentCellEl.innerHTML == "C")
+            currentCellEl.innerHTML = "[C]" + ' Chest';
+        if (currentCellEl.innerHTML == "T") {
+            lootHeading.innerHTML = "[T]" + ' Town';
             isTown = true;
         }
-        if (document.querySelector('#c' + currentCell).innerHTML == " ")
-            document.querySelector('#loot-heading').innerHTML = "[ ]" + ' Empty';
+        if (currentCellEl.innerHTML == " ")
+            lootHeading.innerHTML = "[ ]" + ' Empty';
         if (Math.random() >= 0.80 && fightingMode == false && isTown == false) {
             saveBoxHTML = box.innerHTML;
             fightingMode = true;
@@ -202,25 +206,26 @@ function move(direction) {
                 enemy.style.display = 'block';
             }, 1000);
             enemyDecisionInterval = setInterval(function () {
+                var enemyCoordinates = enemy.getBoundingClientRect();
                 if (playerIsShooting) {
-                    if (enemy.getBoundingClientRect().left + 20 == player.getBoundingClientRect().left) {
-                        enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
-                    } else if (enemy.getBoundingClientRect().left - 20 == player.getBoundingClientRect().left) {
-                        enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
+                    if (enemyCoordinates.left + 20 == player.getBoundingClientRect().left) {
+                        enemy.style.left = enemyCoordinates.left - 20 + 'px';
+                    } else if (enemyCoordinates.left - 20 == player.getBoundingClientRect().left) {
+                        enemy.style.left = enemyCoordinates.left + 20 + 'px';
                     } else {
-                        enemy.style.left = enemy.getBoundingClientRect().left + ((Math.random() >= .50) ? 20 : (-20)) + 'px';
+                        enemy.style.left = enemyCoordinates.left + ((Math.random() >= .50) ? 20 : (-20)) + 'px';
                     }
-                } else if (enemy.getBoundingClientRect().left == player.getBoundingClientRect().left) {
+                } else if (enemyCoordinates.left == player.getBoundingClientRect().left) {
                     enemyShoot();
-                    enemy.getBoundingClientRect().left = player.getBoundingClientRect().left;
-                } else if (enemy.getBoundingClientRect().left < player.getBoundingClientRect().left) {
-                    enemy.style.left = enemy.getBoundingClientRect().left + 20 + 'px';
-                } else if (enemy.getBoundingClientRect().left > player.getBoundingClientRect().left) {
-                    enemy.style.left = enemy.getBoundingClientRect().left - 20 + 'px';
+                    enemyCoordinates.left = player.getBoundingClientRect().left;
+                } else if (enemyCoordinates.left < player.getBoundingClientRect().left) {
+                    enemy.style.left = enemyCoordinates.left + 20 + 'px';
+                } else if (enemyCoordinates.left > player.getBoundingClientRect().left) {
+                    enemy.style.left = enemyCoordinates.left - 20 + 'px';
                 }
-                if (enemy.getBoundingClientRect().left <= box.getBoundingClientRect().left + 12)
+                if (enemyCoordinates.left <= box.getBoundingClientRect().left + 12)
                     enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
-                if (enemy.getBoundingClientRect().left >= box.getBoundingClientRect().left + 172)
+                if (enemyCoordinates.left >= box.getBoundingClientRect().left + 172)
                     enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
                 if (enemyHealth <= 0)
                     clearInterval(enemyDecisionInterval);
@@ -596,7 +601,7 @@ function eat(amount) {
 
 var cc2 = document.querySelector('#c' + currentCell);
 var lh = document.querySelector('#loot-heading');
-if(cc2){
+if (cc2) {
     if (cc2.innerHTML == "'")
         lh.innerHTML = "[']" + ' Plains';
     if (cc2.innerHTML == "*")
@@ -743,10 +748,10 @@ for (var x = 0; x < 2500; x += 100) {
             cell = 0;
         console.log(cell);
         tds[cell].innerHTML = value;
-        if(cell<tds.length-1) tds[cell + 1].innerHTML = value;
-        if(cell<tds.length-2) tds[cell + 2].innerHTML = value;
+        if (cell < tds.length - 1) tds[cell + 1].innerHTML = value;
+        if (cell < tds.length - 2) tds[cell + 2].innerHTML = value;
         tds[cell].innerHTML = value;
-        if(cell<tds.length-3) tds[cell + 3].innerHTML = value;
+        if (cell < tds.length - 3) tds[cell + 3].innerHTML = value;
     }
 }
 
