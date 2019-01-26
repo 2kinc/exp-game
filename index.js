@@ -408,6 +408,7 @@ document.body.onkeyup = function (e) {
                 energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
                 isTown = false;
             }
+            isTown = false;
             clearInterval(enemyDecisionInterval);
         }
     }
