@@ -767,7 +767,7 @@ noise.seed(Math.random());
 var tds = document.querySelectorAll('td');
 console.log(tds);
 
-for (var x = 0; x < 2600; x += 100) {
+for (var x = 0; x < 2500; x += 100) {
     for (var y = 0; y < 2500; y += 100) {
         var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
         value *= 3;
@@ -783,21 +783,21 @@ for (var x = 0; x < 2600; x += 100) {
         } else {
             value = '.';
         }
-        var cell = Math.floor(((x + y * 25) / 100)) - 4;
+        var cell = Math.floor(((x + y * 25) / 100) - 3);
         if (cell < 0)
             cell = 0;
         console.log(cell);
         tds[cell].innerHTML = value;
         if(cell<tds.length-1) tds[cell + 1].innerHTML = value;
         if(cell<tds.length-2) tds[cell + 2].innerHTML = value;
-        tds[cell].innerHTML += value;
+        tds[cell].innerHTML = value;
         if(cell<tds.length-3) tds[cell + 3].innerHTML = value;
     }
 }
 
-document.querySelectorAll('td').forEach(function (element) {
+/*document.querySelectorAll('td').forEach(function (element) {
     element.innerHTML = element.innerHTML.slice(1);
-});
+});*/
 
 for (var i = 0; i < 625; i++) {
     var randomNum = Math.random();
