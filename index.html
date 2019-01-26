@@ -10,129 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
     <link rel="icon" href="favicon.png" type="image/x-icon">
-    <style>
-        body {
-            font-family: monospace;
-            background: #333;
-            user-select: none !important;
-            font-size: 12px;
-            color: white;
-            overflow: hidden;
-            padding: 30px;
-            min-width: 1100px;
-        }
-
-        #player {
-            position: absolute;
-            height: 20px;
-            width: 20px;
-            z-index: 2;
-        }
-
-        #box {
-            border: 2px solid #fff;
-            width: 500px;
-            height: 500px;
-            margin: auto;
-            transition: all 1.5s;
-            transition-timing-function: ease-in-out;
-            transform-origin: 50% 50%;
-        }
-
-        td {
-            width: 20px;
-            height: 16px;
-            text-align: center;
-        }
-
-        .bullet {
-            background: url(https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=360&h=360);
-            height: 18px;
-            width: 18px;
-            z-index: 3;
-            position: absolute;
-        }
-
-        .card {
-            border: 2px solid #fff;
-            padding: 10px;
-            max-width: 250px;
-            z-index: 4;
-            background: #333;
-        }
-
-        .card div {
-            margin: 0;
-        }
-
-        .left-side {
-            float: left;
-            position: relative;
-        }
-
-        .right-side {
-            float: right;
-            position: relative;
-        }
-
-        .heading {
-            font-size: 18px;
-        }
-
-        #log {
-            overflow: hidden;
-            max-height: 100px;
-            max-width: 250px;
-        }
-
-        #name:hover {
-            background: #fff;
-            color: #333;
-        }
-
-        #name:focus {
-            background: #fff;
-            color: #333;
-        }
-
-        #enemy {
-            position: absolute;
-            display: none;
-            height: 20px;
-            width: 20px;
-            z-index: 2;
-        }
-
-        img {
-            user-drag: none;
-            user-select: none;
-            -moz-user-select: none;
-            -webkit-user-drag: none;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-        }
-
-        #enemy-health {
-            position: absolute;
-            text-align: center;
-            display: none;
-        }
-
-        #fight-health {
-            position: absolute;
-            text-align: center;
-            display: none;
-        }
-        
-        #startscreen {
-            z-index: 99;
-			background: #333;
-			position: absolute;
-			left: 0;
-			width: 100%;
-			height: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-133299888-1"></script>
 	<script>
@@ -146,9 +24,9 @@
 
 <body>
     <div id="startscreen">
-        <div style="font-size: 12em; position: absolute; width: 100%; text-align: center; left: calc(0px + 0.1em);" id="hugeheading" class="">E. X. P.</div>
+        <div id="hugeheading" class="">E. X. P.</div>
 
-        <div id="by2kinc" style="position: absolute; left: 0; width: 100%; text-align: center; font-size: 5em; top: calc(4em); clip: unset; transform: none!important;">By 2K inc.</div>
+        <div id="by2kinc">By 2K inc.</div>
 
 	    <div style="position: absolute; left: 0; width: 100%; text-align: center; font-size: 3em; top: calc(10em);">[Space to play]</div>
     </div>
