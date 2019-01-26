@@ -385,7 +385,8 @@ document.body.onkeyup = function (e) {
             } else if (isTown = true){
                 setTimeout(function () {
                     fightingMode = false;
-                }, 1500)
+                    isTown = false;
+                }, 1500);
                 box.innerHTML = saveBoxHTML;
                 box.style.transform = 'scale(1.0)';
                 box.style.borderWidth = '2px';
@@ -404,7 +405,8 @@ document.body.onkeyup = function (e) {
                 setCookie('gameprogression', gameProgression, 30);
                 energy -= 3;
                 setCookie('energy', energy, 30);
-                energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
+                energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
+                isTown = false;
             }
             clearInterval(enemyDecisionInterval);
         }
