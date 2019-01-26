@@ -734,14 +734,86 @@ $('#hugeheading').mgGlitch({
 
 $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
 
-/*$('body').mgGlitch({
-    destroy: false,
-    glitch: true,
-    scale: false,
-    blend: true,
-    blendModeType: 'hue',
-    glitch1TimeMin: 500,
-    glitch1TimeMax: 100,
-    glitch2TimeMin: 100,
-    glitch2TimeMax: 100,
-});*/
+noise.seed(Math.random());
+
+/*for (var x = 0; x < 2500; x += 100) {
+    for (var y = 0; y < 2500; y += 100) {
+        var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
+        value *= 4;
+
+        if (value >= 0.75) {
+            value = " ";
+        } else if (value >= 0.45) {
+            value = ",";
+        } else if (value >= 0.25) {
+            value = "'";
+        } else if (value >= 0) {
+            value = "*";
+        } else {
+            value = '.';
+        }
+        var cell = ((x + y) / 100) - 1;
+        if (cell < 0)
+            cell = 0;
+        document.querySelectorAll('td')[cell].innerHTML
+            = document.querySelectorAll('td')[cell + 1].innerHTML
+            = document.querySelectorAll('td')[cell + 2].innerHTML
+            = value;
+        document.querySelectorAll('td')[cell].innerHTML += value
+        document.querySelectorAll('td')[cell + 3].innerHTML = value;
+    }
+}*/
+
+var tds = document.querySelectorAll('td');
+console.log(tds);
+
+for (var x = 0; x < 2500; x += 100) {
+    for (var y = 0; y < 2500; y += 100) {
+        var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
+        value *= 3;
+
+        if (value >= 0.75) {
+            value = " ";
+        } else if (value >= 0.45) {
+            value = ",";
+        } else if (value >= 0.25) {
+            value = "'";
+        } else if (value >= 0) {
+            value = "*";
+        } else {
+            value = '.';
+        }
+        var cell = Math.floor(((x + y * 25) / 100)) - 1;
+        if (cell < 0)
+            cell = 0;
+        console.log(cell);
+        tds[cell].innerHTML = value;
+        if(cell<tds.length-1) tds[cell + 1].innerHTML = value;
+        if(cell<tds.length-2) tds[cell + 2].innerHTML = value;
+        tds[cell].innerHTML += value;
+        if(cell<tds.length-3) tds[cell + 3].innerHTML = value;
+    }
+}
+
+document.querySelectorAll('td').forEach(function (element) {
+    element.innerHTML = element.innerHTML.slice(1);
+});
+
+
+document.querySelectorAll('td').forEach(function (element) {
+    element.innerHTML = element.innerHTML.slice(1);
+});
+
+document.querySelectorAll('td').forEach(function (element) {
+    element.innerHTML = element.innerHTML.slice(1);
+});
+
+for (var i = 0; i < 625; i++) {
+    var randomNum = Math.random();
+    if (randomNum >= 0.95) {
+        document.querySelectorAll('td')[i].innerHTML = 'C';
+    }
+    if (randomNum <= 0.01) {
+        document.querySelectorAll('td')[i].innerHTML = 'T';
+    }
+}
