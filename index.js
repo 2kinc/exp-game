@@ -767,7 +767,7 @@ noise.seed(Math.random());
 var tds = document.querySelectorAll('td');
 console.log(tds);
 
-for (var x = 0; x < 2500; x += 100) {
+for (var x = 0; x < 2600; x += 100) {
     for (var y = 0; y < 2500; y += 100) {
         var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
         value *= 3;
@@ -783,7 +783,7 @@ for (var x = 0; x < 2500; x += 100) {
         } else {
             value = '.';
         }
-        var cell = Math.floor(((x + y * 25) / 100));
+        var cell = Math.floor(((x + y * 25) / 100)) - 4;
         if (cell < 0)
             cell = 0;
         console.log(cell);
