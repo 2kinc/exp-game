@@ -158,7 +158,7 @@ function move(direction) {
             lootArray[currentCell] = new lootSpawn((currentCellEl.innerHTML == 'C'));
         setCookie('loot', JSON.stringify(lootArray));
         var currentLoot = lootArray[currentCell];
-        
+
         lootAmmo.innerHTML = currentLoot.ammo;
         lootFood.innerHTML = currentLoot.food;
         lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
@@ -289,6 +289,7 @@ function move(direction) {
         log("You have no energy! Get food fast!");
     }
 }
+
 document.body.onkeyup = function (e) {
     if (document.activeElement != nameEl) {
         if (e.key == "w" || e.key == "ArrowUp") {
@@ -768,3 +769,29 @@ for (var i = 0; i < 625; i++) {
         document.querySelectorAll('td')[i].innerHTML = 'T';
     }
 }
+
+var currentCellEl = document.querySelector('#c' + currentCell);
+if (lootArray[currentCell] == undefined)
+    lootArray[currentCell] = new lootSpawn((currentCellEl.innerHTML == 'C'));
+setCookie('loot', JSON.stringify(lootArray));
+var currentLoot = lootArray[currentCell];
+
+lootAmmo.innerHTML = currentLoot.ammo;
+lootFood.innerHTML = currentLoot.food;
+lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
+lootFoodWrap.style.display = ((currentLoot.food == 0) ? 'none' : 'block');
+lootArray[currentCell].take = takeF;
+if (currentCellEl.innerHTML == "'")
+    lootHeading.innerHTML = "[']" + ' Plains';
+if (currentCellEl.innerHTML == "*")
+    lootHeading.innerHTML = "[*]" + ' Forest';
+if (currentCellEl.innerHTML == ",")
+    lootHeading.innerHTML = "[,]" + ' Swamp';
+if (currentCellEl.innerHTML == "C")
+    lootHeading.innerHTML = "[C]" + ' Chest';
+if (currentCellEl.innerHTML == "T") {
+    lootHeading.innerHTML = "[T]" + ' Town';
+    isTown = true;
+}
+if (currentCellEl.innerHTML == " ")
+    lootHeading.innerHTML = "[ ]" + ' Empty';
