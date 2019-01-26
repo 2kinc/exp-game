@@ -382,7 +382,31 @@ document.body.onkeyup = function (e) {
                 energy -= 3;
                 setCookie('energy', energy, 30);
                 energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
+            } else if (isTown = true){
+                setTimeout(function () {
+                    fightingMode = false;
+                }, 1500)
+                box.innerHTML = saveBoxHTML;
+                box.style.transform = 'scale(1.0)';
+                box.style.borderWidth = '2px';
+                setTimeout(function () {
+                    player.style.top = document.querySelector('#c' + currentCell).getBoundingClientRect().y + 'px';
+                    player.style.left = document.querySelector('#c' + currentCell).getBoundingClientRect().x + 'px';
+                }, 1500);
+                setCookie('energy', energy, 30);
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                enemy.style.display = 'none';
+                clearInterval(x);
+                playerIsShooting = false;
+                fightHealthEl.style.display = 'none';
+                enemyHealthEl.style.display = 'none';
+                gameProgression += 10;
+                setCookie('gameprogression', gameProgression, 30);
+                energy -= 3;
+                setCookie('energy', energy, 30);
+                energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
             }
+            clearInterval(enemyDecisionInterval);
         }
     }
 }
