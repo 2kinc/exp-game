@@ -382,7 +382,7 @@ document.body.onkeyup = function (e) {
                 energy -= 3;
                 setCookie('energy', energy, 30);
                 energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
-            } else if (isTown = true){
+            } else if (isTown) {
                 setTimeout(function () {
                     fightingMode = false;
                     isTown = false;
