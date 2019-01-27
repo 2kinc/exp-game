@@ -778,7 +778,7 @@
             var cell = Math.floor(((x + y * 25) / 100) - 3);
             if (cell < 0)
                 cell = 0;
-            console.log(cell);
+
             tds[cell].innerHTML = value;
             if (cell < tds.length - 1) tds[cell + 1].innerHTML = value;
             if (cell < tds.length - 2) tds[cell + 2].innerHTML = value;
