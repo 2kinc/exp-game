@@ -471,7 +471,7 @@
         if (ammo > 0) {
             var bullet = document.createElement('div');
             bullet.className = 'bullet';
-            bullet.innerHTML = "<img src='https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=720&amp;h=719' height='18px' width='18px'>"
+            bullet.innerHTML = "<img src='bullet.png' height='18px' width='18px'>"
             bullet.style.top = player.getBoundingClientRect().y + 'px';
             bullet.style.left = player.getBoundingClientRect().x + 'px';
             var playerX = player.getBoundingClientRect().x;
@@ -545,7 +545,7 @@
     function enemyShoot() {
         var bullet = document.createElement('div');
         bullet.className = 'bullet';
-        bullet.innerHTML = "<img src='https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=720&amp;h=719' height='18px' width='18px'>"
+        bullet.innerHTML = "<img src='bullet.png' height='18px' width='18px'>"
         bullet.style.top = enemy.getBoundingClientRect().y + 'px';
         bullet.style.left = enemy.getBoundingClientRect().x + 'px';
         var enemyX = enemy.getBoundingClientRect().x;
