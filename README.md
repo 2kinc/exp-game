@@ -1,3 +1,7 @@
-<img src="https://iamcev.github.io/exp-game/favicon.png" width=60 /><h3 style="font-size: 100px;">E. X. P.</h3>
+<a href="https://iamcev.github.io/exp-game"><img src="https://s2.gifyu.com/images/exp-text.gif" alt="E. X. P." border="0" width="100%"/></a>
 A game by 2K inc.  
 Play it for **free** [here](https://iamcev.github.io/exp-game)!
+
+If you are a developer, **please post "to-do"s in the wiki.** 
+
+If you want to become a developer, please contact **mailofrealcev@gmail.com** or **dev.velp@gmail.com**.
