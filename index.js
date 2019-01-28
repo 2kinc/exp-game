@@ -288,8 +288,10 @@
                 player.style.left = box.getBoundingClientRect().left + 12 + 'px';
             if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
                 player.style.left = box.getBoundingClientRect().left + 172 + 'px';
-            if (player.getBoundingClientRect().y > box.getBoundingClientRect().y)
-                player.style.left = box.getBoundingClientRect().left + 'px';
+            if (player.getBoundingClientRect().y < box.getBoundingClientRect().y)
+                player.style.top = box.getBoundingClientRect().top + 'px';
+            if (player.getBoundingClientRect().y > box.getBoundingClientRect().y+174)
+                player.style.top = box.getBoundingClientRect().top + 174 + 'px';
             steps++;
             stepsEl.innerHTML = 'Steps taken: ' + steps;
             setCookie('steps', steps, 30);
