@@ -4,6 +4,18 @@
 
 Play it for **free** [here](https://iamcev.github.io/exp-game)!
 
+Controls: 
+
+* WASD/arrow keys to move
+
+* Space to shoot
+
+* E to eat (make sure to keep eating: when your energy reaches zero, you will die in a few seconds)
+
+* ESC to escape from a fight or exit a sub-area, such as a town
+
+<hr>
+
 If you are a developer, **please post "to-do"s in the wiki.** 
 
 If you want to become a developer, please contact **mailofrealcev@gmail.com** or **dev.velp@gmail.com**.
