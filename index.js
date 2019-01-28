@@ -270,15 +270,19 @@
         } else if (isTown == true && energy >= 0.4) {
             if (direction == 'right') {
                 player.style.left = player.getBoundingClientRect().x + 20 + 'px';
+                player.style.transform = 'rotate(90deg)';
             }
             if (direction == 'left') {
                 player.style.left = player.getBoundingClientRect().x - 20 + 'px';
+                player.style.transform = 'rotate(270deg)';
             }
             if (direction == 'down') {
                 player.style.top = player.getBoundingClientRect().y + 20 + 'px';
+                player.style.transform = 'rotate(180deg)';
             }
             if (direction == 'up') {
                 player.style.top = player.getBoundingClientRect().y - 20 + 'px';
+                player.style.transform = 'rotate(0deg)';
             }
             if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
                 player.style.left = box.getBoundingClientRect().left + 12 + 'px';
