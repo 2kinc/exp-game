@@ -275,10 +275,10 @@
                 player.style.left = player.getBoundingClientRect().x - 20 + 'px';
             }
             if (direction == 'down') {
-                player.style.left = player.getBoundingClientRect().y + 20 + 'px';
+                player.style.top = player.getBoundingClientRect().y + 20 + 'px';
             }
             if (direction == 'up') {
-                player.style.left = player.getBoundingClientRect().y - 20 + 'px';
+                player.style.top = player.getBoundingClientRect().y - 20 + 'px';
             }
             if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
                 player.style.left = box.getBoundingClientRect().left + 12 + 'px';
@@ -287,7 +287,7 @@
             steps++;
             stepsEl.innerHTML = 'Steps taken: ' + steps;
             setCookie('steps', steps, 30);
-            gameProgression++;
+            gameProgression += 2;
             setCookie('gameprogression', gameProgression, 30);
         } else {
             log("You have no energy! Get food fast!");
