@@ -2,7 +2,7 @@
 
 <h2>A text adventure by 2K inc. </h1> 
 
-Play it for **free** [here](https://iamcev.github.io/exp-game)!
+Play it for **free** [here](https://2kinc.github.io/exp-game)!
 
 Controls: 
 
