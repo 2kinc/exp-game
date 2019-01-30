@@ -51,7 +51,9 @@
   var gradP = new Array(512);
 
   // This isn't a very good seeding function, but it works ok. It supports 2^16
-  // different seed values. Write something better if you need more seeds.
+  // different seed values. Write something better if you need more seeds...
+  var worldSeed;
+  
   module.seed = function(seed) {
     if(seed > 0 && seed < 1) {
       // Scale the seed out
@@ -74,6 +76,9 @@
       perm[i] = perm[i + 256] = v;
       gradP[i] = gradP[i + 256] = grad3[v % 12];
     }
+    worldSeed = seed;
+    console.log(worldSeed);
+    return worldSeed;
   };
 
   module.seed(0);
