@@ -46,7 +46,7 @@
     var regenDegenInterval;
     var isTown = false;
     var lootHeading = qs('#loot-heading');
-
+    var playEl = qs("#play_button");
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
             && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
@@ -301,7 +301,7 @@
             log("You have no energy! Get food fast!");
         }
     }
-
+    
     document.body.onkeyup = function (e) {
         if (document.activeElement != nameEl) {
             if (e.key == "w" || e.key == "ArrowUp") {
@@ -424,6 +424,53 @@
                 clearInterval(enemyDecisionInterval);
             }
         }
+    }
+    if ($('startscreen').html != '') {
+        playEl.addEventListener('click', function() {
+            regenDegenInterval = setInterval(function () {
+                if (Math.round(energy) > 0 && health == maxHealth)
+                    energy--;
+                if (energy > maxEnergy)
+                    energy = maxEnergy;
+                if (Math.round(energy) == maxEnergy && health < maxHealth) {
+                    energy = maxEnergy;
+                    health += 3;
+                }
+                if (Math.round(energy) == 0) {
+                    health -= Math.floor(maxHealth / 3);
+                    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                    log('You have no energy! Get food fast!');
+                }
+                if (health < 0) {
+                    var saveHTML = document.body.innerHTML;
+                    document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+                    setTimeout(function () {
+                        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+                    }, 1000);
+                    setTimeout(function () {
+                        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+                    }, 2000);
+                    setTimeout(function () {
+                        energy = maxEnergy;
+                        health = maxHealth;
+                        setCookie('energy', energy);
+                        setCookie('health', health);
+                        setCookie('ammo', ammo, 30);
+                        setCookie('food', food, 30);
+                        location.reload();
+                    }, 3000);
+                }
+                if (health > maxHealth)
+                    health = maxHealth;
+                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                setCookie('energy', energy);
+                setCookie('health', health);
+            }, 5000);
+            $('#startscreen').html('');
+            $('#startscreen').css('display', 'none');
+        }
+        });
     }
     /*if (getCookie('map') == "") {
         var mapHTML;
