@@ -1,5 +1,5 @@
 (function (global) {
-    var qs = function(selector){
+    var qs = function (selector) {
         return document.querySelector(selector);
     };
     var player = qs('#player');
@@ -293,7 +293,7 @@
                 player.style.left = box.getBoundingClientRect().left + 172 + 'px';
             if (player.getBoundingClientRect().y < box.getBoundingClientRect().y)
                 player.style.top = box.getBoundingClientRect().top + 'px';
-            if (player.getBoundingClientRect().y > box.getBoundingClientRect().y+174)
+            if (player.getBoundingClientRect().y > box.getBoundingClientRect().y + 174)
                 player.style.top = box.getBoundingClientRect().top + 174 + 'px';
             steps++;
             stepsEl.innerHTML = 'Steps taken: ' + steps;
@@ -304,7 +304,7 @@
             log("You have no energy! Get food fast!");
         }
     }
-    
+
     document.body.onkeyup = function (e) {
         if (document.activeElement != nameEl) {
             if (e.key == "w" || e.key == "ArrowUp") {
@@ -430,7 +430,7 @@
         }
     }
     if ($('startscreen').html != '') {
-        playEl.addEventListener('click', function() {
+        playEl.addEventListener('click', function () {
             regenDegenInterval = setInterval(function () {
                 if (Math.round(energy) > 0 && health == maxHealth)
                     energy--;
@@ -741,7 +741,6 @@
             food = Number(getCookie('food'));
             steps = Number(getCookie('steps'));
             ammoUsed = Number(getCookie('ammoused'));
-            generatedMap = getCookie('map');
             lootArray = JSON.parse(getCookie('loot'));
             gameProgression = Number(getCookie('gameprogression'));
             noise.seed(getCookie('seed'));
@@ -845,21 +844,6 @@
             if (cell < tds.length - 3) tds[cell + 3].innerHTML = value;
         }
     }
-    
-    for (var i = 0; i < 625; i++) {
-        var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1] + pi[worldSeed + i + 2]) / 3;
-        if (randomNum >= 8.5) {
-            document.querySelectorAll('td')[i].innerHTML = 'C';
-        } else if (randomNum <= 1. && randomNum > 0.15) {
-            document.querySelectorAll('td')[i].innerHTML = 'T';
-        } else if (randomNum == 0) {
-            document.querySelectorAll('td')[i].innerHTML = 'L';
-        }
-    }
-    
-    generatedMap = tbl.join('');
-
-    setCookie('map', generatedMap, 30);
 
     for (var i = 0; i < 625; i++) {
         var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1] + pi[worldSeed + i + 2]) / 3;
@@ -871,6 +855,16 @@
             document.querySelectorAll('td')[i].innerHTML = 'L';
         }
     }
+
+    function town(index) {
+        var possibleDirections = ['North', 'East', 'South', 'West'];
+        this.townHall = possibleDirections[pi[worldSeed + index] % 4];
+        this.pathLengths = [pi[worldSeed + index + 1] % 3 + 2, pi[worldSeed + index + 2] % 3 + 2,
+        pi[worldSeed + index + 3] % 3 + 2];
+        this.index = index;
+    }
+
+    console.log(new town(1));
 
     var currentCellEl = qs('#c' + currentCell);
     if (lootArray[currentCell] == undefined)
