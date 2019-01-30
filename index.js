@@ -244,6 +244,14 @@
             if (isTown == true) {
                 saveBoxHTML = box.innerHTML;
                 box.innerHTML = '';
+                var tblt = ['<table><tr>'];
+                for (var i = 0; i < 144; i++) {
+                    tblt.push("<td id='c" + i + "'style='width:34.614px;height:34.614px;font-size:23.076px;'></td>");
+                    if ((i + 1) % 12 == 0)
+                        tblt.push('</tr><tr>');
+                }
+                tblt.push('</tr></table>');
+                box.innerHTML = tblt.join('');
                 player.style.transform = 'rotate(0deg)';
                 facing = 'up';
                 player.style.left = 'calc(50% - 10px)';
