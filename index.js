@@ -30,8 +30,10 @@
     var foodTakes = qs('#foodtakes');
     var lootAmmo = qs('#lootammonum');
     var lootFood = qs('#lootfoodnum');
+    var lootArmour = qs('#lootarmournum');
     var lootAmmoWrap = qs('#lootammo');
     var lootFoodWrap = qs('#lootfood');
+    var lootArmourWrap = qs('#lootarmour');
     var fightingMode = false;
     var saveBoxHTML;
     var playerFightingOrigin;
@@ -45,6 +47,7 @@
     var gameProgression = 0;
     var regenDegenInterval;
     var isTown = false;
+    var armour = false;
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
     function detectHit(bulletEl, target) {
@@ -408,7 +411,7 @@
                                 health = maxHealth;
                                 setCookie('energy', energy);
                                 setCookie('health', health);
-                                setCookie('ammo', ammo, 30);
+                                setCookie('ammo', ammo, 60);
                                 setCookie('food', food, 30);
                                 location.reload();
                             }, 3000);
@@ -699,6 +702,8 @@
             lh.innerHTML = "[C]" + ' Chest';
         if (cc2.innerHTML == " ")
             lh.innerHTML = "[ ]" + ' Empty';
+        if (cc2.innerHTML == "L")
+            lh.innerHTMP == "[L]" + 'Lake';
     }
 
     function setCookie(cname, cvalue, exdays) {
