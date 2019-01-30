@@ -744,6 +744,7 @@
             generatedMap = getCookie('map');
             lootArray = JSON.parse(getCookie('loot'));
             gameProgression = Number(getCookie('gameprogression'));
+            noise.seed(getCookie('seed'));
         } else {
             setCookie('loot', JSON.stringify(lootArray), 30);
         }
@@ -817,8 +818,6 @@
 
     $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
 
-    noise.seed(Math.random());
-
     for (var x = 0; x < 2500; x += 100) {
         for (var y = 0; y < 2500; y += 100) {
             var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
@@ -846,18 +845,29 @@
             if (cell < tds.length - 3) tds[cell + 3].innerHTML = value;
         }
     }
-
+    
+    for (var i = 0; i < 625; i++) {
+        var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1] + pi[worldSeed + i + 2]) / 3;
+        if (randomNum >= 8.5) {
+            document.querySelectorAll('td')[i].innerHTML = 'C';
+        } else if (randomNum <= 1. && randomNum > 0.15) {
+            document.querySelectorAll('td')[i].innerHTML = 'T';
+        } else if (randomNum == 0) {
+            document.querySelectorAll('td')[i].innerHTML = 'L';
+        }
+    }
+    
     generatedMap = tbl.join('');
 
     setCookie('map', generatedMap, 30);
 
     for (var i = 0; i < 625; i++) {
-        var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1]) / 2;
-        if (randomNum >= 9.5) {
+        var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1] + pi[worldSeed + i + 2]) / 3;
+        if (randomNum >= 8.5) {
             document.querySelectorAll('td')[i].innerHTML = 'C';
-        } else if (randomNum <= 0.3 && randomNum > 0.15) {
+        } else if (randomNum <= 1. && randomNum > 0.15) {
             document.querySelectorAll('td')[i].innerHTML = 'T';
-        } else if (randomNum <= 0.15 && randomNum > 0) {
+        } else if (randomNum == 0) {
             document.querySelectorAll('td')[i].innerHTML = 'L';
         }
     }
