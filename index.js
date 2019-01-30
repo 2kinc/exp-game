@@ -317,54 +317,10 @@
                 move('down');
             }
             else if (e.key == " ") {
-                if (energy >= 0.2 && $('#startscreen').html() == '') {
+                if (energy >= 0.2) {
                     shoot(facing);
                 } else {
                     log("You have no energy! Get food fast!");
-                }
-                if ($('#startscreen').html() != '') {
-                    regenDegenInterval = setInterval(function () {
-                        if (Math.round(energy) > 0 && health == maxHealth)
-                            energy--;
-                        if (energy > maxEnergy)
-                            energy = maxEnergy;
-                        if (Math.round(energy) == maxEnergy && health < maxHealth) {
-                            energy = maxEnergy;
-                            health += 3;
-                        }
-                        if (Math.round(energy) == 0) {
-                            health -= Math.floor(maxHealth / 3);
-                            healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-                            log('You have no energy! Get food fast!');
-                        }
-                        if (health < 0) {
-                            var saveHTML = document.body.innerHTML;
-                            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-                            setTimeout(function () {
-                                document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
-                            }, 1000);
-                            setTimeout(function () {
-                                document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
-                            }, 2000);
-                            setTimeout(function () {
-                                energy = maxEnergy;
-                                health = maxHealth;
-                                setCookie('energy', energy);
-                                setCookie('health', health);
-                                setCookie('ammo', ammo, 30);
-                                setCookie('food', food, 30);
-                                location.reload();
-                            }, 3000);
-                        }
-                        if (health > maxHealth)
-                            health = maxHealth;
-                        energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-                        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-                        setCookie('energy', energy);
-                        setCookie('health', health);
-                    }, 5000);
-                    $('#startscreen').html('');
-                    $('#startscreen').css('display', 'none');
                 }
             }
             else if (e.key == "e") {
@@ -422,6 +378,51 @@
                 }
                 isTown = false;
                 clearInterval(enemyDecisionInterval);
+            } else if (e.key == 'Enter') {
+                if ($('#startscreen').html() != '') {
+                    regenDegenInterval = setInterval(function () {
+                        if (Math.round(energy) > 0 && health == maxHealth)
+                            energy--;
+                        if (energy > maxEnergy)
+                            energy = maxEnergy;
+                        if (Math.round(energy) == maxEnergy && health < maxHealth) {
+                            energy = maxEnergy;
+                            health += 3;
+                        }
+                        if (Math.round(energy) == 0) {
+                            health -= Math.floor(maxHealth / 3);
+                            healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                            log('You have no energy! Get food fast!');
+                        }
+                        if (health < 0) {
+                            var saveHTML = document.body.innerHTML;
+                            document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
+                            setTimeout(function () {
+                                document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
+                            }, 1000);
+                            setTimeout(function () {
+                                document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
+                            }, 2000);
+                            setTimeout(function () {
+                                energy = maxEnergy;
+                                health = maxHealth;
+                                setCookie('energy', energy);
+                                setCookie('health', health);
+                                setCookie('ammo', ammo, 30);
+                                setCookie('food', food, 30);
+                                location.reload();
+                            }, 3000);
+                        }
+                        if (health > maxHealth)
+                            health = maxHealth;
+                        energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+                        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                        setCookie('energy', energy);
+                        setCookie('health', health);
+                    }, 5000);
+                    $('#startscreen').html('');
+                    $('#startscreen').css('display', 'none');
+                }
             }
         }
     }
