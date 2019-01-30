@@ -469,7 +469,6 @@
             }, 5000);
             $('#startscreen').html('');
             $('#startscreen').css('display', 'none');
-        }
         });
     }
     /*if (getCookie('map') == "") {
