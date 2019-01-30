@@ -852,12 +852,13 @@
     setCookie('map', generatedMap, 30);
 
     for (var i = 0; i < 625; i++) {
-        var randomNum = Math.random();
-        if (randomNum >= 0.95) {
+        var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1]) / 2;
+        if (randomNum >= 9.5) {
             document.querySelectorAll('td')[i].innerHTML = 'C';
-        }
-        if (randomNum <= 0.01) {
+        } else if (randomNum <= 0.3 && randomNum > 0.15) {
             document.querySelectorAll('td')[i].innerHTML = 'T';
+        } else if (randomNum <= 0.15 && randomNum > 0) {
+            document.querySelectorAll('td')[i].innerHTML = 'L';
         }
     }
 
