@@ -256,7 +256,7 @@
                 facing = 'up';
                 player.style.left = 'calc(50% - 10px)';
                 player.style.left = player.getBoundingClientRect().left + 'px';
-                box.style.transform = 'scale(0.40)';
+                box.style.transform = 'scale(0.52)';
                 box.style.borderWidth = '5px';
                 player.style.top = box.offsetHeight - 140 + 'px';
                 gameProgression += 5;
@@ -824,6 +824,9 @@
     });
 
     $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
+
+    if (worldSeed == 0 || getCookie('seed') == '')
+        noise.seed(Math.random());
 
     for (var x = 0; x < 2500; x += 100) {
         for (var y = 0; y < 2500; y += 100) {
