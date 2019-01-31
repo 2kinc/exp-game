@@ -921,10 +921,10 @@
             }
         });
         saveFile = saveFile.slice(0,-1);
-        console.log(saveFile);
         saveFile = window.btoa(saveFile);
         setCookie('savefile', saveFile, 100);
         setCookie('name', name, 100);
+        console.log(getCookie('savefile'));
     }
     setInterval(function(){
         saveGame();
