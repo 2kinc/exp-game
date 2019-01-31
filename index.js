@@ -915,19 +915,16 @@
     function saveGame() {
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
             gameProgression, isTown, fightingMode].join('#');
-        console.log(saveFile);
         lootArray.forEach(function(element, index){
             if (element != null) {
                 saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + '|';
             }
         });
-        console.log(saveFile);
-        saveFile = saveFile.slice(0,1);
+        saveFile = saveFile.slice(0,-1);
         console.log(saveFile);
         saveFile = window.btoa(saveFile);
         setCookie('savefile', saveFile, 100);
         setCookie('name', name, 100);
-        console.log(getCookie('savefile'));
     }
     setInterval(function(){
         saveGame();
