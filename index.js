@@ -918,7 +918,7 @@
             gameProgression, isTown, fightingMode].join('#');
         lootArray.forEach(function(element, index){
             if (element != null) {
-                saveFile += index + '|' + element.ammo + '|' + element.food + '|''
+                saveFile += index + '|' + element.ammo + '|' + element.food + '|';
             }
         });
         saveFile = saveFile.slice(0,1);
