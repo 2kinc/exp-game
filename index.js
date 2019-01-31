@@ -910,4 +910,4 @@
         lootHeading.innerHTML = "[ ]" + ' Empty';
     document.querySelector('#loading').style.display = 'none';
     console.log(noise.seed);
-})(this);
+}(this);
