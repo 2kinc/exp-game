@@ -916,9 +916,10 @@
     function saveGame() {
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
             gameProgression, isTown, fightingMode].join('#');
+        console.log(saveFile);
         lootArray.forEach(function(element, index){
             if (element != null) {
-                saveFile += (index + '|' + element.ammo + '|' + element.food + '|');
+                saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + '|';
             }
         });
         saveFile = saveFile.slice(0,1);
