@@ -710,7 +710,7 @@
             lh.innerHTML = "[C]" + ' Chest';
         if (cc2.innerHTML == " ")
             lh.innerHTML = "[ ]" + ' Empty';
-        if (cc2.innerHTML == "L")
+        if (cc2.innerHTML == "[L]")
             lh.innerHTMP == "[L]" + 'Lake';
     }
 
