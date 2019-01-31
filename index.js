@@ -711,7 +711,9 @@
         if (cc2.innerHTML == " ")
             lh.innerHTML = "[ ]" + ' Empty';
         if (cc2.innerHTML == "[L]")
-            lh.innerHTMP == "[L]" + 'Lake';
+            lh.innerHTML == "[L]" + 'Lake';
+        if (cc2.innerHTML == "[M]") 
+            lh.innerHTML == "[M]" + 'Mountains';
     }
 
     function setCookie(cname, cvalue, exdays) {
@@ -899,7 +901,11 @@
     if (currentCellEl.innerHTML == "T") {
         lootHeading.innerHTML = "[T]" + ' Town';
         isTown = true;
-    }
+    if (currentCellEl.innerHTML == "L") 
+        lootHeading.innerHTML = "[L]" + ' Lake';
+        if (currentCellEl.innerHTML == "M") 
+        lootHeading.innerHTML = "[M]" + ' Mountains';
+        
     if (currentCellEl.innerHTML == " ")
         lootHeading.innerHTML = "[ ]" + ' Empty';
     document.querySelector('#loading').style.display = 'none';
