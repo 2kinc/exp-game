@@ -917,8 +917,8 @@
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
             gameProgression, isTown, fightingMode, JSON.stringify(lootArray)].join('#');
         saveFile = window.btoa(saveFile);
-        setCookie('savefile', saveFile);
-        setCookie('name', name);
+        setCookie('savefile', saveFile, 100);
+        setCookie('name', name, 100);
         console.log(getCookie('savefile'));
     }
     setInterval(function(){
