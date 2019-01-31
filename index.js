@@ -915,7 +915,13 @@
     console.log(noise.seed);
     function saveGame() {
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
-            gameProgression, isTown, fightingMode, JSON.stringify(lootArray)].join('#');
+            gameProgression, isTown, fightingMode].join('#');
+        lootArray.forEach(function(element, index){
+            if (element != null) {
+                saveFile += index + '|' + element.ammo + '|' + element.food + '|''
+            }
+        });
+        saveFile = saveFile.slice(0,1);
         saveFile = window.btoa(saveFile);
         setCookie('savefile', saveFile, 100);
         setCookie('name', name, 100);
