@@ -906,8 +906,9 @@
         if (currentCellEl.innerHTML == "M") 
         lootHeading.innerHTML = "[M]" + ' Mountains';
         
-    if (currentCellEl.innerHTML == " ")
+    if (currentCellEl.innerHTML == " ") {
         lootHeading.innerHTML = "[ ]" + ' Empty';
+    }
     document.querySelector('#loading').style.display = 'none';
     console.log(noise.seed);
-}(this);
+})(this);
