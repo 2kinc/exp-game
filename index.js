@@ -50,6 +50,7 @@
     var armour = false;
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
+    var saveFile;
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
             && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
@@ -912,4 +913,14 @@
     }
     document.querySelector('#loading').style.display = 'none';
     console.log(noise.seed);
+    function saveGame() {
+        saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
+            gameProgression, isTown, fightingMode, JSON.stringify(lootArray)].join('#');
+        saveFile = window.btoa(saveFile);
+        setCookie('savefile', saveFile);
+        setCookie('name', name);
+    }
+    setInterval(function(){
+        saveGame();
+    }, 3000);
 })(this);
