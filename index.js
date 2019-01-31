@@ -912,7 +912,6 @@
         lootHeading.innerHTML = "[ ]" + ' Empty';
     }
     document.querySelector('#loading').style.display = 'none';
-    console.log(noise.seed);
     function saveGame() {
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
             gameProgression, isTown, fightingMode].join('#');
@@ -922,6 +921,7 @@
                 saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + '|';
             }
         });
+        console.log(saveFile);
         saveFile = saveFile.slice(0,1);
         console.log(saveFile);
         saveFile = window.btoa(saveFile);
