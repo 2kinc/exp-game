@@ -112,9 +112,8 @@
 
     checkCookie();
 
-    if (saveFile != '') {
-        
-    }
+    if (saveFile != '')
+        initFromSave();
 
     setCookie('maxenergy', maxEnergy);
     setCookie('loot', JSON.stringify(lootArray), 30);
