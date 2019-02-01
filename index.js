@@ -519,7 +519,7 @@
         var x = element.id.slice(0, 3);
         var y = element.id.slice(3, 0);
         element.addEventListener('click', function () {
-            lootArray[currentCell].take(y, x);
+            takeF(y, x);
         });
     });
 
@@ -855,7 +855,7 @@
         var x = element.id.slice(0, 3);
         var y = element.id.slice(3);
         element.addEventListener('click', function () {
-            lootArray[currentCell].take(y, x);
+            takeF(y, x);
         });
     });
     logEl.innerHTML = 'You awake into a strange world.';
