@@ -985,7 +985,8 @@
     
     setInterval(function(){
         saveGame();
-        console.log(readSaveFile());
+        initFromSave();
     }, 3000);    
+    initFromSave();
     document.querySelector('#loading').style.display = 'none';
 })(this);
