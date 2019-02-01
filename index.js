@@ -510,6 +510,8 @@
         lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     lootArray[currentCell].take = takeF;
+        if (lootArray[currentCell] == undefined)
+        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     lootAmmo.innerHTML = lootArray[currentCell].ammo;
     lootFood.innerHTML = lootArray[currentCell].food;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
