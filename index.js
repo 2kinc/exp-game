@@ -52,8 +52,7 @@
     var playEl = qs("#play_button");
     var saveFile;
     
-    if (getCookie('savefile') != '')
-        saveFile = getCookie('savefile');
+    saveFile = getCookie('savefile');
     
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
@@ -113,8 +112,6 @@
     var tds = document.querySelectorAll('td');
 
     setCookie('map', generatedMap, 100);
-
-    checkCookie();
 
     if (saveFile != '')
         initFromSave();
@@ -746,6 +743,29 @@
         return "";
     }
     
+    function checkCookie() {
+        var checker = getCookie('checker');
+        if (checker == "yup") {
+            /*name = getCookie('name');
+            health = Number(getCookie('health'));
+            maxHealth = Number(getCookie('maxhealth'));
+            ammo = Number(getCookie('ammo'));
+            energy = Number(getCookie('energy'));
+            maxEnergy = Number(getCookie('maxenergy'));
+            food = Number(getCookie('food'));
+            steps = Number(getCookie('steps'));
+            ammoUsed = Number(getCookie('ammoused'));
+            lootArray = JSON.parse(getCookie('loot'));
+            gameProgression = Number(getCookie('gameprogression'));
+            noise.seed(getCookie('seed'));*/
+            saveFile = getCookie('saveFile');
+        } /*else {
+            setCookie('loot', JSON.stringify(lootArray), 30);
+        }*/
+    }
+    
+    checkCookie();
+
     function saveGame() {
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell, 
             gameProgression, isTown, fightingMode].join('#') + '#';
@@ -807,27 +827,6 @@
     }
     
     saveGame();
-    
-    function checkCookie() {
-        var checker = getCookie('checker');
-        if (checker == "yup") {
-            /*name = getCookie('name');
-            health = Number(getCookie('health'));
-            maxHealth = Number(getCookie('maxhealth'));
-            ammo = Number(getCookie('ammo'));
-            energy = Number(getCookie('energy'));
-            maxEnergy = Number(getCookie('maxenergy'));
-            food = Number(getCookie('food'));
-            steps = Number(getCookie('steps'));
-            ammoUsed = Number(getCookie('ammoused'));
-            lootArray = JSON.parse(getCookie('loot'));
-            gameProgression = Number(getCookie('gameprogression'));
-            noise.seed(getCookie('seed'));*/
-            saveFile = getCookie('saveFile');
-        } /*else {
-            setCookie('loot', JSON.stringify(lootArray), 30);
-        }*/
-    }
     
     if (readSaveFile != '')
         initFromSave();
