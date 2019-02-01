@@ -911,13 +911,13 @@
     if (currentCellEl.innerHTML == " ") {
         lootHeading.innerHTML = "[ ]" + ' Empty';
     }
-    document.querySelector('#loading').style.display = 'none';
+
     function saveGame() {
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
             gameProgression, isTown, fightingMode].join('#') + '#';
         lootArray.forEach(function(element, index){
             if (element != null) {
-                saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + '|';
+                saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + ',';
             }
         });
         saveFile = saveFile.slice(0,-1);
@@ -925,7 +925,35 @@
         setCookie('savefile', saveFile, 100);
         setCookie('name', name, 100);
     }
+    
+    function readSaveFile() {
+        var decodedSaveFile = window.atob(saveFile);
+        var split = decodedSaveFile.split('#');
+        var loot = [];
+        split[10].split(',').forEach(function(element){
+            var x = element.split('|');
+            loot[Number(x[0])] = {
+                ammo: Number(x[1]),
+                food: Number(x[2])
+            };
+        });
+        return {
+            seed: Number(split[0]),
+            health: Number(split[1]),
+            maxHealth: Number(split[2]),
+            energy: Number(split[3]),
+            maxEnergy: Number(split[4]),
+            ammo: Number(split[5]),
+            currentCell: Number(split[6]),
+            gameProgression: Number(split[7]),
+            isTown: (split[8] == 'true'),
+            fightingMode: (split[9] == 'true'),
+            lootArray: loot
+        };
+    }
+    
     setInterval(function(){
         saveGame();
-    }, 3000);
+    }, 3000);    
+    document.querySelector('#loading').style.display = 'none';
 })(this);
