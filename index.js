@@ -743,7 +743,7 @@
         return "";
     }
     
-        function saveGame() {
+    function saveGame() {
         saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell, 
             gameProgression, isTown, fightingMode].join('#') + '#';
         lootArray.forEach(function(element, index){
@@ -801,6 +801,8 @@
         fightingMode = r.fightingMode;
         lootArray = r.loot;
     }
+    
+    saveGame();
     
     function checkCookie() {
         var checker = getCookie('checker');
