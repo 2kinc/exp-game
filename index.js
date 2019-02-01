@@ -51,6 +51,9 @@
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
     var saveFile;
+    
+    saveFile = getCookie('savefile');
+    
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
             && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
@@ -819,6 +822,7 @@
             gameProgression = Number(getCookie('gameprogression'));
             noise.seed(getCookie('seed'));*/
             saveFile = getCookie('saveFile');
+            initFromSave();
         } /*else {
             setCookie('loot', JSON.stringify(lootArray), 30);
         }*/
