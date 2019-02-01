@@ -54,6 +54,7 @@
     
     saveFile = getCookie('savefile');
     
+
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
             && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
@@ -899,8 +900,7 @@
 
     $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
 
-    if (worldSeed == 0 || getCookie('seed') == '')
-        noise.seed(Math.random());
+    noise.seed(readSaveFile().seed);
 
     for (var x = 0; x < 2500; x += 100) {
         for (var y = 0; y < 2500; y += 100) {
