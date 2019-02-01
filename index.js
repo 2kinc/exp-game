@@ -987,6 +987,5 @@
         saveGame();
         initFromSave();
     }, 3000);    
-    initFromSave();
     document.querySelector('#loading').style.display = 'none';
 //})(this);
