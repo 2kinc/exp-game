@@ -52,7 +52,8 @@
     var playEl = qs("#play_button");
     var saveFile;
     
-    saveFile = getCookie('savefile');
+    if (getCookie('savefile') != '')
+        saveFile = getCookie('savefile');
     
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
