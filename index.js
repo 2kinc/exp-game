@@ -506,7 +506,7 @@
         element.id = 'c' + index;
     });*/
 
-    if (lootArray[currentCell] == undefined && $('startscreen').html == '')
+    if (lootArray[currentCell] == undefined)
         lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     lootArray[currentCell].take = takeF;
