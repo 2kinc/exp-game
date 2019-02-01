@@ -112,6 +112,10 @@
 
     checkCookie();
 
+    if (saveFile != '') {
+        
+    }
+
     setCookie('maxenergy', maxEnergy);
     setCookie('loot', JSON.stringify(lootArray), 30);
     if (gameProgression == '')
@@ -233,7 +237,6 @@
                     }
                     if (enemyCoordinates.left <= box.getBoundingClientRect().left + 12)
                         enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
-                    if (enemyCoordinates.left >= box.getBoundingClientRect().left + 172)
                         enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
                     if (enemyHealth <= 0)
                         clearInterval(enemyDecisionInterval);
@@ -755,11 +758,15 @@
             lootArray = JSON.parse(getCookie('loot'));
             gameProgression = Number(getCookie('gameprogression'));
             noise.seed(getCookie('seed'));
+            saveFile = getCookie('saveFile');
         } else {
             setCookie('loot', JSON.stringify(lootArray), 30);
         }
     }
-
+    
+    if (readSaveFile != '')
+        initFromSave();
+    
     setCookie('checker', 'yup', 30);
 
     nameEl.innerHTML = name;
@@ -913,7 +920,7 @@
     }
 
     function saveGame() {
-        saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, currentCell, 
+        saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell, 
             gameProgression, isTown, fightingMode].join('#') + '#';
         lootArray.forEach(function(element, index){
             if (element != null) {
@@ -930,7 +937,7 @@
         var decodedSaveFile = window.atob(saveFile);
         var split = decodedSaveFile.split('#');
         var loot = [];
-        split[10].split(',').forEach(function(element){
+        split[11].split(',').forEach(function(element){
             var x = element.split('|');
             loot[Number(x[0])] = {
                 ammo: Number(x[1]),
@@ -944,12 +951,29 @@
             energy: Number(split[3]),
             maxEnergy: Number(split[4]),
             ammo: Number(split[5]),
-            currentCell: Number(split[6]),
-            gameProgression: Number(split[7]),
-            isTown: (split[8] == 'true'),
-            fightingMode: (split[9] == 'true'),
+            food: Number(split[6]),
+            currentCell: Number(split[7]),
+            gameProgression: Number(split[8]),
+            isTown: (split[9] == 'true'),
+            fightingMode: (split[10] == 'true'),
             lootArray: loot
         };
+    }
+
+    function initFromSave() {
+        var r = readSaveFile();
+        worldSeed = r.seed;
+        health = r.health;
+        maxHealth = r.maxHealth;
+        energy = r.energy;
+        maxEnergy = r.maxEnergy;
+        ammo = r.ammo;
+        food = r.food;
+        currentCell = r.currentCell;
+        gameProgression = r.gameProgression;
+        isTown = r.isTown;
+        fightingMode = r.fightingMode;
+        lootArray = r.loot;
     }
     
     setInterval(function(){
