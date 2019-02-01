@@ -784,7 +784,7 @@
         var decodedSaveFile = window.atob(saveFile);
         var split = decodedSaveFile.split('#');
         var loot = [];
-        split[11].split(',').forEach(function(element){
+        split[10].split(',').forEach(function(element){
             var x = element.split('|');
             loot[Number(x[0])] = {
                 ammo: Number(x[1]),
