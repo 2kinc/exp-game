@@ -365,7 +365,7 @@
                     setCookie('gameprogression', gameProgression, 30);
                     energy -= 3;
                     setCookie('energy', energy, 30);
-                    energyEl.innerHTML = 'Energy' + energy + '/' + maxEnergy;
+                    energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
                 } else if (isTown) {
                     setTimeout(function () {
                         fightingMode = false;
@@ -378,8 +378,6 @@
                         player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
                         player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
                     }, 1500);
-                    setCookie('energy', energy, 30);
-                    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                     enemy.style.display = 'none';
                     clearInterval(x);
                     playerIsShooting = false;
@@ -388,9 +386,9 @@
                     gameProgression += 10;
                     setCookie('gameprogression', gameProgression, 30);
                     energy -= 3;
-                    setCookie('energy', energy, 30);
                     energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
                     isTown = false;
+                    saveGame();
                 }
                 isTown = false;
                 clearInterval(enemyDecisionInterval);
@@ -420,12 +418,13 @@
                                 document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
                             }, 2000);
                             setTimeout(function () {
-                                energy = maxEnergy;
                                 health = maxHealth;
-                                setCookie('energy', energy);
-                                setCookie('health', health);
-                                setCookie('ammo', ammo, 60);
-                                setCookie('food', food, 30);
+                                energy = maxEnergy;
+                                ammo = 100;
+                                food = 100;
+                                fightingMode = false;
+                                isTown = false;
+                                saveGame();
                                 location.reload();
                             }, 3000);
                         }
@@ -433,8 +432,7 @@
                             health = maxHealth;
                         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                         healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-                        setCookie('energy', energy);
-                        setCookie('health', health);
+                        saveGame();
                     }, 5000);
                     $('#startscreen').html('');
                     $('#startscreen').css('display', 'none');
@@ -570,7 +568,6 @@
                             player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
                             player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
                         }, 1500);
-                        setCookie('energy', energy, 30);
                         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                         enemy.style.display = 'none';
                         clearInterval(x);
@@ -578,6 +575,7 @@
                         fightHealthEl.style.display = 'none';
                         enemyHealthEl.style.display = 'none';
                         gameProgression += 100;
+                        saveGame();
                     }
                     setCookie('gameprogression', gameProgression, 30);
                 }
