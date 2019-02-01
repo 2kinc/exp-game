@@ -144,7 +144,6 @@
             }
             if (direction == 'right') {
                 currentCell = (((currentCell + 1) % 25 != 0) ? currentCell + 1 : currentCell);
-                player.style.transform = 'rotate(90deg)';
             }
             if (direction == 'left') {
                 currentCell = (((currentCell + 1) % 25 != 1) ? currentCell - 1 : currentCell);
@@ -833,6 +832,11 @@
         initFromSave();
     
     setCookie('checker', 'yup', 30);
+    
+    if (lootArray[currentCell] == undefined)
+        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
+    setCookie('loot', JSON.stringify(lootArray));
+    lootArray[currentCell].take = takeF;
 
     nameEl.innerHTML = name;
     healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
