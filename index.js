@@ -954,7 +954,7 @@
     
     setInterval(function(){
         saveGame();
-        readSaveFile();
+        console.log(readSaveFile());
     }, 3000);    
     document.querySelector('#loading').style.display = 'none';
 })(this);
