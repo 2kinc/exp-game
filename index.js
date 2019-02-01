@@ -788,7 +788,7 @@
 
     function initFromSave() {
         var r = readSaveFile();
-        worldSeed = r.seed;
+        noise.seed(r.seed);
         health = r.health;
         maxHealth = r.maxHealth;
         energy = r.energy;
@@ -807,7 +807,7 @@
     function checkCookie() {
         var checker = getCookie('checker');
         if (checker == "yup") {
-            name = getCookie('name');
+            /*name = getCookie('name');
             health = Number(getCookie('health'));
             maxHealth = Number(getCookie('maxhealth'));
             ammo = Number(getCookie('ammo'));
@@ -818,11 +818,11 @@
             ammoUsed = Number(getCookie('ammoused'));
             lootArray = JSON.parse(getCookie('loot'));
             gameProgression = Number(getCookie('gameprogression'));
-            noise.seed(getCookie('seed'));
+            noise.seed(getCookie('seed'));*/
             saveFile = getCookie('saveFile');
-        } else {
+        } /*else {
             setCookie('loot', JSON.stringify(lootArray), 30);
-        }
+        }*/
     }
     
     if (readSaveFile != '')
