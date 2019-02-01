@@ -1,4 +1,4 @@
-(function (global) {
+//(function (global) {
     var qs = function (selector) {
         return document.querySelector(selector);
     };
@@ -990,4 +990,4 @@
     }, 3000);    
     initFromSave();
     document.querySelector('#loading').style.display = 'none';
-})(this);
+//})(this);
