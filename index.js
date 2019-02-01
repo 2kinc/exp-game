@@ -823,7 +823,6 @@
             gameProgression = Number(getCookie('gameprogression'));
             noise.seed(getCookie('seed'));*/
             saveFile = getCookie('saveFile');
-            initFromSave();
         } /*else {
             setCookie('loot', JSON.stringify(lootArray), 30);
         }*/
