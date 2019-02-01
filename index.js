@@ -799,7 +799,7 @@
         gameProgression = r.gameProgression;
         isTown = r.isTown;
         fightingMode = r.fightingMode;
-        lootArray = r.loot;
+        lootArray = r.lootArray;
     }
     
     saveGame();
