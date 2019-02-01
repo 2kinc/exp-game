@@ -934,6 +934,7 @@
     }
     
     function readSaveFile() {
+        if (saveFile != '') {
         var decodedSaveFile = window.atob(saveFile);
         var split = decodedSaveFile.split('#');
         var loot = [];
@@ -958,6 +959,7 @@
             fightingMode: (split[10] == 'true'),
             lootArray: loot
         };
+        }
     }
 
     function initFromSave() {
