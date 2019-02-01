@@ -769,7 +769,8 @@
             var x = element.split('|');
             loot[Number(x[0])] = {
                 ammo: Number(x[1]),
-                food: Number(x[2])
+                food: Number(x[2]),
+                take: takeF;
             };
         });
         return {
@@ -803,6 +804,7 @@
         isTown = r.isTown;
         fightingMode = r.fightingMode;
         lootArray = r.lootArray;
+        
     }
     
     saveGame();
