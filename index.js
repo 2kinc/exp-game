@@ -770,7 +770,7 @@
             loot[Number(x[0])] = {
                 ammo: Number(x[1]),
                 food: Number(x[2]),
-                take: takeF;
+                take: takeF
             };
         });
         return {
@@ -803,8 +803,7 @@
         gameProgression = r.gameProgression;
         isTown = r.isTown;
         fightingMode = r.fightingMode;
-        lootArray = r.lootArray;
-        
+        lootArray = r.lootArray;   
     }
     
     saveGame();
