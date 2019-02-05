@@ -1,4 +1,4 @@
-<a href="https://iamcev.github.io/exp-game"><img src="https://s2.gifyu.com/images/exp-text.gif" alt="E. X. P." border="0" width="100%"/></a>
+<a href="https://iamcev.github.io/exp-game"><img src="exp-logo.png" alt="E. X. P." border="0" width="100%"/></a>
 
 <h2>A text adventure by 2K inc. </h1> 
 
