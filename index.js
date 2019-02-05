@@ -825,6 +825,7 @@
         gameProgression = r.gameProgression;
         isTown = r.isTown;
         fightingMode = r.fightingMode;
+        if (r.lootArray != undefined)
         lootArray = r.lootArray;   
     }
     
