@@ -875,6 +875,7 @@
                 player.style.top = savePlayerCoordinates.top + 'px';
             }, 200);
             count++;
+            glitchInterval();
         }, (10000000 / gameProgression) * count);
     }
 
