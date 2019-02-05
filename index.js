@@ -364,7 +364,7 @@
                     setCookie('gameprogression', gameProgression, 30);
                     energy -= 3;
                     setCookie('energy', energy, 30);
-                    energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
+                    energyEl.innerHTML = 'Energy ' + Math.round(energy) + '/' + maxEnergy;
                 } else if (isTown) {
                     setTimeout(function () {
                         fightingMode = false;
@@ -385,7 +385,7 @@
                     gameProgression += 10;
                     setCookie('gameprogression', gameProgression, 30);
                     energy -= 3;
-                    energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
+                    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                     isTown = false;
                     saveGame();
                 }
