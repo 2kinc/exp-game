@@ -175,7 +175,6 @@
             lootFood.innerHTML = currentLoot.food;
             lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
             lootFoodWrap.style.display = ((currentLoot.food == 0) ? 'none' : 'block');
-            lootArray[currentCell].take = takeF;
             if (currentCellEl.innerHTML == "'")
                 lootHeading.innerHTML = "[']" + ' Plains';
             if (currentCellEl.innerHTML == "*")
@@ -505,12 +504,8 @@
         element.id = 'c' + index;
     });*/
 
-    if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
+    lootArray[currentCell] = lootArray[currentCell] || new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
-    lootArray[currentCell].take = takeF;
-        if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     lootAmmo.innerHTML = lootArray[currentCell].ammo;
     lootFood.innerHTML = lootArray[currentCell].food;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
@@ -835,11 +830,8 @@
         initFromSave();
     
     setCookie('checker', 'yup', 30);
-    
-    if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
+    lootArray[currentCell] = lootArray[currentCell] || new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
-    lootArray[currentCell].take = takeF;
 
     nameEl.innerHTML = name;
     healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
@@ -959,8 +951,7 @@
     console.log(new town(1));
 
     var currentCellEl = qs('#c' + currentCell);
-    if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((currentCellEl.innerHTML == 'C'));
+    lootArray[currentCell] = lootArray[currentCell] || new lootSpawn((currentCellEl.innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     var currentLoot = lootArray[currentCell];
 
@@ -968,7 +959,6 @@
     lootFood.innerHTML = currentLoot.food;
     lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((currentLoot.food == 0) ? 'none' : 'block');
-    lootArray[currentCell].take = takeF;
     if (currentCellEl.innerHTML == "'")
         lootHeading.innerHTML = "[']" + ' Plains';
     if (currentCellEl.innerHTML == "*")
