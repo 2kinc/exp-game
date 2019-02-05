@@ -785,14 +785,16 @@
         var decodedSaveFile = window.atob(saveFile);
         var split = decodedSaveFile.split('#');
         var loot = [];
-        split[10].split(',').forEach(function(element){
-            var x = element.split('|');
-            loot[Number(x[0])] = {
-                ammo: Number(x[1]),
-                food: Number(x[2]),
-                take: takeF
-            };
-        });
+        if (split[10] != undefined) {
+            split[10].split(',').forEach(function(element){
+                var x = element.split('|');
+                loot[Number(x[0])] = {
+                    ammo: Number(x[1]),
+                    food: Number(x[2]),
+                    take: takeF
+                };
+            });
+        }
         return {
             seed: Number(split[0]),
             health: Number(split[1]),
