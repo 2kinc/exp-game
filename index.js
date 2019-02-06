@@ -1,70 +1,108 @@
-//(function (global) {
+(function (global) {
+
+    if (!window.localStorage) {
+        throw "Your browser does not support Local Storage"
+    }
+
+    global._exp_game = global._exp_game || GameObject.load();
+
     var qs = function (selector) {
         return document.querySelector(selector);
     };
-    var player = qs('#player');
-    var box = qs('#box');
-    var logEl = qs('#log');
-    var currentCell = 312;
-    var facing = 'up';
-    var ammo = 100;
-    var health = 10;
-    var maxHealth = 10;
-    var steps = 0;
-    var energy = 15;
-    var ammoUsed = 0;
-    var name = 'Default Noob';
-    var lootArray = [];
-    var food = 10;
-    var maxEnergy = 15;
-    var foodEl = qs('#food');
-    var lootEl = qs('#loot');
-    var nameEl = qs('#name');
-    var ammoEl = qs('#ammo');
-    var healthEl = qs('#health');
-    var energyEl = qs('#energy')
-    var ammoUsedEl = qs('#ammo-used');
-    var stepsEl = qs('#steps-taken');
-    var generatedMap;
-    var ammoTakes = qs('#ammotakes');
-    var foodTakes = qs('#foodtakes');
-    var lootAmmo = qs('#lootammonum');
-    var lootFood = qs('#lootfoodnum');
-    var lootArmour = qs('#lootarmournum');
-    var lootAmmoWrap = qs('#lootammo');
-    var lootFoodWrap = qs('#lootfood');
-    var lootArmourWrap = qs('#lootarmour');
-    var fightingMode = false;
-    var saveBoxHTML;
-    var playerFightingOrigin;
-    var enemy = qs('#enemy');
-    var enemyMaxHealth = 10;
-    var enemyHealth = enemyMaxHealth;
-    var playerIsShooting = false;
-    var enemyDecisionInterval;
-    var fightHealthEl = qs('#fight-health');
-    var enemyHealthEl = qs('#enemy-health');
-    var gameProgression = 0;
-    var regenDegenInterval;
-    var isTown = false;
-    var armour = false;
-    var lootHeading = qs('#loot-heading');
-    var playEl = qs("#play_button");
-    var saveFile;
-    
-    saveFile = getCookie('savefile');
-    
+
+    function Directions() {
+        /* this function is a "class" that provides Direction constants */
+    }
+    Directions.prototype.up = function () { return 0 };
+    Directions.prototype.right = function () { return 1 };
+    Directions.prototype.down = function () { return 2 };
+    Directions.prototype.left = function () { return 3 };
+
+    function GameObject() {
+        this.player = qs('#player');
+        this.box = qs('#box');
+        this.logEl = qs('#log');
+        this.currentCell = 312;
+        this.facing = Directions.up();
+        this.ammo = 100;
+        this.health = 10;
+        this.maxHealth = 10;
+        this.steps = 0;
+        this.energy = 15;
+        this.ammoUsed = 0;
+        this.name = 'Default Noob';
+        this.lootArray = [];
+        this.food = 10;
+        this.maxEnergy = 15;
+        this.foodEl = qs('#food');
+        this.lootEl = qs('#loot');
+        this.nameEl = qs('#name');
+        this.ammoEl = qs('#ammo');
+        this.healthEl = qs('#health');
+        this.energyEl = qs('#energy')
+        this.ammoUsedEl = qs('#ammo-used');
+        this.stepsEl = qs('#steps-taken');
+        this.generatedMap;
+        this.ammoTakes = qs('#ammotakes');
+        this.foodTakes = qs('#foodtakes');
+        this.lootAmmo = qs('#lootammonum');
+        this.lootFood = qs('#lootfoodnum');
+        this.lootArmour = qs('#lootarmournum');
+        this.lootAmmoWrap = qs('#lootammo');
+        this.lootFoodWrap = qs('#lootfood');
+        this.lootArmourWrap = qs('#lootarmour');
+        this.fightingMode = false;
+        this.saveBoxHTML;
+        this.playerFightingOrigin;
+        this.enemy = qs('#enemy');
+        this.enemyMaxHealth = 10;
+        this.enemyHealth = enemyMaxHealth;
+        this.playerIsShooting = false;
+        this.enemyDecisionInterval;
+        this.fightHealthEl = qs('#fight-health');
+        this.enemyHealthEl = qs('#enemy-health');
+        this.gameProgression = 0;
+        this.regenDegenInterval;
+        this.isTown = false;
+        this.armour = false;
+        this.lootHeading = qs('#loot-heading');
+        this.playEl = qs("#play_button");
+    }
+
+    GameObject.prototype.load = function (save_name) {
+        var data = window.localStorage.getItem("exp/" + (save_name || "save"));
+        try {
+            return JSON.parse(data) || {
+                seed: Number(split[0]),
+                health: Number(split[1]),
+                maxHealth: Number(split[2]),
+                energy: Number(split[3]),
+                maxEnergy: Number(split[4]),
+                ammo: Number(split[5]),
+                food: Number(split[6]),
+                currentCell: Number(split[7]),
+                gameProgression: Number(split[8]),
+                isTown: (split[9] == 'true'),
+                fightingMode: (split[10] == 'true'),
+                lootArray: loot
+            };
+        }
+        catch{
+            return new GameObject();
+        }
+    };
+
+    var game = GameObject.load() || new GameObject();
+
 
     function detectHit(bulletEl, target) {
-        if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
-            && bulletEl.getBoundingClientRect().top >= target.getBoundingClientRect().top - 20
+        var b = bulletEl.getBoundingClientRect();
+        var t = target.getBoundingClientRect();
+        return (b.top <= t.top + 20
+            && b.top >= t.top - 20
             && target.style.display != 'none'
-            && bulletEl.getBoundingClientRect().left >= target.getBoundingClientRect().left - 20
-            && bulletEl.getBoundingClientRect().left <= target.getBoundingClientRect().left + 20) {
-            return true;
-        } else {
-            return false;
-        }
+            && b.left >= t.left - 20
+            && b.left <= t.left + 20);
     };
 
     var takeF = function (item, amount) {
@@ -138,18 +176,18 @@
 
     function move(direction) {
         if (fightingMode == false && energy >= 0.4 && isTown == false) {
-            if (direction == 'up') {
+            if (direction == Directions.up()) {
                 currentCell = ((currentCell > 24) ? currentCell - 25 : currentCell);
                 player.style.transform = 'rotate(0deg)';
             }
-            if (direction == 'right') {
+            if (direction == Directions.right()) {
                 currentCell = (((currentCell + 1) % 25 != 0) ? currentCell + 1 : currentCell);
             }
-            if (direction == 'left') {
+            if (direction == Directions.left()) {
                 currentCell = (((currentCell + 1) % 25 != 1) ? currentCell - 1 : currentCell);
                 player.style.transform = 'rotate(270deg)';
             }
-            if (direction == 'down') {
+            if (direction == Directions.down()) {
                 currentCell = ((currentCell < 600) ? currentCell + 25 : currentCell);
                 player.style.transform = 'rotate(180deg)';
             }
@@ -195,7 +233,7 @@
                 fightingMode = true;
                 box.innerHTML = '';
                 player.style.transform = 'rotate(0deg)';
-                facing = 'up';
+                facing = Directions.up();
                 player.style.left = 'calc(50% - 10px)';
                 player.style.left = player.getBoundingClientRect().left + 'px';
                 box.style.transform = 'scale(0.40)';
@@ -237,7 +275,7 @@
                     }
                     if (enemyCoordinates.left <= box.getBoundingClientRect().left + 12)
                         enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
-                        enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
+                    enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
                     if (enemyHealth <= 0)
                         clearInterval(enemyDecisionInterval);
                     enemyHealthEl.innerHTML = 'Enemy health: ' + enemyHealth + '/' + enemyMaxHealth;
@@ -257,7 +295,7 @@
                 tblt.push('</tr></table>');
                 box.innerHTML = tblt.join('');
                 player.style.transform = 'rotate(0deg)';
-                facing = 'up';
+                facing = Directions.up();
                 player.style.left = 'calc(50% - 10px)';
                 player.style.left = player.getBoundingClientRect().left + 'px';
                 box.style.transform = 'scale(0.52)';
@@ -267,10 +305,10 @@
                 setCookie('gameprogression', gameProgression, 30);
             }
         } else if (fightingMode == true && energy >= 0.4) {
-            if (direction == 'right') {
+            if (direction == Directions.right()) {
                 player.style.left = player.getBoundingClientRect().x + 20 + 'px';
             }
-            if (direction == 'left') {
+            if (direction == Directions.left()) {
                 player.style.left = player.getBoundingClientRect().x - 20 + 'px';
             }
             if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
@@ -283,19 +321,19 @@
             gameProgression++;
             setCookie('gameprogression', gameProgression, 30);
         } else if (isTown == true && energy >= 0.4) {
-            if (direction == 'right') {
+            if (direction == Directions.right()) {
                 player.style.left = player.getBoundingClientRect().x + 20 + 'px';
                 player.style.transform = 'rotate(90deg)';
             }
-            if (direction == 'left') {
+            if (direction == Directions.left()) {
                 player.style.left = player.getBoundingClientRect().x - 20 + 'px';
                 player.style.transform = 'rotate(270deg)';
             }
-            if (direction == 'down') {
+            if (direction == Directions.down()) {
                 player.style.top = player.getBoundingClientRect().y + 20 + 'px';
                 player.style.transform = 'rotate(180deg)';
             }
-            if (direction == 'up') {
+            if (direction == Directions.up()) {
                 player.style.top = player.getBoundingClientRect().y - 20 + 'px';
                 player.style.transform = 'rotate(0deg)';
             }
@@ -320,16 +358,16 @@
     document.body.onkeyup = function (e) {
         if (document.activeElement != nameEl) {
             if (e.key == "w" || e.key == "ArrowUp") {
-                move('up');
+                move(Directions.up());
             }
             else if (e.key == "d" || e.key == "ArrowRight") {
-                move('right');
+                move(Directions.right());
             }
             else if (e.key == "a" || e.key == "ArrowLeft") {
-                move('left');
+                move(Directions.left());
             }
             else if (e.key == "s" || e.key == "ArrowDown") {
-                move('down');
+                move(Directions.down());
             }
             else if (e.key == " ") {
                 if (energy >= 0.2) {
@@ -509,19 +547,12 @@
         lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     lootArray[currentCell].take = takeF;
-        if (lootArray[currentCell] == undefined)
+    if (lootArray[currentCell] == undefined)
         lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     lootAmmo.innerHTML = lootArray[currentCell].ammo;
     lootFood.innerHTML = lootArray[currentCell].food;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
-    document.querySelectorAll('.take').forEach(function (element) {
-        var x = element.id.slice(0, 3);
-        var y = element.id.slice(3, 0);
-        element.addEventListener('click', function () {
-            takeF(y, x);
-        });
-    });
 
     var cc = qs('#c' + currentCell);
 
@@ -541,13 +572,13 @@
             document.body.appendChild(bullet);
             var i = 0;
             var x = setInterval(function () {
-                if (direction == 'up') {
+                if (direction == Directions.up()) {
                     bullet.style.top = playerY - i + 'px';
-                } else if (direction == 'right') {
+                } else if (direction == Directions.right()) {
                     bullet.style.left = playerX + i + 'px';
-                } else if (direction == 'left') {
+                } else if (direction == Directions.left()) {
                     bullet.style.left = playerX - i + 'px';
-                } else if (direction == 'down') {
+                } else if (direction == Directions.down()) {
                     bullet.style.top = playerY + i + 'px';
                 }
                 i += 10;
@@ -716,7 +747,7 @@
             lh.innerHTML = "[ ]" + ' Empty';
         if (cc2.innerHTML == "[L]")
             lh.innerHTML == "[L]" + 'Lake';
-        if (cc2.innerHTML == "[M]") 
+        if (cc2.innerHTML == "[M]")
             lh.innerHTML == "[M]" + 'Mountain';
     }
 
@@ -742,7 +773,7 @@
         }
         return "";
     }
-    
+
     function checkCookie() {
         var checker = getCookie('checker');
         if (checker == "yup") {
@@ -763,50 +794,51 @@
             setCookie('loot', JSON.stringify(lootArray), 30);
         }*/
     }
-    
+
     checkCookie();
 
     function saveGame() {
-        saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell, 
-            gameProgression, isTown, fightingMode].join('#') + '#';
-        lootArray.forEach(function(element, index){
+        saveFile = JSON.stringify(global._exp_game);
+        saveFile = JSON.stringify([worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell,
+            gameProgression, isTown, fightingMode]);
+        lootArray.forEach(function (element, index) {
             if (element != null) {
                 saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + ',';
             }
         });
-        saveFile = saveFile.slice(0,-1);
+        saveFile = saveFile.slice(0, -1);
         saveFile = window.btoa(saveFile);
         setCookie('savefile', saveFile, 100);
         setCookie('name', name, 100);
     }
-    
+
     function readSaveFile() {
         if (saveFile != '') {
-        var decodedSaveFile = window.atob(saveFile);
-        var split = decodedSaveFile.split('#');
-        var loot = [];
-        split[10].split(',').forEach(function(element){
-            var x = element.split('|');
-            loot[Number(x[0])] = {
-                ammo: Number(x[1]),
-                food: Number(x[2]),
-                take: takeF
+            var decodedSaveFile = window.atob(saveFile);
+            var split = decodedSaveFile.split('#');
+            var loot = [];
+            split[10].split(',').forEach(function (element) {
+                var x = element.split('|');
+                loot[Number(x[0])] = {
+                    ammo: Number(x[1]),
+                    food: Number(x[2]),
+                    take: takeF
+                };
+            });
+            return {
+                seed: Number(split[0]),
+                health: Number(split[1]),
+                maxHealth: Number(split[2]),
+                energy: Number(split[3]),
+                maxEnergy: Number(split[4]),
+                ammo: Number(split[5]),
+                food: Number(split[6]),
+                currentCell: Number(split[7]),
+                gameProgression: Number(split[8]),
+                isTown: (split[9] == 'true'),
+                fightingMode: (split[10] == 'true'),
+                lootArray: loot
             };
-        });
-        return {
-            seed: Number(split[0]),
-            health: Number(split[1]),
-            maxHealth: Number(split[2]),
-            energy: Number(split[3]),
-            maxEnergy: Number(split[4]),
-            ammo: Number(split[5]),
-            food: Number(split[6]),
-            currentCell: Number(split[7]),
-            gameProgression: Number(split[8]),
-            isTown: (split[9] == 'true'),
-            fightingMode: (split[10] == 'true'),
-            lootArray: loot
-        };
         }
     }
 
@@ -823,16 +855,16 @@
         gameProgression = r.gameProgression;
         isTown = r.isTown;
         fightingMode = r.fightingMode;
-        lootArray = r.lootArray;   
+        lootArray = r.lootArray;
     }
-    
+
     saveGame();
-    
+
     if (readSaveFile != '')
         initFromSave();
-    
+
     setCookie('checker', 'yup', 30);
-    
+
     if (lootArray[currentCell] == undefined)
         lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
@@ -851,13 +883,6 @@
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
     lootArray[currentCell].take = takeF;
-    document.querySelectorAll('.take').forEach(function (element) {
-        var x = element.id.slice(0, 3);
-        var y = element.id.slice(3);
-        element.addEventListener('click', function () {
-            takeF(y, x);
-        });
-    });
     logEl.innerHTML = 'You awake into a strange world.';
     setTimeout(function () {
         log('Your memories are a messy blur.')
@@ -871,9 +896,9 @@
     function glitchInterval() {
         setTimeout(function () {
             var savePlayerCoordinates = player.getBoundingClientRect();
-            $('html').css({ 'position': 'absolute', 'left': '89px' });
+            $('html').css({ 'position': 'absolute', Directions.left(): '89px' });
             setTimeout(function () { $('html').css('transform', 'scale(1.2), rotate(180deg)') }, 100);
-            setTimeout(function () { $('html').css({ 'filter': 'invert(1)', 'left': '0' }) }, 150);
+            setTimeout(function () { $('html').css({ 'filter': 'invert(1)', Directions.left(): '0' }) }, 150);
             setTimeout(function () {
                 $('html').css({ 'filter': 'none', 'transform': 'none', 'position': 'relative' });
                 player.style.left = savePlayerCoordinates.left + 'px';
@@ -902,7 +927,7 @@
         glitch1TimeMax: 500,
     });
 
-    $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
+    $('#by2kinc').css({ 'clip': 'unset', Directions.left(): '0' });
 
     noise.seed(readSaveFile().seed);
 
@@ -978,18 +1003,18 @@
         lootHeading.innerHTML = "[T]" + ' Town';
         isTown = true;
     }
-    if (currentCellEl.innerHTML == "L") 
+    if (currentCellEl.innerHTML == "L")
         lootHeading.innerHTML = "[L]" + ' Lake';
-    if (currentCellEl.innerHTML == "M") 
+    if (currentCellEl.innerHTML == "M")
         lootHeading.innerHTML = "[M]" + ' Mountain';
-        
+
     if (currentCellEl.innerHTML == " ") {
         lootHeading.innerHTML = "[ ]" + ' Empty';
     }
-    
-    setInterval(function(){
+
+    setInterval(function () {
         saveGame();
         initFromSave();
-    }, 3000);    
+    }, 3000);
     document.querySelector('#loading').style.display = 'none';
-//})(this);
+})(this);
