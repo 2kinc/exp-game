@@ -4,7 +4,22 @@
         throw "Your browser does not support Local Storage"
     }
 
-    global._exp_game = global._exp_game || GameObject.load();
+    global._exp_game = global._exp_game || GameSave.load();
+
+    function GameSave(){
+        this.playerName = "Player 1";
+    }
+
+    GameSave.prototype.load = function(){
+        var data = window.localStorage.getItem("exp-game/save");
+        try {
+            return JSON.parse(data);
+        }
+        catch{
+            return new GameObject();
+        }
+
+    };
 
     var qs = function (selector) {
         return document.querySelector(selector);
@@ -67,35 +82,9 @@
         this.armour = false;
         this.lootHeading = qs('#loot-heading');
         this.playEl = qs("#play_button");
-    }
-
-    GameObject.prototype.load = function (save_name) {
-        var data = window.localStorage.getItem("exp/" + (save_name || "save"));
-        try {
-            return JSON.parse(data) || {
-                seed: Number(split[0]),
-                health: Number(split[1]),
-                maxHealth: Number(split[2]),
-                energy: Number(split[3]),
-                maxEnergy: Number(split[4]),
-                ammo: Number(split[5]),
-                food: Number(split[6]),
-                currentCell: Number(split[7]),
-                gameProgression: Number(split[8]),
-                isTown: (split[9] == 'true'),
-                fightingMode: (split[10] == 'true'),
-                lootArray: loot
-            };
-        }
-        catch{
-            return new GameObject();
-        }
     };
 
-    var game = GameObject.load() || new GameObject();
-
-
-    function detectHit(bulletEl, target) {
+    GameObject.prototype.detectHit = function(bulletEl, target) {
         var b = bulletEl.getBoundingClientRect();
         var t = target.getBoundingClientRect();
         return (b.top <= t.top + 20
@@ -105,37 +94,39 @@
             && b.left <= t.left + 20);
     };
 
-    var takeF = function (item, amount) {
+    GameObject.prototype.takeF = function(item, amount) {
         if (item == 'ammo') {
             if (amount == 'all') {
-                ammo += lootArray[currentCell].ammo;
-                lootArray[currentCell].ammo = 0;
+                this.ammo += this.lootArray[this.currentCell].ammo;
+                this.lootArray[this.currentCell].ammo = 0;
             } else {
-                lootArray[currentCell].ammo--;
-                ammo++;
+                this.lootArray[currentCell].ammo--;
+                this.ammo++;
             }
         }
         if (item == 'food') {
             if (amount == 'all') {
-                food += lootArray[currentCell].food;
-                lootArray[currentCell].food = 0;
+                this.food += this.lootArray[this.currentCell].food;
+                this.lootArray[this.currentCell].food = 0;
             } else {
-                lootArray[currentCell].food--;
-                food++;
+                this.lootArray[this.currentCell].food--;
+                this.food++;
             }
         }
-        ammoEl.innerHTML = 'Ammo: ' + ammo;
-        foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
-        lootAmmo.innerHTML = lootArray[currentCell].ammo;
-        lootFood.innerHTML = lootArray[currentCell].food;
-        lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
-        lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
-        setCookie('loot', JSON.stringify(lootArray));
-        setCookie('food', food, 30);
-        setCookie('ammo', ammo, 30);
+        this.ammoEl.innerHTML = 'Ammo: ' + this.ammo;
+        this.foodEl.innerHTML = 'Food: ' + this.food + ' [E to eat]';
+        this.lootAmmo.innerHTML = this.lootArray[this.currentCell].ammo;
+        this.lootFood.innerHTML = this.lootArray[this.currentCell].food;
+        this.lootAmmoWrap.style.display = ((this.lootArray[this.currentCell].ammo == 0) ? 'none' : 'block');
+        this.lootFoodWrap.style.display = ((this.lootArray[this.currentCell].food == 0) ? 'none' : 'block');
+        setCookie('loot', JSON.stringify(this.lootArray));
+        setCookie('food', this.food, 30);
+        setCookie('ammo', this.ammo, 30);
     };
 
-    setCookie('maxhealth', maxHealth, 30);
+    var game = new GameObject();
+
+    setCookie('maxhealth', this.maxHealth, 30);
 
     var tbl = ['<table><tr>'];
 
@@ -162,7 +153,7 @@
     setCookie('gameprogression', gameProgression, 30);
 
 
-    function lootSpawn(chest) {
+    GameObject.prototype.lootSpawn = function (chest) {
         this.ammo = Math.floor(Math.random() * 10);
         this.food = Math.floor(Math.random() * 5);
         if (chest) {
@@ -171,121 +162,123 @@
             this.ammo *= 3;
             this.food *= 3;
         }
-        setCookie('loot', JSON.stringify(lootArray));
-    }
+        setCookie('loot', JSON.stringify(this.lootArray));
+    };
 
-    function move(direction) {
-        if (fightingMode == false && energy >= 0.4 && isTown == false) {
+    GameObject.prototype.move = function(direction) {
+        if (this.fightingMode == false && this.energy >= 0.4 && this.isTown == false) {
             if (direction == Directions.up()) {
-                currentCell = ((currentCell > 24) ? currentCell - 25 : currentCell);
-                player.style.transform = 'rotate(0deg)';
+                this.currentCell = ((this.currentCell > 24) ? this.currentCell - 25 : this.currentCell);
+                this.player.style.transform = 'rotate(0deg)';
             }
             if (direction == Directions.right()) {
-                currentCell = (((currentCell + 1) % 25 != 0) ? currentCell + 1 : currentCell);
+                this.currentCell = (((this.currentCell + 1) % 25 != 0) ? this.currentCell + 1 : this.currentCell);
             }
             if (direction == Directions.left()) {
-                currentCell = (((currentCell + 1) % 25 != 1) ? currentCell - 1 : currentCell);
-                player.style.transform = 'rotate(270deg)';
+                this.currentCell = (((this.currentCell + 1) % 25 != 1) ? this.currentCell - 1 : this.currentCell);
+                this.player.style.transform = 'rotate(270deg)';
             }
             if (direction == Directions.down()) {
-                currentCell = ((currentCell < 600) ? currentCell + 25 : currentCell);
-                player.style.transform = 'rotate(180deg)';
+                this.currentCell = ((this.currentCell < 600) ? this.currentCell + 25 : this.currentCell);
+                this.player.style.transform = 'rotate(180deg)';
             }
-            player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
-            player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
-            facing = direction;
-            steps++;
-            stepsEl.innerHTML = 'Steps taken: ' + steps;
-            setCookie('steps', steps, 30);
-            energy -= 0.4;
-            energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-            setCookie('energy', energy, 30);
-            setCookie('maxenergy', maxEnergy, 30);
-            gameProgression++;
-            setCookie('gameprogression', gameProgression, 30);
-            var currentCellEl = qs('#c' + currentCell);
-            if (lootArray[currentCell] == undefined)
-                lootArray[currentCell] = new lootSpawn((currentCellEl.innerHTML == 'C'));
-            setCookie('loot', JSON.stringify(lootArray));
-            var currentLoot = lootArray[currentCell];
+            this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
+            this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
+            this.facing = direction;
+            this.steps++;
+            this.stepsEl.innerHTML = 'Steps taken: ' + this.steps;
+            setCookie('steps', this.steps, 30);
+            this.energy -= 0.4;
+            this.energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
+            setCookie('energy',this.energy, 30);
+            setCookie('maxenergy', this.maxEnergy, 30);
+            this.gameProgression++;
+            setCookie('gameprogression', this.gameProgression, 30);
+            var currentCellEl = qs('#c' + this.currentCell);
+            if (!this.lootArray[this.currentCell])
+                this.lootArray[this.currentCell] = new lootSpawn((this.currentCellEl.innerHTML == 'C'));
+            setCookie('loot', JSON.stringify(this.lootArray));
+            var currentLoot = this.lootArray[this.currentCell];
 
-            lootAmmo.innerHTML = currentLoot.ammo;
-            lootFood.innerHTML = currentLoot.food;
-            lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
-            lootFoodWrap.style.display = ((currentLoot.food == 0) ? 'none' : 'block');
-            lootArray[currentCell].take = takeF;
-            if (currentCellEl.innerHTML == "'")
-                lootHeading.innerHTML = "[']" + ' Plains';
-            if (currentCellEl.innerHTML == "*")
-                lootHeading.innerHTML = "[*]" + ' Forest';
-            if (currentCellEl.innerHTML == ",")
-                lootHeading.innerHTML = "[,]" + ' Swamp';
-            if (currentCellEl.innerHTML == "C")
-                lootHeading.innerHTML = "[C]" + ' Chest';
-            if (currentCellEl.innerHTML == "T") {
-                lootHeading.innerHTML = "[T]" + ' Town';
-                isTown = true;
+            this.lootAmmo.innerHTML = this.currentLoot.ammo;
+            this.lootFood.innerHTML = this.currentLoot.food;
+            this.lootAmmoWrap.style.display = ((this.currentLoot.ammo == 0) ? 'none' : 'block');
+            this.lootFoodWrap.style.display = ((this.currentLoot.food == 0) ? 'none' : 'block');
+            this.lootArray[currentCell].take = this.takeF;
+            if (this.currentCellEl.innerHTML == "'")
+                this.lootHeading.innerHTML = "[']" + ' Plains';
+            if (this.currentCellEl.innerHTML == "*")
+                this.lootHeading.innerHTML = "[*]" + ' Forest';
+            if (this.currentCellEl.innerHTML == ",")
+                this.lootHeading.innerHTML = "[,]" + ' Swamp';
+            if (this.currentCellEl.innerHTML == "C")
+                this.lootHeading.innerHTML = "[C]" + ' Chest';
+            if (this.currentCellEl.innerHTML == "T") {
+                this.lootHeading.innerHTML = "[T]" + ' Town';
+                this.isTown = true;
             }
-            if (currentCellEl.innerHTML == " ")
-                lootHeading.innerHTML = "[ ]" + ' Empty';
-            if (Math.random() >= 0.80 && fightingMode == false && isTown == false) {
-                saveBoxHTML = box.innerHTML;
-                fightingMode = true;
-                box.innerHTML = '';
-                player.style.transform = 'rotate(0deg)';
-                facing = Directions.up();
-                player.style.left = 'calc(50% - 10px)';
-                player.style.left = player.getBoundingClientRect().left + 'px';
-                box.style.transform = 'scale(0.40)';
-                box.style.borderWidth = '5px';
-                player.style.top = box.offsetHeight - 140 + 'px';
-                enemy.style.top = box.offsetHeight - 300 + 'px';
-                enemyHealth = enemyMaxHealth;
+            if (this.currentCellEl.innerHTML == " ")
+                this.lootHeading.innerHTML = "[ ]" + ' Empty';
+            if (Math.random() >= 0.80 && this.fightingMode == false && this.isTown == false) {
+                this.saveBoxHTML = this.box.innerHTML;
+                this.fightingMode = true;
+                this.box.innerHTML = '';
+                this.player.style.transform = 'rotate(0deg)';
+                this.facing = Directions.up();
+                this.player.style.left = 'calc(50% - 10px)';
+                this.player.style.left = this.player.getBoundingClientRect().left + 'px';
+                this.box.style.transform = 'scale(0.40)';
+                this.box.style.borderWidth = '5px';
+                this.player.style.top = this.box.offsetHeight - 140 + 'px';
+                this.enemy.style.top = this.box.offsetHeight - 300 + 'px';
+                this.enemyHealth = this.enemyMaxHealth;
+                var that = this;
                 setTimeout(function () {
-                    enemy.style.left = player.style.left;
-                    enemyHealthEl.innerHTML = 'Enemy health: ' + enemyHealth + '/' + enemyMaxHealth;
-                    fightHealthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-                    enemyHealthEl.style.left = box.getBoundingClientRect().left + 'px';
-                    enemyHealthEl.style.top = box.getBoundingClientRect().top - 15 + 'px';
-                    enemyHealthEl.style.width = box.getBoundingClientRect().width + 'px';
-                    fightHealthEl.style.left = box.getBoundingClientRect().left + 'px';
-                    fightHealthEl.style.top = box.getBoundingClientRect().top + 2 + box.getBoundingClientRect().height + 'px';
-                    fightHealthEl.style.width = box.getBoundingClientRect().width + 'px';
-                    fightHealthEl.style.display = 'block';
-                    enemyHealthEl.style.display = 'block';
-                    enemy.style.display = 'block';
+                    var b = that.box.getBoundingClientRect();
+                    that.enemy.style.left = that.player.style.left;
+                    that.enemyHealthEl.innerHTML = 'Enemy health: ' + that.enemyHealth + '/' + that.enemyMaxHealth;
+                    that.fightHealthEl.innerHTML = 'Health: ' + that.health + '/' + that.maxHealth;
+                    that.enemyHealthEl.style.left = b.left + 'px';
+                    that.enemyHealthEl.style.top = b.top - 15 + 'px';
+                    that.enemyHealthEl.style.width = b.width + 'px';
+                    that.fightHealthEl.style.left = b.left + 'px';
+                    that.fightHealthEl.style.top = b.top + 2 + b.height + 'px';
+                    that.fightHealthEl.style.width = b.width + 'px';
+                    that.fightHealthEl.style.display = 'block';
+                    that.enemyHealthEl.style.display = 'block';
+                    that.enemy.style.display = 'block';
                 }, 1000);
                 enemyDecisionInterval = setInterval(function () {
-                    var enemyCoordinates = enemy.getBoundingClientRect();
-                    if (playerIsShooting) {
-                        if (enemyCoordinates.left + 20 == player.getBoundingClientRect().left) {
-                            enemy.style.left = enemyCoordinates.left - 20 + 'px';
-                        } else if (enemyCoordinates.left - 20 == player.getBoundingClientRect().left) {
-                            enemy.style.left = enemyCoordinates.left + 20 + 'px';
+                    var enemyCoordinates = that.enemy.getBoundingClientRect();
+                    if (that.playerIsShooting) {
+                        if (that.enemyCoordinates.left + 20 == that.player.getBoundingClientRect().left) {
+                            that.enemy.style.left = that.enemyCoordinates.left - 20 + 'px';
+                        } else if (that.enemyCoordinates.left - 20 == that.player.getBoundingClientRect().left) {
+                            that.enemy.style.left = that.enemyCoordinates.left + 20 + 'px';
                         } else {
-                            enemy.style.left = enemyCoordinates.left + ((Math.random() >= .50) ? 20 : (-20)) + 'px';
+                            that.enemy.style.left = that.enemyCoordinates.left + ((Math.random() >= .50) ? 20 : (-20)) + 'px';
                         }
-                    } else if (enemyCoordinates.left == player.getBoundingClientRect().left) {
-                        enemyShoot();
-                        enemyCoordinates.left = player.getBoundingClientRect().left;
-                    } else if (enemyCoordinates.left < player.getBoundingClientRect().left) {
-                        enemy.style.left = enemyCoordinates.left + 20 + 'px';
-                    } else if (enemyCoordinates.left > player.getBoundingClientRect().left) {
-                        enemy.style.left = enemyCoordinates.left - 20 + 'px';
+                    } else if (that.enemyCoordinates.left == that.player.getBoundingClientRect().left) {
+                        that.enemyShoot();
+                        that.enemyCoordinates.left = that.player.getBoundingClientRect().left;
+                    } else if (enemyCoordinates.left < that.player.getBoundingClientRect().left) {
+                        that.enemy.style.left = that.enemyCoordinates.left + 20 + 'px';
+                    } else if (that.enemyCoordinates.left > that.player.getBoundingClientRect().left) {
+                        that.enemy.style.left = that.enemyCoordinates.left - 20 + 'px';
                     }
-                    if (enemyCoordinates.left <= box.getBoundingClientRect().left + 12)
-                        enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
-                    enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
-                    if (enemyHealth <= 0)
+                    if (that.enemyCoordinates.left <= that.box.getBoundingClientRect().left + 12)
+                        that.enemy.style.left = that.box.getBoundingClientRect().left + 12 + 'px';
+                    that.enemy.style.left = that.box.getBoundingClientRect().left + 172 + 'px';
+                    if (that.enemyHealth <= 0)
                         clearInterval(enemyDecisionInterval);
-                    enemyHealthEl.innerHTML = 'Enemy health: ' + enemyHealth + '/' + enemyMaxHealth;
-                    fightHealthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-                    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                    that.enemyHealthEl.innerHTML = 'Enemy health: ' + that.enemyHealth + '/' + that.enemyMaxHealth;
+                    that.fightHealthEl.innerHTML = 'Health: ' + that.health + '/' + that.maxHealth;
+                    that.healthEl.innerHTML = 'Health: ' + that.health + '/' + that.maxHealth;
                 }, 320);
             }
-            if (isTown == true) {
-                saveBoxHTML = box.innerHTML;
-                box.innerHTML = '';
+            if (this.isTown == true) {
+                this.saveBoxHTML = this.box.innerHTML;
+                this.box.innerHTML = '';
                 var tblt = ['<table><tr>'];
                 for (var i = 0; i < 144; i++) {
                     tblt.push("<td id='c" + i + "'style='width:34.614px;height:34.614px;font-size:23.076px;'></td>");
@@ -293,63 +286,63 @@
                         tblt.push('</tr><tr>');
                 }
                 tblt.push('</tr></table>');
-                box.innerHTML = tblt.join('');
-                player.style.transform = 'rotate(0deg)';
-                facing = Directions.up();
-                player.style.left = 'calc(50% - 10px)';
-                player.style.left = player.getBoundingClientRect().left + 'px';
-                box.style.transform = 'scale(0.52)';
-                box.style.borderWidth = '5px';
-                player.style.top = box.offsetHeight - 140 + 'px';
-                gameProgression += 5;
-                setCookie('gameprogression', gameProgression, 30);
+                this.box.innerHTML = tblt.join('');
+                this.player.style.transform = 'rotate(0deg)';
+                this.facing = Directions.up();
+                this.player.style.left = 'calc(50% - 10px)';
+                this.player.style.left = this.player.getBoundingClientRect().left + 'px';
+                this.box.style.transform = 'scale(0.52)';
+                this.box.style.borderWidth = '5px';
+                this.player.style.top = this.box.offsetHeight - 140 + 'px';
+                this.gameProgression += 5;
+                setCookie('gameprogression', this.gameProgression, 30);
             }
-        } else if (fightingMode == true && energy >= 0.4) {
-            if (direction == Directions.right()) {
-                player.style.left = player.getBoundingClientRect().x + 20 + 'px';
+        } else if (this.fightingMode == true && this.energy >= 0.4) {
+            if (this.direction == Directions.right()) {
+                this.player.style.left = this.player.getBoundingClientRect().x + 20 + 'px';
             }
-            if (direction == Directions.left()) {
-                player.style.left = player.getBoundingClientRect().x - 20 + 'px';
+            if (this.direction == Directions.left()) {
+                this.player.style.left = this.player.getBoundingClientRect().x - 20 + 'px';
             }
-            if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
-                player.style.left = box.getBoundingClientRect().left + 12 + 'px';
-            if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
-                player.style.left = box.getBoundingClientRect().left + 172 + 'px';
-            steps++;
-            stepsEl.innerHTML = 'Steps taken: ' + steps;
-            setCookie('steps', steps, 30);
-            gameProgression++;
-            setCookie('gameprogression', gameProgression, 30);
-        } else if (isTown == true && energy >= 0.4) {
-            if (direction == Directions.right()) {
-                player.style.left = player.getBoundingClientRect().x + 20 + 'px';
-                player.style.transform = 'rotate(90deg)';
+            if (this.player.getBoundingClientRect().left < this.box.getBoundingClientRect().left + 12)
+                this.player.style.left = box.getBoundingClientRect().left + 12 + 'px';
+            if (this.player.getBoundingClientRect().left > this.box.getBoundingClientRect().left + 172)
+                this.player.style.left = box.getBoundingClientRect().left + 172 + 'px';
+            this.steps++;
+            this.stepsEl.innerHTML = 'Steps taken: ' + this.steps;
+            setCookie('steps', this.steps, 30);
+            this.gameProgression++;
+            setCookie('gameprogression', this.gameProgression, 30);
+        } else if (this.isTown == true && this.energy >= 0.4) {
+            if (this.direction == Directions.right()) {
+                this.player.style.left = this.player.getBoundingClientRect().x + 20 + 'px';
+                this.player.style.transform = 'rotate(90deg)';
             }
-            if (direction == Directions.left()) {
-                player.style.left = player.getBoundingClientRect().x - 20 + 'px';
-                player.style.transform = 'rotate(270deg)';
+            if (this.direction == Directions.left()) {
+                this.player.style.left = this.player.getBoundingClientRect().x - 20 + 'px';
+                this.player.style.transform = 'rotate(270deg)';
             }
-            if (direction == Directions.down()) {
-                player.style.top = player.getBoundingClientRect().y + 20 + 'px';
-                player.style.transform = 'rotate(180deg)';
+            if (this.direction == Directions.down()) {
+                this.player.style.top = this.player.getBoundingClientRect().y + 20 + 'px';
+                this.player.style.transform = 'rotate(180deg)';
             }
-            if (direction == Directions.up()) {
-                player.style.top = player.getBoundingClientRect().y - 20 + 'px';
-                player.style.transform = 'rotate(0deg)';
+            if (this.direction == Directions.up()) {
+                this.player.style.top = this.player.getBoundingClientRect().y - 20 + 'px';
+                this.player.style.transform = 'rotate(0deg)';
             }
-            if (player.getBoundingClientRect().left < box.getBoundingClientRect().left + 12)
-                player.style.left = box.getBoundingClientRect().left + 12 + 'px';
-            if (player.getBoundingClientRect().left > box.getBoundingClientRect().left + 172)
-                player.style.left = box.getBoundingClientRect().left + 172 + 'px';
-            if (player.getBoundingClientRect().y < box.getBoundingClientRect().y)
-                player.style.top = box.getBoundingClientRect().top + 'px';
-            if (player.getBoundingClientRect().y > box.getBoundingClientRect().y + 174)
-                player.style.top = box.getBoundingClientRect().top + 174 + 'px';
-            steps++;
-            stepsEl.innerHTML = 'Steps taken: ' + steps;
-            setCookie('steps', steps, 30);
-            gameProgression += 2;
-            setCookie('gameprogression', gameProgression, 30);
+            if (this.player.getBoundingClientRect().left < this.box.getBoundingClientRect().left + 12)
+                this.player.style.left = this.box.getBoundingClientRect().left + 12 + 'px';
+            if (this.player.getBoundingClientRect().left > this.box.getBoundingClientRect().left + 172)
+                this.player.style.left = this.box.getBoundingClientRect().left + 172 + 'px';
+            if (this.player.getBoundingClientRect().y < this.box.getBoundingClientRect().y)
+                this.player.style.top = this.box.getBoundingClientRect().top + 'px';
+            if (this.player.getBoundingClientRect().y > this.box.getBoundingClientRect().y + 174)
+                this.player.style.top = this.box.getBoundingClientRect().top + 174 + 'px';
+            this.steps++;
+            this.stepsEl.innerHTML = 'Steps taken: ' + this.steps;
+            setCookie('steps', this.steps, 30);
+            this.gameProgression += 2;
+            setCookie('gameprogression', this.gameProgression, 30);
         } else {
             log("You have no energy! Get food fast!");
         }
@@ -388,14 +381,14 @@
                     box.style.transform = 'scale(1.0)';
                     box.style.borderWidth = '2px';
                     setTimeout(function () {
-                        player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
-                        player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
+                        this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
+                        this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
                     }, 1500);
                     setCookie('energy', energy, 30);
                     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                     enemy.style.display = 'none';
                     clearInterval(x);
-                    playerIsShooting = false;
+                    this.playerIsShooting = false;
                     fightHealthEl.style.display = 'none';
                     enemyHealthEl.style.display = 'none';
                     gameProgression += 10;
@@ -412,12 +405,12 @@
                     box.style.transform = 'scale(1.0)';
                     box.style.borderWidth = '2px';
                     setTimeout(function () {
-                        player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
-                        player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
+                        this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
+                        this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
                     }, 1500);
                     enemy.style.display = 'none';
                     clearInterval(x);
-                    playerIsShooting = false;
+                    this.playerIsShooting = false;
                     fightHealthEl.style.display = 'none';
                     enemyHealthEl.style.display = 'none';
                     gameProgression += 10;
@@ -544,20 +537,20 @@
     });*/
 
     if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
+        lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     lootArray[currentCell].take = takeF;
     if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
+        lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
     lootAmmo.innerHTML = lootArray[currentCell].ammo;
     lootFood.innerHTML = lootArray[currentCell].food;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
 
-    var cc = qs('#c' + currentCell);
+    var cc = qs('#c' + this.currentCell);
 
-    player.style.top = cc.getBoundingClientRect().y + 'px';
-    player.style.left = cc.getBoundingClientRect().x + 'px';
+    this.player.style.top = cc.getBoundingClientRect().y + 'px';
+    this.player.style.left = cc.getBoundingClientRect().x + 'px';
 
 
     function shoot(direction) {
@@ -565,24 +558,24 @@
             var bullet = document.createElement('div');
             bullet.className = 'bullet';
             bullet.innerHTML = "<img src='bullet.png' height='18px' width='18px'>"
-            bullet.style.top = player.getBoundingClientRect().y + 'px';
-            bullet.style.left = player.getBoundingClientRect().x + 'px';
-            var playerX = player.getBoundingClientRect().x;
-            var playerY = player.getBoundingClientRect().y;
+            bullet.style.top = this.player.getBoundingClientRect().y + 'px';
+            bullet.style.left = this.player.getBoundingClientRect().x + 'px';
+            var this.playerX = this.player.getBoundingClientRect().x;
+            var this.playerY = this.player.getBoundingClientRect().y;
             document.body.appendChild(bullet);
             var i = 0;
             var x = setInterval(function () {
                 if (direction == Directions.up()) {
-                    bullet.style.top = playerY - i + 'px';
+                    bullet.style.top = this.playerY - i + 'px';
                 } else if (direction == Directions.right()) {
-                    bullet.style.left = playerX + i + 'px';
+                    bullet.style.left = this.playerX + i + 'px';
                 } else if (direction == Directions.left()) {
-                    bullet.style.left = playerX - i + 'px';
+                    bullet.style.left = this.playerX - i + 'px';
                 } else if (direction == Directions.down()) {
-                    bullet.style.top = playerY + i + 'px';
+                    bullet.style.top = this.playerY + i + 'px';
                 }
                 i += 10;
-                playerIsShooting = true;
+                this.playerIsShooting = true;
                 if (detectHit(bullet, enemy) == true) {
                     console.log('yay!');
                     clearInterval(x);
@@ -597,13 +590,13 @@
                         box.style.transform = 'scale(1.0)';
                         box.style.borderWidth = '2px';
                         setTimeout(function () {
-                            player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
-                            player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
+                            this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
+                            this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
                         }, 1500);
                         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                         enemy.style.display = 'none';
                         clearInterval(x);
-                        playerIsShooting = false;
+                        this.playerIsShooting = false;
                         fightHealthEl.style.display = 'none';
                         enemyHealthEl.style.display = 'none';
                         gameProgression += 100;
@@ -625,7 +618,7 @@
             setCookie('gameprogression', gameProgression, 30);
             setTimeout(function () {
                 clearInterval(x);
-                playerIsShooting = false;
+                this.playerIsShooting = false;
                 if (bullet.parentNode != null) {
                     bullet.parentNode.removeChild(bullet);
                 }
@@ -648,7 +641,7 @@
         var x = setInterval(function () {
             bullet.style.top = enemyY + i + 'px';
             i += 10;
-            if (detectHit(bullet, player)) {
+            if (detectHit(bullet, this.player)) {
                 console.log('boo!');
                 bullet.parentNode.removeChild(bullet);
                 health--;
@@ -662,12 +655,12 @@
                     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                     enemy.style.display = 'none';
                     clearInterval(x);
-                    playerIsShooting = false;
+                    this.playerIsShooting = false;
                     fightHealthEl.style.display = 'none';
                     enemyHealthEl.style.display = 'none';
                     setTimeout(function () {
-                        player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
-                        player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
+                        this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
+                        this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
                     }, 1500);
                     setCookie('energy', energy, 30);
                     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
@@ -732,7 +725,7 @@
         }
     }
 
-    var cc2 = qs('#c' + currentCell);
+    var cc2 = qs('#c' + this.currentCell);
     var lh = qs('#loot-heading');
     if (cc2) {
         if (cc2.innerHTML == "'")
@@ -799,7 +792,7 @@
 
     function saveGame() {
         saveFile = JSON.stringify(global._exp_game);
-        saveFile = JSON.stringify([worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell,
+        saveFile = JSON.stringify([worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, this.currentCell,
             gameProgression, isTown, fightingMode]);
         lootArray.forEach(function (element, index) {
             if (element != null) {
@@ -833,7 +826,7 @@
                 maxEnergy: Number(split[4]),
                 ammo: Number(split[5]),
                 food: Number(split[6]),
-                currentCell: Number(split[7]),
+                this.currentCell: Number(split[7]),
                 gameProgression: Number(split[8]),
                 isTown: (split[9] == 'true'),
                 fightingMode: (split[10] == 'true'),
@@ -851,7 +844,7 @@
         maxEnergy = r.maxEnergy;
         ammo = r.ammo;
         food = r.food;
-        currentCell = r.currentCell;
+        this.currentCell = r.currentCell;
         gameProgression = r.gameProgression;
         isTown = r.isTown;
         fightingMode = r.fightingMode;
@@ -866,7 +859,7 @@
     setCookie('checker', 'yup', 30);
 
     if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
+        lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     lootArray[currentCell].take = takeF;
 
@@ -895,14 +888,14 @@
 
     function glitchInterval() {
         setTimeout(function () {
-            var savePlayerCoordinates = player.getBoundingClientRect();
+            var savePlayerCoordinates = this.player.getBoundingClientRect();
             $('html').css({ 'position': 'absolute', Directions.left(): '89px' });
             setTimeout(function () { $('html').css('transform', 'scale(1.2), rotate(180deg)') }, 100);
             setTimeout(function () { $('html').css({ 'filter': 'invert(1)', Directions.left(): '0' }) }, 150);
             setTimeout(function () {
                 $('html').css({ 'filter': 'none', 'transform': 'none', 'position': 'relative' });
-                player.style.left = savePlayerCoordinates.left + 'px';
-                player.style.top = savePlayerCoordinates.top + 'px';
+                this.player.style.left = savePlayerCoordinates.left + 'px';
+                this.player.style.top = savePlayerCoordinates.top + 'px';
             }, 200);
             count++;
         }, (10000000 / gameProgression) * count);
@@ -980,9 +973,9 @@
 
     console.log(new town(1));
 
-    var currentCellEl = qs('#c' + currentCell);
+    var this.currentCellEl = qs('#c' + this.currentCell);
     if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((currentCellEl.innerHTML == 'C'));
+        lootArray[currentCell] = new lootSpawn((this.currentCellEl.innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     var currentLoot = lootArray[currentCell];
 
@@ -991,24 +984,24 @@
     lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((currentLoot.food == 0) ? 'none' : 'block');
     lootArray[currentCell].take = takeF;
-    if (currentCellEl.innerHTML == "'")
+    if (this.currentCellEl.innerHTML == "'")
         lootHeading.innerHTML = "[']" + ' Plains';
-    if (currentCellEl.innerHTML == "*")
+    if (this.currentCellEl.innerHTML == "*")
         lootHeading.innerHTML = "[*]" + ' Forest';
-    if (currentCellEl.innerHTML == ",")
+    if (this.currentCellEl.innerHTML == ",")
         lootHeading.innerHTML = "[,]" + ' Swamp';
-    if (currentCellEl.innerHTML == "C")
+    if (this.currentCellEl.innerHTML == "C")
         lootHeading.innerHTML = "[C]" + ' Chest';
-    if (currentCellEl.innerHTML == "T") {
+    if (this.currentCellEl.innerHTML == "T") {
         lootHeading.innerHTML = "[T]" + ' Town';
         isTown = true;
     }
-    if (currentCellEl.innerHTML == "L")
+    if (this.currentCellEl.innerHTML == "L")
         lootHeading.innerHTML = "[L]" + ' Lake';
-    if (currentCellEl.innerHTML == "M")
+    if (this.currentCellEl.innerHTML == "M")
         lootHeading.innerHTML = "[M]" + ' Mountain';
 
-    if (currentCellEl.innerHTML == " ") {
+    if (this.currentCellEl.innerHTML == " ") {
         lootHeading.innerHTML = "[ ]" + ' Empty';
     }
 
