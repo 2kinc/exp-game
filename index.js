@@ -95,7 +95,7 @@
                 lootArray[currentCell].armour--;
                 food++;
             }
-        
+            }
         }
         ammoEl.innerHTML = 'Ammo: ' + ammo;
         foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
