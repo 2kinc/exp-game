@@ -47,7 +47,7 @@
     var gameProgression = 0;
     var regenDegenInterval;
     var isTown = false;
-    var armour = false;
+    var armour = 0;
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
     var saveFile;
@@ -790,6 +790,7 @@
                 };
             });
         }
+           
         return {
             seed: Number(split[0]),
             health: Number(split[1]),
@@ -806,6 +807,7 @@
         };
         }
     }
+
 
     function initFromSave() {
         var r = readSaveFile();
@@ -987,3 +989,4 @@
     }, 3000);    
     document.querySelector('#loading').style.display = 'none';
 //})(this);
+
