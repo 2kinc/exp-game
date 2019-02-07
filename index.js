@@ -129,14 +129,29 @@
     function lootSpawn(chest) {
         this.ammo = Math.floor(Math.random() * 10);
         this.food = Math.floor(Math.random() * 5);
+        this.armour = Math.floor(Math.random() * 0.582319759202 )
         if (chest) {
             this.ammo++;
             this.food++;
             this.ammo *= 3;
             this.food *= 3;
+            this.armour *= 3;
         }
         setCookie('loot', JSON.stringify(lootArray));
     }
+    
+//armour stuff goes here
+
+
+
+/*
+if (armour > 0) {
+maxHealth = maxHealth + armour * 4;
+
+}
+
+*/
+
 
     function move(direction) {
         if (fightingMode == false && energy >= 0.4 && isTown == false) {
@@ -775,8 +790,9 @@
         saveFile = window.btoa(saveFile);
         setCookie('savefile', saveFile, 100);
         setCookie('name', name, 100);
-    }
-    
+    }    
+
+
     function readSaveFile() {
         if (saveFile != '') {
         var decodedSaveFile = window.atob(saveFile);
