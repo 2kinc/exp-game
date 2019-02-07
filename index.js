@@ -48,6 +48,7 @@
     var regenDegenInterval;
     var isTown = false;
     var armour = 0;
+    //ducks are awesome
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
     var saveFile;
@@ -88,6 +89,7 @@
         }
         ammoEl.innerHTML = 'Ammo: ' + ammo;
         foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
+        
         lootAmmo.innerHTML = lootArray[currentCell].ammo;
         lootFood.innerHTML = lootArray[currentCell].food;
         lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
