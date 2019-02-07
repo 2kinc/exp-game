@@ -16,12 +16,14 @@
     var name = 'Default Noob';
     var lootArray = [];
     var food = 10;
+    var armour = 0;
     var maxEnergy = 15;
     var foodEl = qs('#food');
     var lootEl = qs('#loot');
     var nameEl = qs('#name');
     var ammoEl = qs('#ammo');
     var healthEl = qs('#health');
+    var arnourEl = qs('#armour');
     var energyEl = qs('#energy')
     var ammoUsedEl = qs('#ammo-used');
     var stepsEl = qs('#steps-taken');
@@ -47,7 +49,6 @@
     var gameProgression = 0;
     var regenDegenInterval;
     var isTown = false;
-    var armour = 0;
     //ducks are awesome
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
@@ -86,20 +87,32 @@
                 lootArray[currentCell].food--;
                 food++;
             }
+            if (item == 'armour') {
+            if (amount == 'all') {
+                armour += lootArray[currentCell].armour;
+                lootArray[currentCell].armour = 0;
+            } else {
+                lootArray[currentCell].armour--;
+                food++;
+            }
+        
         }
         ammoEl.innerHTML = 'Ammo: ' + ammo;
         foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
-        
+        armourEl.innerHTML = 'Armour: ' + armour
         lootAmmo.innerHTML = lootArray[currentCell].ammo;
         lootFood.innerHTML = lootArray[currentCell].food;
+        lootArmour.innerHTML = lootArray[currentCell].armour;
         lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
         lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
+        lootArmourWrap.style.display = ((lootArray[currentCell].armour == 0) ? 'none' : 'block');
         setCookie('loot', JSON.stringify(lootArray));
         setCookie('food', food, 30);
         setCookie('ammo', ammo, 30);
+        setCookie('armour', armour, 30);
     };
 
-    setCookie('maxhealth', maxHealth, 30);
+    setCookie('maxhealth', maxHealth, 27);
 
     var tbl = ['<table><tr>'];
 
