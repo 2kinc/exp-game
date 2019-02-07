@@ -36,6 +36,7 @@
     var lootAmmoWrap = qs('#lootammo');
     var lootFoodWrap = qs('#lootfood');
     var lootArmourWrap = qs('#lootarmour');
+    var armourEl = qs('armour');
     var fightingMode = false;
     var saveBoxHTML;
     var playerFightingOrigin;
