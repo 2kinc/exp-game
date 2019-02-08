@@ -202,7 +202,7 @@ maxHealth = maxHealth + armour * 4;
                 lootArray[currentCell] = new lootSpawn((currentCellEl.innerHTML == 'C'));
             setCookie('loot', JSON.stringify(lootArray));
             var currentLoot = lootArray[currentCell];
-
+            //dont add loot armour here, only for chests
             lootAmmo.innerHTML = currentLoot.ammo;
             lootFood.innerHTML = currentLoot.food;
             lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
@@ -438,7 +438,7 @@ maxHealth = maxHealth + armour * 4;
                             healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
                             log('You have no energy! Get food fast!');
                         }
-                        if (health < 0) {
+                        if (health <= 0) {
                             var saveHTML = document.body.innerHTML;
                             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
                             setTimeout(function () {
@@ -535,13 +535,15 @@ maxHealth = maxHealth + armour * 4;
     document.querySelectorAll('td').forEach(function (element, index) {
         element.id = 'c' + index;
     });*/
-
+    //add loot armour here?
     lootArray[currentCell] = lootArray[currentCell] || new lootSpawn((qs('#c' + currentCell).innerHTML == 'C'));
     setCookie('loot', JSON.stringify(lootArray));
     lootAmmo.innerHTML = lootArray[currentCell].ammo;
     lootFood.innerHTML = lootArray[currentCell].food;
+    lootArmour.innerHTML = lootArray[currentCell].armour;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
+    lootArmourWrap.style.display = ((lootArray[currentCell].armour == 0) ? 'none' : 'block');
     document.querySelectorAll('.take').forEach(function (element) {
         var x = element.id.slice(0, 3);
         var y = element.id.slice(3, 0);
@@ -681,10 +683,13 @@ maxHealth = maxHealth + armour * 4;
                         health = maxHealth;
                         ammo = 100;
                         food = 10;
+                        //this is right?
+                        armour = 0;
                         setCookie('energy', energy);
                         setCookie('health', health);
                         setCookie('ammo', ammo, 30);
                         setCookie('food', food, 30);
+                        setCookie('armour', armour, 30);
                         location.reload();
                     }, 3000);
                 }
@@ -741,12 +746,16 @@ maxHealth = maxHealth + armour * 4;
             lh.innerHTML = "[C]" + ' Chest';
         if (cc2.innerHTML == " ")
             lh.innerHTML = "[ ]" + ' Empty';
+        /* 
+        fix this wacko code
+        need to add it up there as well
+        you guys do it
         if (cc2.innerHTML == "[L]")
             lh.innerHTML == "[L]" + 'Lake';
         if (cc2.innerHTML == "[M]") 
             lh.innerHTML == "[M]" + 'Mountain';
     }
-
+*/
     function setCookie(cname, cvalue, exdays) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
