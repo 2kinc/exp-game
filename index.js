@@ -23,7 +23,7 @@
     var nameEl = qs('#name');
     var ammoEl = qs('#ammo');
     var healthEl = qs('#health');
-    var arnourEl = qs('#armour');
+    var armourEl = qs('#armour');
     var energyEl = qs('#energy')
     var ammoUsedEl = qs('#ammo-used');
     var stepsEl = qs('#steps-taken');
@@ -37,7 +37,6 @@
     var lootAmmoWrap = qs('#lootammo');
     var lootFoodWrap = qs('#lootfood');
     var lootArmourWrap = qs('#lootarmour');
-    var armourEl = qs('armour');
     var fightingMode = false;
     var saveBoxHTML;
     var playerFightingOrigin;
