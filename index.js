@@ -30,6 +30,7 @@
     var generatedMap;
     var ammoTakes = qs('#ammotakes');
     var foodTakes = qs('#foodtakes');
+    var armourTakes = qs('#armourTakes');
     var lootAmmo = qs('#lootammonum');
     var lootFood = qs('#lootfoodnum');
     var lootArmour = qs('#lootarmournum');
@@ -112,7 +113,7 @@
         setCookie('ammo', ammo, 30);
         setCookie('armour', armour, 30);
     };
-
+    
     setCookie('maxhealth', maxHealth, 27);
 
     var tbl = ['<table><tr>'];
@@ -143,7 +144,7 @@
     function lootSpawn(chest) {
         this.ammo = Math.floor(Math.random() * 10);
         this.food = Math.floor(Math.random() * 5);
-        this.armour = Math.floor(Math.random() * 0.582319759202 )
+        this.armour = Math.floor(Math.random() * 0.59999999999999999999999999999999999999999999 )
         if (chest) {
             this.ammo++;
             this.food++;
