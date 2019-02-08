@@ -1020,14 +1020,11 @@ maxHealth = maxHealth + armour * 4;
         lootHeading.innerHTML = "[L]" + ' Lake';
     if (currentCellEl.innerHTML == "M") 
         lootHeading.innerHTML = "[M]" + ' Mountain';
-        
-    if (currentCellEl.innerHTML == " ") {
+    if (currentCellEl.innerHTML == " ") 
         lootHeading.innerHTML = "[ ]" + ' Empty';
-    }
     
     setInterval(function(){
         saveGame();
-        initFromSave();
     }, 3000);    
     function download(filename, text) {
   var element = document.createElement('a');
@@ -1062,4 +1059,3 @@ function decryptString(text){
 }
     document.querySelector('#loading').style.display = 'none';
 //})(this);
-
