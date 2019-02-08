@@ -74,20 +74,33 @@
 
   document.body.removeChild(element);
 }
+
+var emojiStringToArray = function (str) {
+  split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
+  arr = [];
+  for (var i=0; i<split.length; i++) {
+    char = split[i]
+    if (char !== "") {
+      arr.push(char);
+    }
+  }
+  return arr;
+};
+
 function encryptString(text){
 	text = window.btoa(text);
 	text = text.split('');
 	for (var i = 0; i < text.length; i++) {
-		var o = text[i].codePointAt(0);
-		text[i] = String.fromCharCode(Number('0x' + (Number((o *o).toString().padStart(4, '0'))).toString(16).slice(0, 4)));
-	}
-	return text.join('');
+		var k = text[i].codePointAt();
+		text[i] = String.fromCodePoint(k + 127777);
+    }
+	text = text.join('');
+	return text;
 }
 function decryptString(text){
-	text = text.split('');
+	text = emojiStringToArray(text);
 	for (var i = 0; i < text.length; i++) {
-		var o = text[i].codePointAt(0);
-		text[i] = String.fromCharCode(Math.sqrt(text[i].charCodeAt(0)));
+		text[i] = String.fromCodePoint(text[i].codePointAt() - 127777);
 	}
 	text = text.join('');
 	text = window.atob(text);
