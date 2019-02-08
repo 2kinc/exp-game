@@ -9,7 +9,7 @@
     var facing = 'up';
     var ammo = 100;
     var health = 10;
-    var maxHealth = 10;
+    var maxHealth = 15;
     var steps = 0;
     var energy = 15;
     var ammoUsed = 0;
@@ -41,7 +41,7 @@
     var saveBoxHTML;
     var playerFightingOrigin;
     var enemy = qs('#enemy');
-    var enemyMaxHealth = 10;
+    var enemyMaxHealth = 15;
     var enemyHealth = enemyMaxHealth;
     var playerIsShooting = false;
     var enemyDecisionInterval;
