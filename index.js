@@ -979,16 +979,16 @@ maxHealth = maxHealth + armour * 4;
     }, 10000);
     setTimeout(function () {
         log('The world spins around you as you try to make sense of what happened.')
-    }, 20000);
-    setTimeout(function () {
-        log('Your head throbs as you recall a gunfight.')
     }, 30000);
     setTimeout(function () {
+        log('Your head throbs as you recall a gunfight.')
+    }, 60000);
+    setTimeout(function () {
         log('Distant flashbacks of the battlefield swirl through your mind.')
-    }, 40000);
+    }, 90000);
     setTimeout(function () {
         log('You start to grasp the situation: you are lost in a remote wasteland with only a vauge idea of what happened.')
-    }, 100000);
+    }, 120000);
 
     var count = 1;
 
