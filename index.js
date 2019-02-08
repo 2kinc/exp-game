@@ -880,6 +880,7 @@ maxHealth = maxHealth + armour * 4;
     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
     ammoEl.innerHTML = 'Ammo: ' + ammo;
     foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
+	armourEl.innerHTML = 'Armour: ' + armour;
     ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
     stepsEl.innerHTML = 'Steps taken: ' + steps;
     qs('#log-heading').innerHTML = 'Log';
