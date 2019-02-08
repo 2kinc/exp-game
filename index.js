@@ -976,16 +976,19 @@ maxHealth = maxHealth + armour * 4;
     logEl.innerHTML = 'You awake into a strange world.';
     setTimeout(function () {
         log('Your memories are a messy blur.')
-    }, 3000);
+    }, 10000);
     setTimeout(function () {
         log('The world spins around you as you try to make sense of what happened.')
-    }, 6000);
+    }, 20000);
     setTimeout(function () {
-        log('Your head throbs as you recall fighting a man with a large club.')
-    }, 9000);
+        log('Your head throbs as you recall a gunfight.')
+    }, 30000);
     setTimeout(function () {
         log('Distant flashbacks of the battlefield swirl through your mind.')
-    }, 12000);
+    }, 40000);
+    setTimeout(function () {
+        log('You start to grasp the situation: you are lost in a remote wasteland with only a vauge idea of what happened.')
+    }, 100000);
 
     var count = 1;
 
