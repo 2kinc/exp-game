@@ -57,6 +57,37 @@
     
     saveFile = getCookie('savefile');
     
+	    function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+function encryptString(text){
+	text = window.btoa(text);
+	text = text.split('');
+	for (var i = 0; i < text.length; i++) {
+		var o = text[i].codePointAt(0);
+		text[i] = String.fromCharCode(Number('0x' + (Number((o *o).toString().padStart(4, '0'))).toString(16).slice(0, 4)));
+	}
+	return text.join('');
+}
+function decryptString(text){
+	text = text.split('');
+	for (var i = 0; i < text.length; i++) {
+		var o = text[i].codePointAt(0);
+		text[i] = String.fromCharCode(Math.sqrt(text[i].charCodeAt(0)));
+	}
+	text = text.join('');
+	text = window.atob(text);
+	return text;
+}
 
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
@@ -466,7 +497,9 @@ maxHealth = maxHealth + armour * 4;
                     $('#startscreen').html('');
                     $('#startscreen').css('display', 'none');
                 }
-            }
+            } else if (e.key == 's' && e.ctrlKey) {
+				download('save.txt', encryptString(saveFile));
+			}	
         }
     }
     if ($('startscreen').html != '') {
@@ -1025,36 +1058,5 @@ maxHealth = maxHealth + armour * 4;
     setInterval(function(){
         saveGame();
     }, 3000);    
-    function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
-function encryptString(text){
-	text = window.btoa(text);
-	text = text.split('');
-	for (var i = 0; i < text.length; i++) {
-		var o = text[i].codePointAt(0);
-		text[i] = String.fromCharCode(Number('0x' + (Number((o *o).toString().padStart(4, '0'))).toString(16).slice(0, 4)));
-	}
-	return text.join('');
-}
-function decryptString(text){
-	text = text.split('');
-	for (var i = 0; i < text.length; i++) {
-		var o = text[i].codePointAt(0);
-		text[i] = String.fromCharCode(Math.sqrt(text[i].charCodeAt(0)));
-	}
-	text = text.join('');
-	text = window.atob(text);
-	return text;
-}
     document.querySelector('#loading').style.display = 'none';
 //})(this);
