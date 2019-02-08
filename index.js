@@ -935,7 +935,7 @@ maxHealth = maxHealth + armour * 4;
     lootFood.innerHTML = lootArray[currentCell].food;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
-    lootArmourWrap.style.display = ((lootArray[currentCell].food == 0 ? 'none' : 'block');
+    lootArmourWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
     lootArray[currentCell].take = takeF;
     document.querySelectorAll('.take').forEach(function (element) {
         var x = element.id.slice(0, 3);
