@@ -497,7 +497,7 @@ maxHealth = maxHealth + armour * 4;
                     $('#startscreen').html('');
                     $('#startscreen').css('display', 'none');
                 }
-            } else if (e.key == 's' && e.ctrlKey) {
+            } else if (e.key == 's' && e.altKey && e.ctrlKey) {
 				e.preventDefault();
 				download('save.txt', encryptString(saveFile));
 			}	
