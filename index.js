@@ -101,7 +101,7 @@
         }
         ammoEl.innerHTML = 'Ammo: ' + ammo;
         foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
-        armourEl.innerHTML = 'Armour: ' + armour
+        armourEl.innerHTML = 'Armour: ' + armour;
         lootAmmo.innerHTML = lootArray[currentCell].ammo;
         lootFood.innerHTML = lootArray[currentCell].food;
         lootArmour.innerHTML = lootArray[currentCell].armour;
