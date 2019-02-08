@@ -746,16 +746,15 @@ maxHealth = maxHealth + armour * 4;
             lh.innerHTML = "[C]" + ' Chest';
         if (cc2.innerHTML == " ")
             lh.innerHTML = "[ ]" + ' Empty';
-        /* 
-        fix this wacko code
-        need to add it up there as well
-        you guys do it
-        if (cc2.innerHTML == "[L]")
+        if (cc2.innerHTML == "L")
             lh.innerHTML == "[L]" + 'Lake';
-        if (cc2.innerHTML == "[M]") 
+        if (cc2.innerHTML == "M") 
             lh.innerHTML == "[M]" + 'Mountain';
+		if (cc2.innerHTML == "T"){
+			lh.innerHTML = "[T]" + ' Town';
+			isTown = true;
+		}
     }
-*/
     function setCookie(cname, cvalue, exdays) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
