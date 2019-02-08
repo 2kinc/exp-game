@@ -277,6 +277,7 @@ maxHealth = maxHealth + armour * 4;
                 lootHeading.innerHTML = "[M]" + ' Mountain';
 	    if (currentCellEl.innerHTML == "L")
                 lootHeading.innerHTML = "[L]" + ' Lake';
+		isLake = true;
 	*/
             if (currentCellEl.innerHTML == "T") {
                 lootHeading.innerHTML = "[T]" + ' Town';
@@ -815,6 +816,7 @@ maxHealth = maxHealth + armour * 4;
             lh.innerHTML = "[ ]" + ' Empty';
         /* if (cc2.innerHTML == "L")
             lh.innerHTML == "[L]" + 'Lake';
+	    isLake = true;
         if (cc2.innerHTML == "M") 
             lh.innerHTML == "[M]" + 'Mountain'; */
 		if (cc2.innerHTML == "T"){
@@ -958,7 +960,7 @@ maxHealth = maxHealth + armour * 4;
     lootFood.innerHTML = lootArray[currentCell].food;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
-    lootArmourWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
+    lootArmourWrap.style.display = ((lootArray[currentCell].armour == 0) ? 'none' : 'block');
     lootArray[currentCell].take = takeF;
     document.querySelectorAll('.take').forEach(function (element) {
         var x = element.id.slice(0, 3);
@@ -970,13 +972,16 @@ maxHealth = maxHealth + armour * 4;
     logEl.innerHTML = 'You awake into a strange world.';
     setTimeout(function () {
         log('Your memories are a messy blur.')
-    }, 1500);
-    setTimeout(function () {
-        log('Distant flashbacks of the battlefield swirl through your mind.')
     }, 3000);
     setTimeout(function () {
-        log('Ducks are awesome.')
-    }, 4500);
+        log('The world spins around you as you try to make sense of what happened.')
+    }, 6000);
+    setTimeout(function () {
+        log('Your head throbs as you recall fighting a man with a large club.')
+    }, 9000);
+    setTimeout(function () {
+        log('Distant flashbacks of the battlefield swirl through your mind.')
+    }, 12000);
 
     var count = 1;
 
@@ -1089,12 +1094,13 @@ maxHealth = maxHealth + armour * 4;
         lootHeading.innerHTML = "[T]" + ' Town';
         isTown = true;
     }
-    if (currentCellEl.innerHTML == "L") 
+    /*if (currentCellEl.innerHTML == "L") 
         lootHeading.innerHTML = "[L]" + ' Lake';
+	isLake = true;
     if (currentCellEl.innerHTML == "M") 
         lootHeading.innerHTML = "[M]" + ' Mountain';
     if (currentCellEl.innerHTML == " ") 
-        lootHeading.innerHTML = "[ ]" + ' Empty';
+        lootHeading.innerHTML = "[ ]" + ' Empty'; */
     
     setInterval(function(){
         saveGame();
