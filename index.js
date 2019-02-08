@@ -492,6 +492,7 @@ maxHealth = maxHealth + armour * 4;
                                 energy = maxEnergy;
                                 ammo = 100;
                                 food = 100;
+				//armour = 3;
                                 fightingMode = false;
                                 isTown = false;
                                 saveGame();
@@ -522,14 +523,14 @@ maxHealth = maxHealth + armour * 4;
                     energy = maxEnergy;
                 if (Math.round(energy) == maxEnergy && health < maxHealth) {
                     energy = maxEnergy;
-                    health += 3;
+                    health += 5;
                 }
                 if (Math.round(energy) == 0) {
                     health -= Math.floor(maxHealth / 3);
                     healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
                     log('You have no energy! Get food fast!');
                 }
-                if (health < 0) {
+                if (health <= 0) {
                     var saveHTML = document.body.innerHTML;
                     document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
                     setTimeout(function () {
@@ -789,10 +790,10 @@ maxHealth = maxHealth + armour * 4;
             lh.innerHTML = "[C]" + ' Chest';
         if (cc2.innerHTML == " ")
             lh.innerHTML = "[ ]" + ' Empty';
-        if (cc2.innerHTML == "L")
+        /* if (cc2.innerHTML == "L")
             lh.innerHTML == "[L]" + 'Lake';
         if (cc2.innerHTML == "M") 
-            lh.innerHTML == "[M]" + 'Mountain';
+            lh.innerHTML == "[M]" + 'Mountain'; */
 		if (cc2.innerHTML == "T"){
 			lh.innerHTML = "[T]" + ' Town';
 			isTown = true;
@@ -885,6 +886,7 @@ maxHealth = maxHealth + armour * 4;
             food: Number(split[6]),
             currentCell: Number(split[7]),
             gameProgression: Number(split[8]),
+	    armour: Number(split[8]),
             isTown: (split[9] == 'true'),
             fightingMode: (split[10] == 'true'),
             lootArray: loot
@@ -902,6 +904,7 @@ maxHealth = maxHealth + armour * 4;
         maxEnergy = r.maxEnergy;
         ammo = r.ammo;
         food = r.food;
+	armour = r.armour;    
         currentCell = r.currentCell;
         gameProgression = r.gameProgression;
         isTown = r.isTown;
@@ -932,6 +935,7 @@ maxHealth = maxHealth + armour * 4;
     lootFood.innerHTML = lootArray[currentCell].food;
     lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
     lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
+    lootArmourWrap.style.display = ((lootArray[currentCell].food == 0 ? 'none' : 'block');
     lootArray[currentCell].take = takeF;
     document.querySelectorAll('.take').forEach(function (element) {
         var x = element.id.slice(0, 3);
@@ -947,6 +951,9 @@ maxHealth = maxHealth + armour * 4;
     setTimeout(function () {
         log('Distant flashbacks of the battlefield swirl through your mind.')
     }, 3000);
+    setTimeout(function () {
+        log('Ducks are awesome.')
+    }, 4500);
 
     var count = 1;
 
