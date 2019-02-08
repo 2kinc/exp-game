@@ -60,6 +60,7 @@
     
     saveFile = getCookie('savefile');
     //quack
+
     
 	    function download(filename, text) {
   var element = document.createElement('a');
@@ -722,6 +723,9 @@ maxHealth = maxHealth + armour * 4;
                     setTimeout(function () {
                         fightingMode = false;
                     }, 1500)
+		if (health > 27) {
+			health = 27;
+		}
                     box.innerHTML = saveBoxHTML;
                     box.style.transform = 'scale(1.0)';
                     box.style.borderWidth = '2px';
