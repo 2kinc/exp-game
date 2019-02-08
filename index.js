@@ -50,6 +50,9 @@
     var gameProgression = 0;
     var regenDegenInterval;
     var isTown = false;
+    //so the lake has ducks and ducks are just enemies who don't shoot and only give you food
+    var ducks;
+    var isLake = false;
     //ducks are awesome
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
@@ -245,6 +248,13 @@ maxHealth = maxHealth + armour * 4;
                 lootHeading.innerHTML = "[,]" + ' Swamp';
             if (currentCellEl.innerHTML == "C")
                 lootHeading.innerHTML = "[C]" + ' Chest';
+	    //for later
+	/*
+	    if (currentCellEl.innerHTML == "M")
+                lootHeading.innerHTML = "[M]" + ' Mountain';
+	    if (currentCellEl.innerHTML == "L")
+                lootHeading.innerHTML = "[L]" + ' Lake';
+	*/
             if (currentCellEl.innerHTML == "T") {
                 lootHeading.innerHTML = "[T]" + ' Town';
                 isTown = true;
