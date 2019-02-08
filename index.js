@@ -177,7 +177,7 @@ function decryptString(text){
     function lootSpawn(chest) {
         this.ammo = Math.floor(Math.random() * 10);
         this.food = Math.floor(Math.random() * 5);
-        this.armour = Math.floor(Math.random() * 0.59999999999999999999999999999999999999999999 )
+        this.armour = Math.floor(Math.random() * 0.6 )
         if (chest) {
             this.ammo++;
             this.food++;
