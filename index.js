@@ -1018,7 +1018,7 @@ maxHealth = maxHealth + armour * 4;
             }, 200);
             count++;
             glitchInterval();
-        }, (10000000 / gameProgression) * count);
+        }, (10000000 / (gameProgression + 1)) * count);
     }
 
     glitchInterval();
