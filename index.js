@@ -59,6 +59,7 @@
     var saveFile;
     
     saveFile = getCookie('savefile');
+    //quack
     
 	    function download(filename, text) {
   var element = document.createElement('a');
