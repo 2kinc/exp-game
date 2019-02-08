@@ -51,7 +51,7 @@
     var regenDegenInterval;
     var isTown = false;
     //so the lake has ducks and ducks are just enemies who don't shoot and only give you food
-    var ducks;
+    var ducks = false;
     var isLake = false;
     //ducks are awesome
     var lootHeading = qs('#loot-heading');
