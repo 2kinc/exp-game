@@ -888,7 +888,7 @@ maxHealth = maxHealth + armour * 4;
     checkCookie();
 
     function saveGame() {
-        saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell, 
+        saveFile = [worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, currentCell, armour,
             gameProgression, isTown, fightingMode].join('#') + '#';
         lootArray.forEach(function(element, index){
             if (element != null) {
@@ -907,8 +907,8 @@ maxHealth = maxHealth + armour * 4;
         var decodedSaveFile = window.atob(saveFile);
         var split = decodedSaveFile.split('#');
         var loot = [];
-        if (split[10] != undefined) {
-            split[10].split(',').forEach(function(element){
+        if (split[12] != undefined) {
+            split[12].split(',').forEach(function(element){
                 var x = element.split('|');
                 loot[Number(x[0])] = {
                     ammo: Number(x[1]),
@@ -927,10 +927,10 @@ maxHealth = maxHealth + armour * 4;
             ammo: Number(split[5]),
             food: Number(split[6]),
             currentCell: Number(split[7]),
-            gameProgression: Number(split[8]),
-	    armour: Number(split[8]),
-            isTown: (split[9] == 'true'),
-            fightingMode: (split[10] == 'true'),
+            armour: Number(split[8]),
+	    gameProgression: Number(split[9]),
+            isTown: (split[10] == 'true'),
+            fightingMode: (split[11] == 'true'),
             lootArray: loot
         };
         }
