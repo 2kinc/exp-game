@@ -548,7 +548,7 @@ maxHealth = maxHealth + armour * 4;
                 }
             } else if (e.key == 'p') {
 				e.preventDefault();
-				download('save.txt', encryptString(readSaveFile()));
+				download('save.txt', encryptString(JSON.stringify(readSaveFile())));
 			}	
         }
     }
