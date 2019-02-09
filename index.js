@@ -594,6 +594,13 @@ maxHealth = maxHealth + armour * 4;
                 setCookie('energy', energy);
                 setCookie('health', health);
             }, 5000);
+			var musicLoop = new Audio('poop%20tune.mp3'); 
+
+			musicLoop.addEventListener('ended', function() {
+    			this.currentTime = 0;
+    			this.play();
+			}, false);
+			musicLoop.play();
             $('#startscreen').html('');
             $('#startscreen').css('display', 'none');
         });
@@ -1125,13 +1132,6 @@ maxHealth = maxHealth + armour * 4;
     setInterval(function(){
         saveGame();
     }, 3000);    
-
-	var musicLoop = new Audio('poop%20tune.mp3'); 
-	musicLoop.addEventListener('ended', function() {
-    	this.currentTime = 0;
-    	this.play();
-	}, false);
-	setTimeout(function(){musicLoop.play()},1000);
 
     document.querySelector('#loading').style.display = 'none';
 //})(this);
