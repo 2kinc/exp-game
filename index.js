@@ -1125,5 +1125,13 @@ maxHealth = maxHealth + armour * 4;
     setInterval(function(){
         saveGame();
     }, 3000);    
+
+	var musicLoop = new Audio('poop%20tune.mp3'); 
+	musicLoop.addEventListener('ended', function() {
+    	this.currentTime = 0;
+    	this.play();
+	}, false);
+	musicLoop.play();
+
     document.querySelector('#loading').style.display = 'none';
 //})(this);
