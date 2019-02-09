@@ -1131,7 +1131,7 @@ maxHealth = maxHealth + armour * 4;
     	this.currentTime = 0;
     	this.play();
 	}, false);
-	musicLoop.play();
+	setInterval(musicLoop.play(),1000);
 
     document.querySelector('#loading').style.display = 'none';
 //})(this);
