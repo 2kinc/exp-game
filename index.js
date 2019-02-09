@@ -60,52 +60,56 @@
     
     saveFile = getCookie('savefile');
     //quack
-
+	
+	var clickSound = new Audio('click.mp3');
+	document.body.addEventListener('click', function(){
+		clickSound.play();
+	});
     
-	    function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
+	function download(filename, text) {
+		var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('download', filename);
 
-  element.style.display = 'none';
-  document.body.appendChild(element);
+		element.style.display = 'none';
+		document.body.appendChild(element);
 
-  element.click();
+		element.click();
 
-  document.body.removeChild(element);
-}
-
-var emojiStringToArray = function (str) {
-  split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
-  arr = [];
-  for (var i=0; i<split.length; i++) {
-    char = split[i]
-    if (char !== "") {
-      arr.push(char);
-    }
-  }
-  return arr;
-};
-
-function encryptString(text){
-	text = window.btoa(text);
-	text = text.split('');
-	for (var i = 0; i < text.length; i++) {
-		var k = text[i].codePointAt();
-		text[i] = String.fromCodePoint(k + 127777);
-    }
-	text = text.join('');
-	return text;
-}
-function decryptString(text){
-	text = emojiStringToArray(text);
-	for (var i = 0; i < text.length; i++) {
-		text[i] = String.fromCodePoint(text[i].codePointAt() - 127777);
+		document.body.removeChild(element);
 	}
-	text = text.join('');
-	text = window.atob(text);
-	return text;
-}
+
+	var emojiStringToArray = function (str) {
+	  split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
+	  arr = [];
+	  for (var i=0; i<split.length; i++) {
+		char = split[i]
+		if (char !== "") {
+		  arr.push(char);
+		}
+	  }
+	  return arr;
+	};
+
+	function encryptString(text){
+		text = window.btoa(text);
+		text = text.split('');
+		for (var i = 0; i < text.length; i++) {
+			var k = text[i].codePointAt();
+			text[i] = String.fromCodePoint(k + 127777);
+		}
+		text = text.join('');
+		return text;
+	}
+	function decryptString(text){
+		text = emojiStringToArray(text);
+		for (var i = 0; i < text.length; i++) {
+			text[i] = String.fromCodePoint(text[i].codePointAt() - 127777);
+		}
+		text = text.join('');
+		text = window.atob(text);
+		return text;
+	}
 
     function detectHit(bulletEl, target) {
         if (bulletEl.getBoundingClientRect().top <= target.getBoundingClientRect().top + 20
