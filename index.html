@@ -11,37 +11,38 @@
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
     <link rel="icon" href="favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-133299888-1"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133299888-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-	  gtag('config', 'UA-133299888-1');
-	</script>
-	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-	  (adsbygoogle = window.adsbygoogle || []).push({
-	    google_ad_client: "ca-pub-9949308515923091",
-	    enable_page_level_ads: true
-	  });
-	</script>
+        gtag('config', 'UA-133299888-1');
+    </script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-9949308515923091",
+            enable_page_level_ads: true
+        });
+    </script>
 </head>
 
 <body>
-	<div id="loading" style="position: absolute; height: 100%; width: 100%; 
+    <div id="loading" style="position: absolute; height: 100%; width: 100%; 
 				left: 0; top: 0; background: #333; z-index: 1000; text-align: center; font-size: 1.5em">
-		<img src="loading.gif" height="120px" width="120px" alt="Loading Animation" style="display: block; 
+        <img src="loading.gif" height="120px" width="120px" alt="Loading Animation" style="display: block; 
 				margin: auto; margin-top: 15%;">
-		loading...
-	</div>
+        loading...
+    </div>
     <div id="startscreen">
         <div id="hugeheading" class="">E. X. P.</div>
 
         <div id="by2kinc">By 2K inc.</div>
 
-	    <div style="position: absolute; left: 0; width: 100%; text-align: center; font-size: 3em; top: calc(10em);" id="play_button">[Enter or Click to play]</div>
+        <div style="position: absolute; left: 0; width: 100%; text-align: center; font-size: 3em; top: calc(10em);" id="play_button">[Enter
+            or Click to play]</div>
     </div>
     <div class="left-side">
         <div id="stats" class="card">
@@ -73,10 +74,12 @@
             </div>
             <hr>
             <div id="loot">
-                <span id='lootammo'><span id='lootammonum'></span> ammo <span id='ammotakes'><span id='oneammo' class='clickable take' onclick="takeF('ammo')">[Take
-                            1]</span> <span id='allammo' class='clickable take' onclick="takeF('ammo', 'all')">[Take All]</span></span></span>
-                <span id='lootfood'><span id='lootfoodnum'></span> food <span id='foodtakes'><span id='onefood' class='clickable take' onclick="takeF('food')">[Take
-                            1]</span> <span id='allfood' class='clickable take' onclick="takeF('food', 'all')">[Take All]</span></span><span>
+                <span id='lootammo'><span id='lootammonum'></span> ammo <span id='ammotakes'><span id='oneammo' class='clickable take'
+                            onclick="takeF('ammo')">Take
+                            1</span> <span id='allammo' class='clickable take' onclick="takeF('ammo', 'all')">Take
+                            All</span></span></span>
+                <span id='lootfood'><span id='lootfoodnum'></span> food <span id='foodtakes'><span id='onefood' class='clickable take'>Take 1</span> 
+                    <span id='allfood' class='clickable take'>Take All</span></span><span>
             </div>
         </div>
     </div>
@@ -84,11 +87,23 @@
     <div class="right-side">
         <div class="card">
             <div id="log-heading" class="heading">
-                Loading...
+                Log
             </div>
             <hr>
             <div id="log">
                 Loading...
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div id="inventory-heading" class="heading">
+                Inventory
+            </div>
+            <hr>
+            <div id="inventory">
+                <div id="spaceused"><span id='occupied'></span><span id='available' class='shaded'></span>
+                    <span id='percent'></span></div>
+                <div id="inventory-stats"></div>
             </div>
         </div>
     </div>
@@ -106,11 +121,11 @@
     <div id="fight-health"></div>
 
     <div id="enemy-health"></div>
-            
+
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="mgGlitch.js"></script>
     <script src="perlin.js"></script>
-	<script src="pi.js"></script>
+    <script src="pi.js"></script>
     <script src="index.js"></script>
 </body>
 

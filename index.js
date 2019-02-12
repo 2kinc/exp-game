@@ -4,41 +4,46 @@
         throw "Your browser does not support Local Storage"
     }
 
-    global._exp_game = global._exp_game || GameSave.load();
-
-    function GameSave(){
-        this.playerName = "Player 1";
+    function modCell(x, y, loot, text) {
+        //define 
     }
 
-    GameSave.prototype.load = function(){
-        var data = window.localStorage.getItem("exp-game/save");
-        try {
-            return JSON.parse(data);
-        }
-        catch{
-            return new GameObject();
-        }
+    function GameSave() {
+        this.playerName = "Player 1";
+        this.food = 10;
+        this.ammo = 100;
+        this.energy = 15;
+        this.maxEnergy = 15;
+        this.hp = 10;
+        this.maxhp = 10;
+        this.armour = 0;
+        this.inventory = new inventory(150);
+        this.saveFile = JSON.stringify(this);
+    }
 
-    };
+
 
     var qs = function (selector) {
         return document.querySelector(selector);
     };
 
     function Directions() {
-        /* this function is a "class" that provides Direction constants */
+        this.up = 0;
+        this.right = 1;
+        this.down = 2;
+        this.left = 3;
     }
-    Directions.prototype.up = function () { return 0 };
+    /*Directions.prototype.up = function () { return 0 };
     Directions.prototype.right = function () { return 1 };
     Directions.prototype.down = function () { return 2 };
-    Directions.prototype.left = function () { return 3 };
+    Directions.prototype.left = function () { return 3 };*/
 
     function GameObject() {
         this.player = qs('#player');
         this.box = qs('#box');
         this.logEl = qs('#log');
         this.currentCell = 312;
-        this.facing = Directions.up();
+        this.facing = Directions.up;
         this.ammo = 100;
         this.health = 10;
         this.maxHealth = 10;
@@ -47,31 +52,12 @@
         this.ammoUsed = 0;
         this.name = 'Default Noob';
         this.lootArray = [];
-        this.food = 10;
-        this.maxEnergy = 15;
-        this.foodEl = qs('#food');
-        this.lootEl = qs('#loot');
-        this.nameEl = qs('#name');
-        this.ammoEl = qs('#ammo');
-        this.healthEl = qs('#health');
-        this.energyEl = qs('#energy')
-        this.ammoUsedEl = qs('#ammo-used');
-        this.stepsEl = qs('#steps-taken');
-        this.generatedMap;
-        this.ammoTakes = qs('#ammotakes');
-        this.foodTakes = qs('#foodtakes');
-        this.lootAmmo = qs('#lootammonum');
-        this.lootFood = qs('#lootfoodnum');
-        this.lootArmour = qs('#lootarmournum');
-        this.lootAmmoWrap = qs('#lootammo');
-        this.lootFoodWrap = qs('#lootfood');
-        this.lootArmourWrap = qs('#lootarmour');
         this.fightingMode = false;
         this.saveBoxHTML;
         this.playerFightingOrigin;
         this.enemy = qs('#enemy');
         this.enemyMaxHealth = 10;
-        this.enemyHealth = enemyMaxHealth;
+        this.enemyHealth = this.enemyMaxHealth;
         this.playerIsShooting = false;
         this.enemyDecisionInterval;
         this.fightHealthEl = qs('#fight-health');
@@ -80,11 +66,45 @@
         this.regenDegenInterval;
         this.isTown = false;
         this.armour = false;
+        this.generatedMap;
         this.lootHeading = qs('#loot-heading');
         this.playEl = qs("#play_button");
+        this.inventory = new inventory(150);
+        this.elements = {
+            foodEl: qs('#food'),
+            lootEl: qs('#loot'),
+            nameEl: qs('#name'),
+            ammoEl: qs('#ammo'),
+            healthEl: qs('#health'),
+            energyEl: qs('#energy'),
+            ammoUsedEl: qs('#ammo-used'),
+            stepsEl: qs('#step-taken'),
+            ammoTakes: qs('#ammotakes'),
+            foodTakes: qs('#foodtakes'),
+            lootAmmo: qs('#lootammonum'),
+            lootFood: qs('#lootfoodnum'),
+            lootArmour: qs('#lootarmournum'),
+            lootAmmoWrap: qs('#lootammo'),
+            lootFoodWrap: qs('#lootfood'),
+            lootArmourWrap: qs('#lootarmour')
+        };
+        this.getCoords = function () {
+            var a = this.currentCell;
+            while (a < 300 || a > 324) {
+                if (a < 300) {
+                    a += 25;
+                } else if (a > 324) {
+                    a -= 25;
+                }
+            }
+            var o = Math.floor(this.currentCell / 25) * 25 + 12;
+            var coords = { x: a - 312, y: (312 - o) / 25 };
+            return coords;
+        }
+        console.log(this.getCoords());
     };
 
-    GameObject.prototype.detectHit = function(bulletEl, target) {
+    GameObject.prototype.detectHit = function (bulletEl, target) {
         var b = bulletEl.getBoundingClientRect();
         var t = target.getBoundingClientRect();
         return (b.top <= t.top + 20
@@ -94,13 +114,13 @@
             && b.left <= t.left + 20);
     };
 
-    GameObject.prototype.takeF = function(item, amount) {
+    GameObject.prototype.takeF = function (item, amount) {
         if (item == 'ammo') {
             if (amount == 'all') {
                 this.ammo += this.lootArray[this.currentCell].ammo;
                 this.lootArray[this.currentCell].ammo = 0;
             } else {
-                this.lootArray[currentCell].ammo--;
+                this.lootArray[this.currentCell].ammo--;
                 this.ammo++;
             }
         }
@@ -113,20 +133,127 @@
                 this.food++;
             }
         }
+        var itemEval = eval(item);
+        if (amount == 'all') {
+            this.itemEval += this.lootArray[this.currentCell].itemEval;
+            this.lootArray[this.currentCell].ammo = 0;
+        } else {
+            this.lootArray[this.currentCell].itemEval--;
+            this.itemEval++;
+        }
         this.ammoEl.innerHTML = 'Ammo: ' + this.ammo;
         this.foodEl.innerHTML = 'Food: ' + this.food + ' [E to eat]';
         this.lootAmmo.innerHTML = this.lootArray[this.currentCell].ammo;
         this.lootFood.innerHTML = this.lootArray[this.currentCell].food;
         this.lootAmmoWrap.style.display = ((this.lootArray[this.currentCell].ammo == 0) ? 'none' : 'block');
         this.lootFoodWrap.style.display = ((this.lootArray[this.currentCell].food == 0) ? 'none' : 'block');
-        setCookie('loot', JSON.stringify(this.lootArray));
-        setCookie('food', this.food, 30);
-        setCookie('ammo', this.ammo, 30);
     };
 
     var game = new GameObject();
 
-    setCookie('maxhealth', this.maxHealth, 30);
+    GameSave.prototype.load = function () {
+        var data = window.localStorage.getItem("exp-game/save");
+        if (data != null)
+            return JSON.parse(data);
+        return new GameObject();
+    };
+
+    GameSave.prototype.save = function () {
+        window.localStorage.setItem('exp-game/save', JSON.stringify(global._exp_game));
+    }
+
+    global._exp_game = ((global._exp_game != null) ? global._exp_game : (new GameSave()).load());
+
+    function shadedText(text) {
+        return "<span class='shaded'>" + text + "</span>";
+    }
+
+    function inventory(space, items) {
+        this.space = space;
+        this.items = items || [];
+        this.elements = {
+            spaceused: {
+                main: document.getElementById('spaceused'),
+                occupied: document.getElementById('occupied'),
+                available: document.getElementById('available'),
+                percent: document.getElementById('percent')
+            },
+            stats: document.getElementById('inventory-stats')
+        };
+        this.updateElements = function () {
+            var a = [];
+            for (var i = 0; i < 15; i++) {
+                a[i] = '#';
+            }
+            var b = 0;
+            for (var k = 0; k < this.items.length; k++) {
+                b += this.items[k].amount;
+            }
+            var c = Math.round(b / this.space * 15);
+            for (var i = 0; i < c; i++) {
+                a[i] = '$';
+            }
+            console.log(a);
+            this.elements.spaceused.innerText = '';
+            var o = this;
+            a.forEach(function (element) {
+                if (element == "$") {
+                    o.elements.spaceused.occupied.innerHTML += element;
+                } else {
+                    o.elements.spaceused.available.innerHTML += element;
+                }
+            });
+            this.elements.spaceused.percent.innerHTML = ' (' + b / this.space * 100 + '% occupied)';
+            var j = this;
+            this.items.forEach(function (element) {
+                j.elements.stats.innerHTML += element.amount + ' ' + element.itemName + shadedText(' (' + element.amount / j.space * 100 + '% of inventory)') + '<br>';
+            });
+        }
+    }
+
+    function item(item, amount) {
+        this.itemName = item;
+        this.amount = amount;
+    }
+
+    inventory.prototype.addItem = function (ITEM) {
+        var t = 0;
+        this.items.forEach(function (element) {
+            t += element.amount;
+        });
+        if (t == this.space) {
+            //oops, inventory has no more space
+        } else if (ITEM.amount + t > this.space) {
+            ITEM.amount -= (this.space - t);
+            var tempItem = new item(ITEM.itemName, this.space - t);
+            this.items.push(tempItem);
+        } else {
+            this.items.push(ITEM);
+        }
+        if (this.items.filter(item => (item.itemName == ITEM.itemName))[1] != undefined) {
+            this.items.filter(item => (item.itemName == ITEM.itemName))[0].amount += ITEM.amount;
+            var r = this.items.indexOf(ITEM);
+            this.items.splice(r, 1);
+        }
+    };
+
+    var anItem = new item('b lasagna', 123);
+    var shoes = new item('shoes', 150);
+    var tekashi = new item('6ix9ine', 69);
+
+    //inventory1.addItem(anItem);
+
+    //inventory1.addItem(new item('shoes', 300));
+
+    //game.inventory.addItem(new item('shoes', 300));
+
+    //game.inventory.addItem(shoes);
+
+    game.inventory.addItem(tekashi);
+
+    game.inventory.updateElements();
+
+    console.log(game.inventory);
 
     var tbl = ['<table><tr>'];
 
@@ -141,44 +268,56 @@
 
     var tds = document.querySelectorAll('td');
 
-    setCookie('map', generatedMap, 100);
-
-    if (saveFile != '')
-        initFromSave();
-
-    setCookie('maxenergy', maxEnergy);
-    setCookie('loot', JSON.stringify(lootArray), 30);
-    if (gameProgression == '')
-        gameProgression = 0;
-    setCookie('gameprogression', gameProgression, 30);
-
-
     GameObject.prototype.lootSpawn = function (chest) {
-        this.ammo = Math.floor(Math.random() * 10);
-        this.food = Math.floor(Math.random() * 5);
-        if (chest) {
-            this.ammo++;
-            this.food++;
-            this.ammo *= 3;
-            this.food *= 3;
+        this.items = [];
+        var ammo = new item('ammo', Math.floor(Math.random() * 10));
+        var food = new item('food', Math.floor(Math.random() * 5));
+        var armour = new item('armour', Math.round(Math.random() * 0.6));
+        if (ammo.amount != 0)
+            this.items.push(ammo);
+        if (food.amount != 0)
+            this.items.push(food);
+        if (armour.amount != 0)
+            this.items.push(armour);
+        if (Math.random() >= .99)
+            this.items.push(new item('Tekashi 6ix9ine', 69));
+        this.updateElements = function () {
+            game.elements.lootEl.innerHTML = '';
+            this.items.forEach(function (element) {
+                var el = document.createElement('span');
+                el.className = 'clickable';
+                el.addEventListener('click', function () {
+                    game.inventory.addItem(element);
+                    var i = this.items.indexOf(element);
+                    this.items.splice(i, 1);
+                    game.inventory.updateElements();
+                    this.updateElements();
+                });
+                el.innerHTML = 'Take';
+                game.elements.lootEl.innerHTML += element.amount + ' ' + element.itemName + ' ';
+                game.elements.lootEl.appendChild(el);
+                game.elements.lootEl.innerHTML += '<br>';
+            });
         }
-        setCookie('loot', JSON.stringify(this.lootArray));
+        this.updateElements();
     };
 
-    GameObject.prototype.move = function(direction) {
+    global.GameObject = new GameObject();
+
+    GameObject.prototype.move = function (direction) {
         if (this.fightingMode == false && this.energy >= 0.4 && this.isTown == false) {
-            if (direction == Directions.up()) {
+            if (direction == Directions.up) {
                 this.currentCell = ((this.currentCell > 24) ? this.currentCell - 25 : this.currentCell);
                 this.player.style.transform = 'rotate(0deg)';
             }
-            if (direction == Directions.right()) {
+            if (direction == Directions.right) {
                 this.currentCell = (((this.currentCell + 1) % 25 != 0) ? this.currentCell + 1 : this.currentCell);
             }
-            if (direction == Directions.left()) {
+            if (direction == Directions.left) {
                 this.currentCell = (((this.currentCell + 1) % 25 != 1) ? this.currentCell - 1 : this.currentCell);
                 this.player.style.transform = 'rotate(270deg)';
             }
-            if (direction == Directions.down()) {
+            if (direction == Directions.down) {
                 this.currentCell = ((this.currentCell < 600) ? this.currentCell + 25 : this.currentCell);
                 this.player.style.transform = 'rotate(180deg)';
             }
@@ -187,17 +326,12 @@
             this.facing = direction;
             this.steps++;
             this.stepsEl.innerHTML = 'Steps taken: ' + this.steps;
-            setCookie('steps', this.steps, 30);
             this.energy -= 0.4;
             this.energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-            setCookie('energy',this.energy, 30);
-            setCookie('maxenergy', this.maxEnergy, 30);
             this.gameProgression++;
-            setCookie('gameprogression', this.gameProgression, 30);
             var currentCellEl = qs('#c' + this.currentCell);
             if (!this.lootArray[this.currentCell])
                 this.lootArray[this.currentCell] = new lootSpawn((this.currentCellEl.innerHTML == 'C'));
-            setCookie('loot', JSON.stringify(this.lootArray));
             var currentLoot = this.lootArray[this.currentCell];
 
             this.lootAmmo.innerHTML = this.currentLoot.ammo;
@@ -224,7 +358,7 @@
                 this.fightingMode = true;
                 this.box.innerHTML = '';
                 this.player.style.transform = 'rotate(0deg)';
-                this.facing = Directions.up();
+                this.facing = Directions.up;
                 this.player.style.left = 'calc(50% - 10px)';
                 this.player.style.left = this.player.getBoundingClientRect().left + 'px';
                 this.box.style.transform = 'scale(0.40)';
@@ -288,20 +422,19 @@
                 tblt.push('</tr></table>');
                 this.box.innerHTML = tblt.join('');
                 this.player.style.transform = 'rotate(0deg)';
-                this.facing = Directions.up();
+                this.facing = Directions.up;
                 this.player.style.left = 'calc(50% - 10px)';
                 this.player.style.left = this.player.getBoundingClientRect().left + 'px';
                 this.box.style.transform = 'scale(0.52)';
                 this.box.style.borderWidth = '5px';
                 this.player.style.top = this.box.offsetHeight - 140 + 'px';
                 this.gameProgression += 5;
-                setCookie('gameprogression', this.gameProgression, 30);
             }
         } else if (this.fightingMode == true && this.energy >= 0.4) {
-            if (this.direction == Directions.right()) {
+            if (this.direction == Directions.right) {
                 this.player.style.left = this.player.getBoundingClientRect().x + 20 + 'px';
             }
-            if (this.direction == Directions.left()) {
+            if (this.direction == Directions.left) {
                 this.player.style.left = this.player.getBoundingClientRect().x - 20 + 'px';
             }
             if (this.player.getBoundingClientRect().left < this.box.getBoundingClientRect().left + 12)
@@ -310,23 +443,21 @@
                 this.player.style.left = box.getBoundingClientRect().left + 172 + 'px';
             this.steps++;
             this.stepsEl.innerHTML = 'Steps taken: ' + this.steps;
-            setCookie('steps', this.steps, 30);
             this.gameProgression++;
-            setCookie('gameprogression', this.gameProgression, 30);
         } else if (this.isTown == true && this.energy >= 0.4) {
-            if (this.direction == Directions.right()) {
+            if (this.direction == Directions.right) {
                 this.player.style.left = this.player.getBoundingClientRect().x + 20 + 'px';
                 this.player.style.transform = 'rotate(90deg)';
             }
-            if (this.direction == Directions.left()) {
+            if (this.direction == Directions.left) {
                 this.player.style.left = this.player.getBoundingClientRect().x - 20 + 'px';
                 this.player.style.transform = 'rotate(270deg)';
             }
-            if (this.direction == Directions.down()) {
+            if (this.direction == Directions.down) {
                 this.player.style.top = this.player.getBoundingClientRect().y + 20 + 'px';
                 this.player.style.transform = 'rotate(180deg)';
             }
-            if (this.direction == Directions.up()) {
+            if (this.direction == Directions.up) {
                 this.player.style.top = this.player.getBoundingClientRect().y - 20 + 'px';
                 this.player.style.transform = 'rotate(0deg)';
             }
@@ -340,9 +471,7 @@
                 this.player.style.top = this.box.getBoundingClientRect().top + 174 + 'px';
             this.steps++;
             this.stepsEl.innerHTML = 'Steps taken: ' + this.steps;
-            setCookie('steps', this.steps, 30);
             this.gameProgression += 2;
-            setCookie('gameprogression', this.gameProgression, 30);
         } else {
             log("You have no energy! Get food fast!");
         }
@@ -351,16 +480,16 @@
     document.body.onkeyup = function (e) {
         if (document.activeElement != nameEl) {
             if (e.key == "w" || e.key == "ArrowUp") {
-                move(Directions.up());
+                move(Directions.up);
             }
             else if (e.key == "d" || e.key == "ArrowRight") {
-                move(Directions.right());
+                move(Directions.right);
             }
             else if (e.key == "a" || e.key == "ArrowLeft") {
-                move(Directions.left());
+                move(Directions.left);
             }
             else if (e.key == "s" || e.key == "ArrowDown") {
-                move(Directions.down());
+                move(Directions.down);
             }
             else if (e.key == " ") {
                 if (energy >= 0.2) {
@@ -384,7 +513,6 @@
                         this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
                         this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
                     }, 1500);
-                    setCookie('energy', energy, 30);
                     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                     enemy.style.display = 'none';
                     clearInterval(x);
@@ -392,9 +520,7 @@
                     fightHealthEl.style.display = 'none';
                     enemyHealthEl.style.display = 'none';
                     gameProgression += 10;
-                    setCookie('gameprogression', gameProgression, 30);
                     energy -= 3;
-                    setCookie('energy', energy, 30);
                     energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
                 } else if (isTown) {
                     setTimeout(function () {
@@ -414,7 +540,6 @@
                     fightHealthEl.style.display = 'none';
                     enemyHealthEl.style.display = 'none';
                     gameProgression += 10;
-                    setCookie('gameprogression', gameProgression, 30);
                     energy -= 3;
                     energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
                     isTown = false;
@@ -471,7 +596,7 @@
         }
     }
     if ($('startscreen').html != '') {
-        playEl.addEventListener('click', function () {
+        game.playEl.addEventListener('click', function () {
             regenDegenInterval = setInterval(function () {
                 if (Math.round(energy) > 0 && health == maxHealth)
                     energy--;
@@ -498,10 +623,6 @@
                     setTimeout(function () {
                         energy = maxEnergy;
                         health = maxHealth;
-                        setCookie('energy', energy);
-                        setCookie('health', health);
-                        setCookie('ammo', ammo, 30);
-                        setCookie('food', food, 30);
                         location.reload();
                     }, 3000);
                 }
@@ -509,8 +630,6 @@
                     health = maxHealth;
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                 healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-                setCookie('energy', energy);
-                setCookie('health', health);
             }, 5000);
             $('#startscreen').html('');
             $('#startscreen').css('display', 'none');
@@ -536,16 +655,15 @@
         element.id = 'c' + index;
     });*/
 
-    if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
-    setCookie('loot', JSON.stringify(lootArray));
-    lootArray[currentCell].take = takeF;
-    if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
-    lootAmmo.innerHTML = lootArray[currentCell].ammo;
-    lootFood.innerHTML = lootArray[currentCell].food;
-    lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
-    lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
+    if (game.lootArray[currentCell] == undefined)
+        game.lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
+    game.lootArray[currentCell].take = takeF;
+    if (game.lootArray[currentCell] == undefined)
+        game.lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
+    game.lootAmmo.innerHTML = game.lootArray[currentCell].ammo;
+    game.lootFood.innerHTML = game.lootArray[currentCell].food;
+    game.lootAmmoWrap.style.display = ((game.lootArray[currentCell].ammo == 0) ? 'none' : 'block');
+    game.lootFoodWrap.style.display = ((game.lootArray[currentCell].food == 0) ? 'none' : 'block');
 
     var cc = qs('#c' + this.currentCell);
 
@@ -560,18 +678,18 @@
             bullet.innerHTML = "<img src='bullet.png' height='18px' width='18px'>"
             bullet.style.top = this.player.getBoundingClientRect().y + 'px';
             bullet.style.left = this.player.getBoundingClientRect().x + 'px';
-            var this.playerX = this.player.getBoundingClientRect().x;
-            var this.playerY = this.player.getBoundingClientRect().y;
+            this.playerX = this.player.getBoundingClientRect().x;
+            this.playerY = this.player.getBoundingClientRect().y;
             document.body.appendChild(bullet);
             var i = 0;
             var x = setInterval(function () {
-                if (direction == Directions.up()) {
+                if (direction == Directions.up) {
                     bullet.style.top = this.playerY - i + 'px';
-                } else if (direction == Directions.right()) {
+                } else if (direction == Directions.right) {
                     bullet.style.left = this.playerX + i + 'px';
-                } else if (direction == Directions.left()) {
+                } else if (direction == Directions.left) {
                     bullet.style.left = this.playerX - i + 'px';
-                } else if (direction == Directions.down()) {
+                } else if (direction == Directions.down) {
                     bullet.style.top = this.playerY + i + 'px';
                 }
                 i += 10;
@@ -602,20 +720,15 @@
                         gameProgression += 100;
                         saveGame();
                     }
-                    setCookie('gameprogression', gameProgression, 30);
                 }
             }, 33);
             ammo--;
             ammoUsed++;
             ammoEl.innerHTML = 'Ammo: ' + ammo;
             ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
-            setCookie('ammo', ammo);
-            setCookie('ammoused', ammoUsed);
             energy -= 0.2;
             energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-            setCookie('energy', energy);
             gameProgression += 0.2;
-            setCookie('gameprogression', gameProgression, 30);
             setTimeout(function () {
                 clearInterval(x);
                 this.playerIsShooting = false;
@@ -662,7 +775,6 @@
                         this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
                         this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
                     }, 1500);
-                    setCookie('energy', energy, 30);
                     energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                     enemy.style.display = 'none';
                     clearInterval(x);
@@ -678,10 +790,6 @@
                         health = maxHealth;
                         ammo = 100;
                         food = 10;
-                        setCookie('energy', energy);
-                        setCookie('health', health);
-                        setCookie('ammo', ammo, 30);
-                        setCookie('food', food, 30);
                         location.reload();
                     }, 3000);
                 }
@@ -689,7 +797,6 @@
                 clearInterval(x);
             }
             health.innerHTML = 'Health: ' + health + '/' + maxHealth;
-            setCookie('health', health, 30);
         }, 33);
         setTimeout(function () {
             clearInterval(x);
@@ -705,7 +812,6 @@
 
     setInterval(function () {
         name = nameEl.innerHTML;
-        setCookie('name', name, 30);
     }, 1000)
 
     function eat(amount) {
@@ -716,8 +822,6 @@
                 energy = maxEnergy;
             foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
             energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-            setCookie('food', food);
-            setCookie('energy', energy);
         } else if (energy < maxEnergy && food < amount) {
             log('You have no food!')
         } else if (energy = maxEnergy) {
@@ -782,7 +886,7 @@
             lootArray = JSON.parse(getCookie('loot'));
             gameProgression = Number(getCookie('gameprogression'));
             noise.seed(getCookie('seed'));*/
-            saveFile = getCookie('saveFile');
+            //saveFile = getCookie('saveFile');
         } /*else {
             setCookie('loot', JSON.stringify(lootArray), 30);
         }*/
@@ -794,15 +898,13 @@
         saveFile = JSON.stringify(global._exp_game);
         saveFile = JSON.stringify([worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, this.currentCell,
             gameProgression, isTown, fightingMode]);
-        lootArray.forEach(function (element, index) {
+        game.lootArray.forEach(function (element, index) {
             if (element != null) {
                 saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + ',';
             }
         });
         saveFile = saveFile.slice(0, -1);
         saveFile = window.btoa(saveFile);
-        setCookie('savefile', saveFile, 100);
-        setCookie('name', name, 100);
     }
 
     function readSaveFile() {
@@ -826,7 +928,7 @@
                 maxEnergy: Number(split[4]),
                 ammo: Number(split[5]),
                 food: Number(split[6]),
-                this.currentCell: Number(split[7]),
+                currentCell: Number(split[7]),
                 gameProgression: Number(split[8]),
                 isTown: (split[9] == 'true'),
                 fightingMode: (split[10] == 'true'),
@@ -835,7 +937,7 @@
         }
     }
 
-    function initFromSave() {
+    /*function initFromSave() {
         var r = readSaveFile();
         noise.seed(r.seed);
         health = r.health;
@@ -849,34 +951,32 @@
         isTown = r.isTown;
         fightingMode = r.fightingMode;
         lootArray = r.lootArray;
-    }
+    }*/
 
     saveGame();
 
     if (readSaveFile != '')
         initFromSave();
 
-    setCookie('checker', 'yup', 30);
 
-    if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
-    setCookie('loot', JSON.stringify(lootArray));
-    lootArray[currentCell].take = takeF;
+    if (game.lootArray[currentCell] == undefined)
+        game.lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
+    game.lootArray[currentCell].take = takeF;
 
-    nameEl.innerHTML = name;
-    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
-    energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-    ammoEl.innerHTML = 'Ammo: ' + ammo;
-    foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
-    ammoUsedEl.innerHTML = 'Ammo used: ' + ammoUsed;
-    stepsEl.innerHTML = 'Steps taken: ' + steps;
+    game.nameEl.innerHTML = game.name;
+    game.healthEl.innerHTML = 'Health: ' + game.health + '/' + game.maxHealth;
+    game.energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + game.maxEnergy;
+    game.ammoEl.innerHTML = 'Ammo: ' + game.ammo;
+    game.foodEl.innerHTML = 'Food: ' + game.food + ' [E to eat]';
+    game.ammoUsedEl.innerHTML = 'Ammo used: ' + game.ammoUsed;
+    game.stepsEl.innerHTML = 'Steps taken: ' + game.steps;
     qs('#log-heading').innerHTML = 'Log';
-    lootAmmo.innerHTML = lootArray[currentCell].ammo;
-    lootFood.innerHTML = lootArray[currentCell].food;
-    lootAmmoWrap.style.display = ((lootArray[currentCell].ammo == 0) ? 'none' : 'block');
-    lootFoodWrap.style.display = ((lootArray[currentCell].food == 0) ? 'none' : 'block');
-    lootArray[currentCell].take = takeF;
-    logEl.innerHTML = 'You awake into a strange world.';
+    game.lootAmmo.innerHTML = game.lootArray[game.currentCell].ammo;
+    game.lootFood.innerHTML = game.lootArray[game.currentCell].food;
+    game.lootAmmoWrap.style.display = ((game.lootArray[game.currentCell].ammo == 0) ? 'none' : 'block');
+    game.lootFoodWrap.style.display = ((game.lootArray[game.currentCell].food == 0) ? 'none' : 'block');
+    game.lootArray[game.currentCell].take = game.takeF;
+    game.logEl.innerHTML = 'You awake into a strange world.';
     setTimeout(function () {
         log('Your memories are a messy blur.')
     }, 1500);
@@ -889,9 +989,9 @@
     function glitchInterval() {
         setTimeout(function () {
             var savePlayerCoordinates = this.player.getBoundingClientRect();
-            $('html').css({ 'position': 'absolute', Directions.left(): '89px' });
+            $('html').css({ 'position': 'absolute', 'left': '89px' });
             setTimeout(function () { $('html').css('transform', 'scale(1.2), rotate(180deg)') }, 100);
-            setTimeout(function () { $('html').css({ 'filter': 'invert(1)', Directions.left(): '0' }) }, 150);
+            setTimeout(function () { $('html').css({ 'filter': 'invert(1)', 'left': '0' }) }, 150);
             setTimeout(function () {
                 $('html').css({ 'filter': 'none', 'transform': 'none', 'position': 'relative' });
                 this.player.style.left = savePlayerCoordinates.left + 'px';
@@ -920,7 +1020,7 @@
         glitch1TimeMax: 500,
     });
 
-    $('#by2kinc').css({ 'clip': 'unset', Directions.left(): '0' });
+    $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
 
     noise.seed(readSaveFile().seed);
 
@@ -973,10 +1073,9 @@
 
     console.log(new town(1));
 
-    var this.currentCellEl = qs('#c' + this.currentCell);
+    this.currentCellEl = qs('#c' + this.currentCell);
     if (lootArray[currentCell] == undefined)
         lootArray[currentCell] = new lootSpawn((this.currentCellEl.innerHTML == 'C'));
-    setCookie('loot', JSON.stringify(lootArray));
     var currentLoot = lootArray[currentCell];
 
     lootAmmo.innerHTML = currentLoot.ammo;

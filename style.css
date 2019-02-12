@@ -138,3 +138,32 @@ img {
     width: 100%;
     height: 100%;
 }
+
+.shaded {
+    color: #aaa;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable::before {
+    content: '[';
+}
+
+.clickable::after {
+    content: ']';
+}
+
+.clickable:hover {
+    background: #fff;
+    color: #333;
+}
+
+.clickable:hover::before {
+    content: '[ ';
+}
+
+.clickable:hover::after {
+    content: ' ]';
+}
