@@ -333,16 +333,19 @@ maxHealth = maxHealth + armour * 4;
                 enemyDecisionInterval = setInterval(function () {
                     var enemyCoordinates = enemy.getBoundingClientRect();
                     if (playerIsShooting) {
-                        if (enemyCoordinates.left + 20 == player.getBoundingClientRect().left) {
+                        if (enemyCoordinates.left + 20 == player.getBoundingClientRect().left
+			    			&& enemyCoordinates.left - 20 > box.getBoundingClientRect().left + 12) {
                             enemy.style.left = enemyCoordinates.left - 20 + 'px';
-                        } else if (enemyCoordinates.left - 20 == player.getBoundingClientRect().left) {
+                        } else if (enemyCoordinates.left - 20 == player.getBoundingClientRect().left
+								  && enemyCoordinates.left + 20 < box.getBoundingClientRect().left + 172) {
                             enemy.style.left = enemyCoordinates.left + 20 + 'px';
-                        } else {
-                            enemy.style.left = enemyCoordinates.left + ((Math.random() >= .50) ? 20 : (-20)) + 'px';
+                        } else if (enemyCoordinates.left - 20 < box.getBoundingClientRect().left + 12){
+                            enemy.style.left = enemyCoordinates.left + 20;
+                        } else if (enemyCoordinates.left + 20 > box.getBoundingClientRect().left + 172){
+                            enemy.style.left = enemyCoordinates.left - 20;
                         }
                     } else if (enemyCoordinates.left == player.getBoundingClientRect().left) {
                         enemyShoot();
-                        enemyCoordinates.left = player.getBoundingClientRect().left;
                     } else if (enemyCoordinates.left < player.getBoundingClientRect().left) {
                         enemy.style.left = enemyCoordinates.left + 20 + 'px';
                     } else if (enemyCoordinates.left > player.getBoundingClientRect().left) {
@@ -350,6 +353,7 @@ maxHealth = maxHealth + armour * 4;
                     }
                     if (enemyCoordinates.left <= box.getBoundingClientRect().left + 12)
                         enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
+					if (enemyCoordinates.left >= box.getBoundingClientRect().left + 12)
                         enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
                     if (enemyHealth <= 0)
                         clearInterval(enemyDecisionInterval);
