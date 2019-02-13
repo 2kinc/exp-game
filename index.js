@@ -226,39 +226,24 @@ maxHealth = maxHealth + armour * 4;
                 currentCell = ((currentCell > 24) ? currentCell - 25 : currentCell);
                 player.style.transform = 'rotate(0deg)';
             }
-		if (armour > 0) {
-maxHealth = maxHealth + armour * 4;
-
-}
-		if (armour > 3) {
-armour = 3;
-
-}
             if (direction == 'right') {
                 currentCell = (((currentCell + 1) % 25 != 0) ? currentCell + 1 : currentCell);
+		player.style.transform = 'rotate(90deg)';
             }
-		if (armour > 0) {
-maxHealth = maxHealth + armour * 4;
-
-}
-		if (armour > 3) {
-armour = 3;
-
-}
             if (direction == 'left') {
                 currentCell = (((currentCell + 1) % 25 != 1) ? currentCell - 1 : currentCell);
                 player.style.transform = 'rotate(270deg)';
-            }
-		if (armour > 0) {
-maxHealth = maxHealth + armour * 4;
-
-}
-		
+            }		
             if (direction == 'down') {
                 currentCell = ((currentCell < 600) ? currentCell + 25 : currentCell);
                 player.style.transform = 'rotate(180deg)';
             }
-		
+	    if (armour > 0) {
+		maxHealth = maxHealth + armour * 4;
+	    }
+	    if (armour > 3) {
+                armour = 3;
+            }
             player.style.top = qs('#c' + currentCell).getBoundingClientRect().y + 'px';
             player.style.left = qs('#c' + currentCell).getBoundingClientRect().x + 'px';
             facing = direction;
