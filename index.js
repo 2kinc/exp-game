@@ -57,7 +57,6 @@
     var lootHeading = qs('#loot-heading');
     var playEl = qs("#play_button");
     var saveFile;
-    
     saveFile = getCookie('savefile');
     //quack
 	
@@ -70,15 +69,11 @@
 		var element = document.createElement('a');
 		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
 		element.setAttribute('download', filename);
-
 		element.style.display = 'none';
 		document.body.appendChild(element);
-
 		element.click();
-
 		document.body.removeChild(element);
 	}
-
 	var emojiStringToArray = function (str) {
 	  split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
 	  arr = [];
@@ -141,14 +136,14 @@
                 lootArray[currentCell].food--;
                 food++;
             }
-            if (item == 'armour') {
+        }
+	if (item == 'armour') {
             if (amount == 'all') {
                 armour += lootArray[currentCell].armour;
                 lootArray[currentCell].armour = 0;
             } else {
                 lootArray[currentCell].armour--;
                 food++;
-            }
             }
         }
         ammoEl.innerHTML = 'Ammo: ' + ammo;
@@ -191,8 +186,6 @@
     if (gameProgression == '')
         gameProgression = 0;
     setCookie('gameprogression', gameProgression, 30);
-
-
     function lootSpawn(chest) {
         this.ammo = Math.floor(Math.random() * 10);
         this.food = Math.floor(Math.random() * 5);
@@ -200,26 +193,17 @@
         if (chest) {
             this.ammo++;
             this.food++;
+	    this.armour++;
             this.ammo *= 3;
             this.food *= 3;
             this.armour *= 3;
         }
         setCookie('loot', JSON.stringify(lootArray));
     }
-    
-//armour stuff goes here
-
-
-
-
-if (armour > 0) {
-maxHealth = maxHealth + armour * 4;
-
-}
-
-
-
-
+    //armour stuff goes here
+    if (armour > 0) {
+        maxHealth = maxHealth + armour * 4;
+    }
     function move(direction) {
         if (fightingMode == false && energy >= 0.4 && isTown == false) {
             if (direction == 'up') {
@@ -275,20 +259,20 @@ maxHealth = maxHealth + armour * 4;
             if (currentCellEl.innerHTML == "C")
                 lootHeading.innerHTML = "[C]" + ' Chest';
 	    //for later
-	/*
+	    /*
 	    if (currentCellEl.innerHTML == "M")
                 lootHeading.innerHTML = "[M]" + ' Mountain';
 	    if (currentCellEl.innerHTML == "L")
                 lootHeading.innerHTML = "[L]" + ' Lake';
 		isLake = true;
-	*/
+	    */
             if (currentCellEl.innerHTML == "T") {
                 lootHeading.innerHTML = "[T]" + ' Town';
                 isTown = true;
             }
             if (currentCellEl.innerHTML == " ")
                 lootHeading.innerHTML = "[ ]" + ' Empty';
-            if (Math.random() >= 0.80 && fightingMode == false && isTown == false) {
+            if (Math.random() >= 0.85 && fightingMode == false && isTown == false && steps > 3) {
                 saveBoxHTML = box.innerHTML;
                 fightingMode = true;
                 box.innerHTML = '';
