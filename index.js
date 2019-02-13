@@ -143,7 +143,7 @@
                 lootArray[currentCell].armour = 0;
             } else {
                 lootArray[currentCell].armour--;
-                food++;
+                armour++;
             }
         }
         ammoEl.innerHTML = 'Ammo: ' + ammo;
@@ -189,7 +189,7 @@
     function lootSpawn(chest) {
         this.ammo = Math.floor(Math.random() * 10);
         this.food = Math.floor(Math.random() * 5);
-        this.armour = Math.floor(Math.random() * 0.6 )
+        this.armour = Math.floor(Math.random() * 1.5);
         if (chest) {
             this.ammo++;
             this.food++;
@@ -306,7 +306,7 @@
 			    			&& enemyCoordinates.left - 20 > box.getBoundingClientRect().left + 12) {
                             enemy.style.left = enemyCoordinates.left - 20 + 'px';
                         } else if (enemyCoordinates.left - 20 == player.getBoundingClientRect().left
-								  && enemyCoordinates.left + 20 < box.getBoundingClientRect().left + 172) {
+			&& enemyCoordinates.left + 20 < box.getBoundingClientRect().left + 172) {
                             enemy.style.left = enemyCoordinates.left + 20 + 'px';
                         } else if (enemyCoordinates.left - 20 < box.getBoundingClientRect().left + 12){
                             enemy.style.left = enemyCoordinates.left + 20;
@@ -322,7 +322,7 @@
                     }
                     if (enemyCoordinates.left <= box.getBoundingClientRect().left + 12)
                         enemy.style.left = box.getBoundingClientRect().left + 12 + 'px';
-					if (enemyCoordinates.left >= box.getBoundingClientRect().left + 12)
+		    if (enemyCoordinates.left >= box.getBoundingClientRect().left + 12)
                         enemy.style.left = box.getBoundingClientRect().left + 172 + 'px';
                     if (enemyHealth <= 0)
                         clearInterval(enemyDecisionInterval);
@@ -524,9 +524,9 @@
                     $('#startscreen').css('display', 'none');
                 }
             } else if (e.key == 'p') {
-				e.preventDefault();
-				download('save.txt', encryptString(saveFile));
-			}	
+		e.preventDefault();
+                download('save.txt', encryptString(saveFile));
+	    }	
         }
     }
     if ($('startscreen').html != '') {
