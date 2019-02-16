@@ -1,11 +1,12 @@
 (function (global) {
 
     if (!window.localStorage) {
-        throw "Your browser does not support Local Storage"
+        throw "Your browser does not support Local Storage";
     }
 
-    function modCell(x, y, loot, text) {
-        //define 
+    function Coordinate(x, y){
+        this.x = x || 0;
+        this.y = y || 0;
     }
 
     function GameSave() {
@@ -17,33 +18,22 @@
         this.hp = 10;
         this.maxhp = 10;
         this.armour = 0;
-        this.inventory = new inventory(150);
-        this.saveFile = JSON.stringify(this);
+        this.inventory = new Inventory(150);
     }
-
-
 
     var qs = function (selector) {
         return document.querySelector(selector);
     };
 
-    function Directions() {
-        this.up = 0;
-        this.right = 1;
-        this.down = 2;
-        this.left = 3;
-    }
-    /*Directions.prototype.up = function () { return 0 };
+    function Directions() {}
+    Directions.prototype.up = function () { return 0 };
     Directions.prototype.right = function () { return 1 };
     Directions.prototype.down = function () { return 2 };
-    Directions.prototype.left = function () { return 3 };*/
+    Directions.prototype.left = function () { return 3 };
 
     function GameObject() {
-        this.player = qs('#player');
-        this.box = qs('#box');
-        this.logEl = qs('#log');
-        this.currentCell = 312;
-        this.facing = Directions.up;
+        this.coordinates = new Coordinate;
+        this.facing = Directions.up();
         this.ammo = 100;
         this.health = 10;
         this.maxHealth = 10;
@@ -55,30 +45,31 @@
         this.fightingMode = false;
         this.saveBoxHTML;
         this.playerFightingOrigin;
-        this.enemy = qs('#enemy');
-        this.enemyMaxHealth = 10;
         this.enemyHealth = this.enemyMaxHealth;
         this.playerIsShooting = false;
         this.enemyDecisionInterval;
-        this.fightHealthEl = qs('#fight-health');
-        this.enemyHealthEl = qs('#enemy-health');
         this.gameProgression = 0;
         this.regenDegenInterval;
         this.isTown = false;
         this.armour = false;
         this.generatedMap;
-        this.lootHeading = qs('#loot-heading');
-        this.playEl = qs("#play_button");
-        this.inventory = new inventory(150);
+        this.inventory = new Inventory(150);
         this.elements = {
-            foodEl: qs('#food'),
-            lootEl: qs('#loot'),
-            nameEl: qs('#name'),
-            ammoEl: qs('#ammo'),
-            healthEl: qs('#health'),
-            energyEl: qs('#energy'),
-            ammoUsedEl: qs('#ammo-used'),
-            stepsEl: qs('#step-taken'),
+            player: qs('#player'),
+            box: qs('#box'),
+            log: qs('#log'),
+            enemy: qs('#enemy'),
+            enemyHealth: qs('#enemy-health'),
+            lootHeading: qs('#loot-heading'),
+            play: qs("#play_button"),
+            food: qs('#food'),
+            loot: qs('#loot'),
+            name: qs('#name'),
+            ammo: qs('#ammo'),
+            health: qs('#health'),
+            energy: qs('#energy'),
+            ammoUsed: qs('#ammo-used'),
+            steps: qs('#step-taken'),
             ammoTakes: qs('#ammotakes'),
             foodTakes: qs('#foodtakes'),
             lootAmmo: qs('#lootammonum'),
@@ -88,7 +79,7 @@
             lootFoodWrap: qs('#lootfood'),
             lootArmourWrap: qs('#lootarmour')
         };
-        this.getCoords = function () {
+        /*this.getCoords = function () {
             var a = this.currentCell;
             while (a < 300 || a > 324) {
                 if (a < 300) {
@@ -101,7 +92,7 @@
             var coords = { x: a - 312, y: (312 - o) / 25 };
             return coords;
         }
-        console.log(this.getCoords());
+        console.log(this.getCoords());*/
     };
 
     GameObject.prototype.detectHit = function (bulletEl, target) {
@@ -114,7 +105,7 @@
             && b.left <= t.left + 20);
     };
 
-    GameObject.prototype.takeF = function (item, amount) {
+    /*GameObject.prototype.takeF = function (item, amount) {
         if (item == 'ammo') {
             if (amount == 'all') {
                 this.ammo += this.lootArray[this.currentCell].ammo;
@@ -147,7 +138,7 @@
         this.lootFood.innerHTML = this.lootArray[this.currentCell].food;
         this.lootAmmoWrap.style.display = ((this.lootArray[this.currentCell].ammo == 0) ? 'none' : 'block');
         this.lootFoodWrap.style.display = ((this.lootArray[this.currentCell].food == 0) ? 'none' : 'block');
-    };
+    };*/
 
     var game = new GameObject();
 
@@ -168,7 +159,7 @@
         return "<span class='shaded'>" + text + "</span>";
     }
 
-    function inventory(space, items) {
+    function Inventory(space, items) {
         this.space = space;
         this.items = items || [];
         this.elements = {
@@ -216,7 +207,7 @@
         this.amount = amount;
     }
 
-    inventory.prototype.addItem = function (ITEM) {
+    Inventory.prototype.addItem = function (ITEM) {
         var t = 0;
         this.items.forEach(function (element) {
             t += element.amount;
@@ -286,16 +277,19 @@
             this.items.forEach(function (element) {
                 var el = document.createElement('span');
                 el.className = 'clickable';
-                el.addEventListener('click', function () {
-                    game.inventory.addItem(element);
-                    var i = this.items.indexOf(element);
-                    this.items.splice(i, 1);
-                    game.inventory.updateElements();
-                    this.updateElements();
-                });
+                var k = element;
                 el.innerHTML = 'Take';
                 game.elements.lootEl.innerHTML += element.amount + ' ' + element.itemName + ' ';
                 game.elements.lootEl.appendChild(el);
+                console.log(this);
+                el.addEventListener('click', function () {
+                    game.inventory.addItem(k);
+                    var i = this.items.indexOf(k);
+                    this.items.splice(i, 1);
+                    console.log(this.items);
+                    game.inventory.updateElements();
+                    this.updateElements();
+                });
                 game.elements.lootEl.innerHTML += '<br>';
             });
         }
@@ -306,18 +300,19 @@
 
     GameObject.prototype.move = function (direction) {
         if (this.fightingMode == false && this.energy >= 0.4 && this.isTown == false) {
-            if (direction == Directions.up) {
-                this.currentCell = ((this.currentCell > 24) ? this.currentCell - 25 : this.currentCell);
-                this.player.style.transform = 'rotate(0deg)';
+            if (direction == Directions.up()) {
+                this.coordinates.y += 1;
+                this.elements.player.style.transform = 'rotate(0deg)';
             }
-            if (direction == Directions.right) {
-                this.currentCell = (((this.currentCell + 1) % 25 != 0) ? this.currentCell + 1 : this.currentCell);
+            if (direction == Directions.right()) {
+                this.coordinates.x += 1;
+                this.elements.player.style.transform = 'rotate(90deg)';
             }
-            if (direction == Directions.left) {
+            if (direction == Directions.left()) {
                 this.currentCell = (((this.currentCell + 1) % 25 != 1) ? this.currentCell - 1 : this.currentCell);
                 this.player.style.transform = 'rotate(270deg)';
             }
-            if (direction == Directions.down) {
+            if (direction == Directions.down()) {
                 this.currentCell = ((this.currentCell < 600) ? this.currentCell + 25 : this.currentCell);
                 this.player.style.transform = 'rotate(180deg)';
             }
@@ -358,7 +353,7 @@
                 this.fightingMode = true;
                 this.box.innerHTML = '';
                 this.player.style.transform = 'rotate(0deg)';
-                this.facing = Directions.up;
+                this.facing = Directions.up();
                 this.player.style.left = 'calc(50% - 10px)';
                 this.player.style.left = this.player.getBoundingClientRect().left + 'px';
                 this.box.style.transform = 'scale(0.40)';
@@ -422,7 +417,7 @@
                 tblt.push('</tr></table>');
                 this.box.innerHTML = tblt.join('');
                 this.player.style.transform = 'rotate(0deg)';
-                this.facing = Directions.up;
+                this.facing = Directions.up();
                 this.player.style.left = 'calc(50% - 10px)';
                 this.player.style.left = this.player.getBoundingClientRect().left + 'px';
                 this.box.style.transform = 'scale(0.52)';
@@ -431,10 +426,10 @@
                 this.gameProgression += 5;
             }
         } else if (this.fightingMode == true && this.energy >= 0.4) {
-            if (this.direction == Directions.right) {
+            if (this.direction == Directions.right()) {
                 this.player.style.left = this.player.getBoundingClientRect().x + 20 + 'px';
             }
-            if (this.direction == Directions.left) {
+            if (this.direction == Directions.left()) {
                 this.player.style.left = this.player.getBoundingClientRect().x - 20 + 'px';
             }
             if (this.player.getBoundingClientRect().left < this.box.getBoundingClientRect().left + 12)
@@ -445,19 +440,19 @@
             this.stepsEl.innerHTML = 'Steps taken: ' + this.steps;
             this.gameProgression++;
         } else if (this.isTown == true && this.energy >= 0.4) {
-            if (this.direction == Directions.right) {
+            if (this.direction == Directions.right()) {
                 this.player.style.left = this.player.getBoundingClientRect().x + 20 + 'px';
                 this.player.style.transform = 'rotate(90deg)';
             }
-            if (this.direction == Directions.left) {
+            if (this.direction == Directions.left()) {
                 this.player.style.left = this.player.getBoundingClientRect().x - 20 + 'px';
                 this.player.style.transform = 'rotate(270deg)';
             }
-            if (this.direction == Directions.down) {
+            if (this.direction == Directions.down()) {
                 this.player.style.top = this.player.getBoundingClientRect().y + 20 + 'px';
                 this.player.style.transform = 'rotate(180deg)';
             }
-            if (this.direction == Directions.up) {
+            if (this.direction == Directions.up()) {
                 this.player.style.top = this.player.getBoundingClientRect().y - 20 + 'px';
                 this.player.style.transform = 'rotate(0deg)';
             }
@@ -480,16 +475,16 @@
     document.body.onkeyup = function (e) {
         if (document.activeElement != nameEl) {
             if (e.key == "w" || e.key == "ArrowUp") {
-                move(Directions.up);
+                move(Directions.up());
             }
             else if (e.key == "d" || e.key == "ArrowRight") {
-                move(Directions.right);
+                move(Directions.right());
             }
             else if (e.key == "a" || e.key == "ArrowLeft") {
-                move(Directions.left);
+                move(Directions.left());
             }
             else if (e.key == "s" || e.key == "ArrowDown") {
-                move(Directions.down);
+                move(Directions.down());
             }
             else if (e.key == " ") {
                 if (energy >= 0.2) {
@@ -683,13 +678,13 @@
             document.body.appendChild(bullet);
             var i = 0;
             var x = setInterval(function () {
-                if (direction == Directions.up) {
+                if (direction == Directions.up()) {
                     bullet.style.top = this.playerY - i + 'px';
-                } else if (direction == Directions.right) {
+                } else if (direction == Directions.right()) {
                     bullet.style.left = this.playerX + i + 'px';
-                } else if (direction == Directions.left) {
+                } else if (direction == Directions.left()) {
                     bullet.style.left = this.playerX - i + 'px';
-                } else if (direction == Directions.down) {
+                } else if (direction == Directions.down()) {
                     bullet.style.top = this.playerY + i + 'px';
                 }
                 i += 10;
