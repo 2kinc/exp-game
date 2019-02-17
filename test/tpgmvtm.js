@@ -1,4 +1,4 @@
-(function (el, w, h) {
+(function (el, w, h, global) {
     function Game() {
         this.coordinate = { x: 0, y: 0 };
         this.MapTile = function (coords, loot, terrain, properties) {
@@ -7,6 +7,7 @@
             this.terrain = terrain;
             this.properties = properties;
         }
+        var that = this;
         this.Chunk = function (sideLength, coords, seed) {
             this.terrain = [];
             for (var x = 0; x < sideLength; x++) {
@@ -29,12 +30,11 @@
                         value = '.';
                     }
                     // ... or noise.simplex3 and noise.perlin3:
-                    var newTile = new MapTile({ x: x, y: y }, null, value, null);
+                    var newTile = new that.MapTile({ x: x, y: y }, null, value, null);
                     this.terrain.push(newTile);
                 }
             }
         }
-    }
     this.get_topleft = function () {
         return {
             y: this.coordinate.y + Math.floor(h / 2),
@@ -186,7 +186,7 @@
     }
 }
 
-    var game = new Game();
-game.initialize_viewport(w, h);
+    global.game = new Game();
+global.game.initialize_viewport(w, h);
 
-}) (document.querySelector("#tvp"), 25, 25);
+}) (document.querySelector("#tvp"), 25, 25, this);
