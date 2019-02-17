@@ -21,8 +21,8 @@ function ViewPort(center){
             this.before_update_center(this.center, new_center);
         }
 
-        this.center.x = new_center;
-
+        this.center.x = new_center.x;
+        this.center.y = new_center.y;
     };
 }
 
