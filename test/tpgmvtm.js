@@ -7,16 +7,25 @@
                 x: this.coordinate.x - Math.floor(w / 2)
             }
         };
+        this.get_bottomleft = function () {
+            return {
+                x: this.coordinate.x - Math.floor(w / 2),
+                y: this.coordinate.y - Math.floor(h / 2)
+            }
+        }
         this.for_id = function (n) {
             return String(Math.abs(n)) + (n < 0 ? "n" : "");
         };
-        this.get_tile_id = function(sx, sy){
+        this.get_tile_id = function (sx, sy) {
             return "c_" + sx + "_" + sy;
         };
         this.generate_rows = function (topleft, n_rows, n_cols, start_index) {
             var anchor = null;
-            if(start_index >= 0){
+            if (start_index >= 0) {
                 anchor = el.children[start_index];
+            }
+            if (start_index < 0) {
+                anchor = el.children[el.children.length + start_index];
             }
             for (var y = 0; y < n_rows; y++) {
                 var tr = document.createElement("tr");
@@ -30,23 +39,22 @@
                     td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
                     tr.appendChild(td);
                 }
-                if(anchor){
+                if (anchor) {
                     el.insertBefore(tr, anchor);
                 }
-                else{
+                else {
                     el.appendChild(tr);
                 }
             }
 
             var c = document.querySelector("td.current");
-            if(c) 
-            {
+            if (c) {
                 c.classList.remove("current");
             }
-            c = document.getElementById(this.get_tile_id(this.coordinate.x, this.coordinate.y));
+            c = document.getElementById(this.get_tile_id(this.for_id(this.coordinate.x), this.for_id(this.coordinate.y)));
             if (c) {
                 c.classList.add("current");
-            } 
+            }
 
         };
         this.initialize_viewport = function () {
@@ -63,7 +71,7 @@
         };
         this.shift_viewport_vertically = function (distance) {
             this.coordinate.y += distance;
-            if(distance > 0){
+            if (distance > 0) {
                 console.log("moving up");
                 for (var i = 0; i < distance; i++) {
                     el.removeChild(el.lastChild);
@@ -71,6 +79,14 @@
 
                 var tl = this.get_topleft();
                 this.generate_rows(tl, distance, w, 0);
+            } else if (distance < 0) {
+                console.log("moving down");
+                for (var i = 0; i < Math.abs(distance); i++) {
+                    el.removeChild(el.children[0]);
+                }
+
+                var tl = this.get_bottomleft();
+                this.generate_rows(tl, Math.abs(distance), w);
             }
         };
     }
@@ -78,4 +94,4 @@
     var game = new Game();
     game.initialize_viewport(w, h);
 
-})(document.querySelector("#tvp"), 25, 25);
+})(document.querySelector("#tvp"), 15, 15);
