@@ -13,6 +13,18 @@
                 y: this.coordinate.y - Math.floor(h / 2)
             }
         }
+        this.get_topright = function () {
+            return {
+                x: this.coordinate.x + Math.floor(w / 2),
+                y: this.coordinate.y + Math.floor(h / 2)
+            }
+        }
+        this.get_bottomright = function () {
+            return {
+                x: this.coordinate.x + Math.floor(w / 2),
+                y: this.coordinate.y - Math.floor(h / 2)
+            }
+        }
         this.for_id = function (n) {
             return String(Math.abs(n)) + (n < 0 ? "n" : "");
         };
@@ -71,8 +83,8 @@
                     td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
                     rows[y].insertBefore(td, rows[y].children[start_index]);
                 }
-                this.updateCenterEl();
             }
+            this.updateCenterEl();
         }
         this.initialize_viewport = function () {
             var topleft = this.get_topleft();
@@ -121,7 +133,7 @@
                         row[k].removeChild(row[k].children[0]);
                     }
                 }
-                var tl = this.get_topleft();
+                var tl = this.get_topright();
                 this.generate_columns(tl, h, distance, -1);
                 console.log('moving right');
             } else if (distance < 0) {
