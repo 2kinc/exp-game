@@ -7,6 +7,9 @@
             this.terrain = terrain;
             this.properties = properties;
         }
+        this.getTileElement = function (x, y) {
+            return document.querySelector('#c_' + this.for_id(x) + '_' + this.for_id(y));
+        }
         var that = this;
         this.Chunk = function (sideLength, coords, seed) {
             this.terrain = [];
@@ -34,6 +37,16 @@
                     this.terrain.push(newTile);
                 }
             }
+        }
+        this.renderChunk = function (chunk) {
+            var a = chunk.terrain;
+            var that = this;
+            a.forEach(function (element) {
+                var x = element.coordinates.x;
+                var y = element.coordinates.y;
+                var tile = that.getTileElement(x, y);
+                tile.innerHTML = element.terrain;
+            });
         }
         this.get_topleft = function () {
             return {
