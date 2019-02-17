@@ -10,6 +10,8 @@ table {
     border: 1px black solid;
     width: 20px;
     height: 20px;
+    max-width: 20px;
+    max-height: 20px;
     text-align: center;
     justify-content: center;
     font-size: 0.5em;

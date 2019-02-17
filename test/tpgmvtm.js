@@ -155,4 +155,4 @@
     var game = new Game();
     game.initialize_viewport(w, h);
 
-})(document.querySelector("#tvp"), 15, 15);
+})(document.querySelector("#tvp"), 25, 25);
