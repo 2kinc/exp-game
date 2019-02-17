@@ -13,8 +13,10 @@ table {
     text-align: center;
     justify-content: center;
     font-size: 0.5em;
+    color: white;
+    overflow: hidden;
 }
 
 td.current{
-    background-color: green;
+    background-color: green !important;
 }
