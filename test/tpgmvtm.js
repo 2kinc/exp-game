@@ -19,6 +19,16 @@
         this.get_tile_id = function (sx, sy) {
             return "c_" + sx + "_" + sy;
         };
+        this.updateCenterEl = function () {
+            var c = document.querySelector("td.current");
+            if (c) {
+                c.classList.remove("current");
+            }
+            c = document.getElementById(this.get_tile_id(this.for_id(this.coordinate.x), this.for_id(this.coordinate.y)));
+            if (c) {
+                c.classList.add("current");
+            }
+        }
         this.generate_rows = function (topleft, n_rows, n_cols, start_index) {
             var anchor = null;
             if (start_index >= 0) {
@@ -46,17 +56,24 @@
                     el.appendChild(tr);
                 }
             }
-
-            var c = document.querySelector("td.current");
-            if (c) {
-                c.classList.remove("current");
-            }
-            c = document.getElementById(this.get_tile_id(this.for_id(this.coordinate.x), this.for_id(this.coordinate.y)));
-            if (c) {
-                c.classList.add("current");
-            }
-
+            this.updateCenterEl();
         };
+        this.generate_columns = function (topleft, n_rows, n_cols, start_index) {
+            for (var x = 0; x < n_cols; x++) {
+                var sx = this.for_id(topleft.x + x);
+                var sy = this.for_id(topleft.y);
+                for (var y = 0; y < n_rows; y++) {
+                    var td = document.createElement("td");
+                    var rows = el.children;
+                    sy = this.for_id(topleft.y - y);
+                    td.id = this.get_tile_id(sx, sy);
+                    td.innerText = String(topleft.x + x) + "," + String(topleft.y - y);
+                    td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
+                    rows[y].insertBefore(td, rows[y].children[start_index]);
+                }
+                this.updateCenterEl();
+            }
+        }
         this.initialize_viewport = function () {
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
@@ -66,6 +83,10 @@
                     that.shift_viewport_vertically(1);
                 } else if (event.key === "S" || event.key === "s") {
                     that.shift_viewport_vertically(-1);
+                } else if (event.key === "D" || event.key === "d") {
+                    that.shift_viewport_horizontally(1);
+                } else if (event.key === "A" || event.key === "a") {
+                    that.shift_viewport_horizontally(-1);
                 }
             }
         };
@@ -89,6 +110,34 @@
                 this.generate_rows(tl, Math.abs(distance), w);
             }
         };
+        this.shift_viewport_horizontally = function (distance) {
+            this.coordinate.x += distance;
+            if (distance > 0) {
+                console.log(el.children);
+                for (var i = 0; i < h; i++) {
+                    var row = el.children;
+                    var k = i;
+                    for(var j = 0; j < distance; j ++){
+                        row[k].removeChild(row[k].children[0]);
+                    }
+                }
+                var tl = this.get_topleft();
+                this.generate_columns(tl, h, distance, -1);
+                console.log('moving right');
+            } else if (distance < 0) {
+                for (var i = 0; i < h; i++) {
+                    var row = el.children;
+                    var k = i;
+                    for(var j = 0; j < Math.abs(distance); j ++){
+                        row[k].removeChild(row[k].lastChild);
+                    }
+                }
+
+                var tl = this.get_topleft();
+                this.generate_columns(tl, h, Math.abs(distance), 0);
+                console.log('moving left');
+            }
+        }
     }
 
     var game = new Game();
