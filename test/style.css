@@ -14,3 +14,7 @@ table {
     justify-content: center;
     font-size: 0.5em;
 }
+
+td.current{
+    background-color: green;
+}
