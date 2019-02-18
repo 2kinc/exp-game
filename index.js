@@ -104,7 +104,9 @@
             dirt: new this.Tile('*', 'rgb(109,76,65)', 'Dirt', 'An abundant substance that plants grow in.'),
             sand: new this.Tile('~', 'rgb(253,216,53)', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
             grass: new this.Tile(',', 'rgb(76,175,80)', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
-            cactus: new this.Tile('🌵', 'rgb(253,216,53)', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 })
+            cactus: new this.Tile('🌵', 'rgb(253,216,53)', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
+            tree: new this.Tile('🌲', 'rgb(109,76,65)', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', {itemDrop: new item('Wood', 1)}),
+            wood: new this.Tile('🏽', 'rgb(141,110,99)', 'Wood', 'Strong, organic material used to build structures.')
         }
         this.coordinate = { x: 0, y: 0 };
         this.MapTile = function (coords, loot, terrain) {
