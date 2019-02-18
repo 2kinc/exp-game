@@ -1,10 +1,10 @@
-(function (global) {
+(function (global, w, h, el) {
 
     if (!window.localStorage) {
         throw "Your browser does not support Local Storage";
     }
 
-    function Coordinate(x, y){
+    function Coordinate(x, y) {
         this.x = x || 0;
         this.y = y || 0;
     }
@@ -25,15 +25,17 @@
         return document.querySelector(selector);
     };
 
-    function Directions() {}
+    function Directions() { }
     Directions.prototype.up = function () { return 0 };
     Directions.prototype.right = function () { return 1 };
     Directions.prototype.down = function () { return 2 };
     Directions.prototype.left = function () { return 3 };
 
+    
+
     function GameObject() {
         this.coordinates = new Coordinate;
-        this.facing = Directions.up();
+        this.facing = (new Directions).up();
         this.ammo = 100;
         this.health = 10;
         this.maxHealth = 10;
@@ -69,7 +71,7 @@
             health: qs('#health'),
             energy: qs('#energy'),
             ammoUsed: qs('#ammo-used'),
-            steps: qs('#step-taken'),
+            steps: qs('#steps-taken'),
             ammoTakes: qs('#ammotakes'),
             foodTakes: qs('#foodtakes'),
             lootAmmo: qs('#lootammonum'),
@@ -77,23 +79,229 @@
             lootArmour: qs('#lootarmournum'),
             lootAmmoWrap: qs('#lootammo'),
             lootFoodWrap: qs('#lootfood'),
-            lootArmourWrap: qs('#lootarmour')
+            lootArmourWrap: qs('#lootarmour'),
+            play: qs('#play_button'),
+            name: qs('#name')
         };
-        /*this.getCoords = function () {
-            var a = this.currentCell;
-            while (a < 300 || a > 324) {
-                if (a < 300) {
-                    a += 25;
-                } else if (a > 324) {
-                    a -= 25;
+        this.coordinate = { x: 0, y: 0 };
+        this.MapTile = function (coords, loot, terrain, properties) {
+            this.coordinates = coords;
+            this.loot = loot;
+            this.terrain = terrain;
+            this.properties = properties;
+        }
+        this.getTileElement = function (x, y) {
+            return document.querySelector('#c_' + this.for_id(x) + '_' + this.for_id(y));
+        }
+        var that = this;
+        this.Chunk = function (sideLength, bottomleft, seed) {
+            this.terrain = [];
+            noise.seed(seed);
+            for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
+                for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
+                    // All noise functions return values in the range of -1 to 1.
+
+                    // noise.simplex2 and noise.perlin2 for 2d noise
+                    var value = noise.simplex2(x / 100, y / 100);
+                    if (value < 0) {
+                        value = 1 - Math.abs(value);
+                    }
+                    if (value >= 0.75) {
+                        value = "🌊";
+                    } else if (value >= 0.45) {
+                        value = "🏜️";
+                    } else if (value >= 0.25) {
+                        value = "🌿";
+                    } else if (value >= 0) {
+                        value = "🌲";
+                    } else {
+                        value = '.';
+                    }
+                    // ... or noise.simplex3 and noise.perlin3:
+                    var newTile = new that.MapTile({ x: x, y: y }, null, value, null);
+                    this.terrain.push(newTile);
                 }
             }
-            var o = Math.floor(this.currentCell / 25) * 25 + 12;
-            var coords = { x: a - 312, y: (312 - o) / 25 };
-            return coords;
         }
-        console.log(this.getCoords());*/
-    };
+        this.renderChunks = function (chunks) {
+            var that = this;
+            chunks.forEach(function (chunk) {
+                var a = chunk.terrain;
+                a.forEach(function (element) {
+                    var x = element.coordinates.x;
+                    var y = element.coordinates.y;
+                    var tile = that.getTileElement(x, y);
+                    tile.innerHTML = element.terrain;
+                    if (tile.innerHTML == '🌊') {
+                        tile.style.background = 'rgb(3,169,244)';
+                    } else if (tile.innerHTML == '🏜️') {
+                        tile.style.background = 'rgb(251,192,45)';
+                    } else if (tile.innerHTML == '🌿') {
+                        tile.style.background = 'rgb(139,195,74)';
+                    } else if (tile.innerHTML == '🌲') {
+                        tile.style.background = 'rgb(121,85,72)';
+                    }
+                });
+            }
+            )
+        }
+        this.get_topleft = function () {
+            return {
+                y: this.coordinate.y + Math.floor(h / 2),
+                x: this.coordinate.x - Math.floor(w / 2)
+            }
+        };
+        this.get_bottomleft = function () {
+            return {
+                x: this.coordinate.x - Math.floor(w / 2),
+                y: this.coordinate.y - Math.floor(h / 2)
+            }
+        }
+        this.get_topright = function () {
+            return {
+                x: this.coordinate.x + Math.floor(w / 2),
+                y: this.coordinate.y + Math.floor(h / 2)
+            }
+        }
+        this.get_bottomright = function () {
+            return {
+                x: this.coordinate.x + Math.floor(w / 2),
+                y: this.coordinate.y - Math.floor(h / 2)
+            }
+        }
+        this.for_id = function (n) {
+            return String(Math.abs(n)) + (n < 0 ? "n" : "");
+        };
+        this.get_tile_id = function (sx, sy) {
+            return "c_" + sx + "_" + sy;
+        };
+        this.updateCenterEl = function () {
+            var c = document.querySelector("td.current");
+            if (c) {
+                c.classList.remove("current");
+            }
+            c = document.getElementById(this.get_tile_id(this.for_id(this.coordinate.x), this.for_id(this.coordinate.y)));
+            if (c) {
+                c.classList.add("current");
+            }
+        }
+        this.generate_rows = function (topleft, n_rows, n_cols, start_index) {
+            var anchor = null;
+            if (start_index >= 0) {
+                anchor = el.children[start_index];
+            }
+            if (start_index < 0) {
+                anchor = el.children[el.children.length + start_index];
+            }
+            for (var y = 0; y < n_rows; y++) {
+                var tr = document.createElement("tr");
+                var sy = this.for_id(topleft.y - y);
+                tr.id = "r_" + sy;
+                for (var x = 0; x < n_cols; x++) {
+                    var td = document.createElement("td");
+                    var sx = this.for_id(topleft.x + x);
+                    td.id = this.get_tile_id(sx, sy);
+                    td.innerText = String(topleft.x + x) + "," + String(topleft.y - y);
+                    //td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
+                    tr.appendChild(td);
+                }
+                if (anchor) {
+                    el.insertBefore(tr, anchor);
+                }
+                else {
+                    el.appendChild(tr);
+                }
+            }
+            this.updateCenterEl();
+        };
+        this.generate_columns = function (topleft, n_rows, n_cols, start_index) {
+            for (var x = 0; x < n_cols; x++) {
+                var sx = this.for_id(topleft.x + x);
+                var sy = this.for_id(topleft.y);
+                for (var y = 0; y < n_rows; y++) {
+                    var td = document.createElement("td");
+                    var rows = el.children;
+                    sy = this.for_id(topleft.y - y);
+                    td.id = this.get_tile_id(sx, sy);
+                    td.innerText = String(topleft.x + x) + "," + String(topleft.y - y);
+                    //td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
+                    rows[y].insertBefore(td, rows[y].children[start_index]);
+                }
+            }
+            this.updateCenterEl();
+        }
+        this.initialize_viewport = function () {
+            var topleft = this.get_topleft();
+            this.generate_rows(topleft, h, w);
+            var that = this;
+            document.onkeypress = function (event) {
+                if (event.key === "W" || event.key === "w") {
+                    that.shift_viewport_vertically(1);
+                } else if (event.key === "S" || event.key === "s") {
+                    that.shift_viewport_vertically(-1);
+                } else if (event.key === "D" || event.key === "d") {
+                    that.shift_viewport_horizontally(1);
+                } else if (event.key === "A" || event.key === "a") {
+                    that.shift_viewport_horizontally(-1);
+                }
+            }
+            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            this.renderChunks([a]);
+        };
+        this.shift_viewport_vertically = function (distance) {
+            this.coordinate.y += distance;
+            if (distance > 0) {
+                console.log("moving up");
+                for (var i = 0; i < distance; i++) {
+                    el.removeChild(el.lastChild);
+                }
+
+                var tl = this.get_topleft();
+                this.generate_rows(tl, distance, w, 0);
+            } else if (distance < 0) {
+                console.log("moving down");
+                for (var i = 0; i < Math.abs(distance); i++) {
+                    el.removeChild(el.children[0]);
+                }
+
+                var tl = this.get_bottomleft();
+                this.generate_rows(tl, Math.abs(distance), w);
+            }
+            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            this.renderChunks([a]);
+        };
+        this.shift_viewport_horizontally = function (distance) {
+            this.coordinate.x += distance;
+            if (distance > 0) {
+                console.log(el.children);
+                for (var i = 0; i < h; i++) {
+                    var row = el.children;
+                    var k = i;
+                    for (var j = 0; j < distance; j++) {
+                        row[k].removeChild(row[k].children[0]);
+                    }
+                }
+                var tl = this.get_topright();
+                this.generate_columns(tl, h, distance, -1);
+                console.log('moving right');
+            } else if (distance < 0) {
+                for (var i = 0; i < h; i++) {
+                    var row = el.children;
+                    var k = i;
+                    for (var j = 0; j < Math.abs(distance); j++) {
+                        row[k].removeChild(row[k].lastChild);
+                    }
+                }
+
+                var tl = this.get_topleft();
+                this.generate_columns(tl, h, Math.abs(distance), 0);
+                console.log('moving left');
+            }
+            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            this.renderChunks([a]);
+        }
+    }
+
 
     GameObject.prototype.detectHit = function (bulletEl, target) {
         var b = bulletEl.getBoundingClientRect();
@@ -105,40 +313,6 @@
             && b.left <= t.left + 20);
     };
 
-    /*GameObject.prototype.takeF = function (item, amount) {
-        if (item == 'ammo') {
-            if (amount == 'all') {
-                this.ammo += this.lootArray[this.currentCell].ammo;
-                this.lootArray[this.currentCell].ammo = 0;
-            } else {
-                this.lootArray[this.currentCell].ammo--;
-                this.ammo++;
-            }
-        }
-        if (item == 'food') {
-            if (amount == 'all') {
-                this.food += this.lootArray[this.currentCell].food;
-                this.lootArray[this.currentCell].food = 0;
-            } else {
-                this.lootArray[this.currentCell].food--;
-                this.food++;
-            }
-        }
-        var itemEval = eval(item);
-        if (amount == 'all') {
-            this.itemEval += this.lootArray[this.currentCell].itemEval;
-            this.lootArray[this.currentCell].ammo = 0;
-        } else {
-            this.lootArray[this.currentCell].itemEval--;
-            this.itemEval++;
-        }
-        this.ammoEl.innerHTML = 'Ammo: ' + this.ammo;
-        this.foodEl.innerHTML = 'Food: ' + this.food + ' [E to eat]';
-        this.lootAmmo.innerHTML = this.lootArray[this.currentCell].ammo;
-        this.lootFood.innerHTML = this.lootArray[this.currentCell].food;
-        this.lootAmmoWrap.style.display = ((this.lootArray[this.currentCell].ammo == 0) ? 'none' : 'block');
-        this.lootFoodWrap.style.display = ((this.lootArray[this.currentCell].food == 0) ? 'none' : 'block');
-    };*/
 
     var game = new GameObject();
 
@@ -153,7 +327,7 @@
         window.localStorage.setItem('exp-game/save', JSON.stringify(global._exp_game));
     }
 
-    global._exp_game = ((global._exp_game != null) ? global._exp_game : (new GameSave()).load());
+    //global._exp_game = ((global._exp_game != null) ? global._exp_game : (new GameSave()).load());
 
     function shadedText(text) {
         return "<span class='shaded'>" + text + "</span>";
@@ -246,19 +420,6 @@
 
     console.log(game.inventory);
 
-    var tbl = ['<table><tr>'];
-
-    for (var i = 0; i < 625; i++) {
-        tbl.push("<td id='c" + i + "'></td>");
-        if ((i + 1) % 25 == 0)
-            tbl.push('</tr><tr>');
-    }
-
-    tbl.push('</tr></table>');
-    box.innerHTML = tbl.join('');
-
-    var tds = document.querySelectorAll('td');
-
     GameObject.prototype.lootSpawn = function (chest) {
         this.items = [];
         var ammo = new item('ammo', Math.floor(Math.random() * 10));
@@ -297,8 +458,8 @@
     };
 
     global.GameObject = new GameObject();
-
-    GameObject.prototype.move = function (direction) {
+    
+    /*GameObject.prototype.move = function (direction) {
         if (this.fightingMode == false && this.energy >= 0.4 && this.isTown == false) {
             if (direction == Directions.up()) {
                 this.coordinates.y += 1;
@@ -328,7 +489,7 @@
             if (!this.lootArray[this.currentCell])
                 this.lootArray[this.currentCell] = new lootSpawn((this.currentCellEl.innerHTML == 'C'));
             var currentLoot = this.lootArray[this.currentCell];
-
+    
             this.lootAmmo.innerHTML = this.currentLoot.ammo;
             this.lootFood.innerHTML = this.currentLoot.food;
             this.lootAmmoWrap.style.display = ((this.currentLoot.ammo == 0) ? 'none' : 'block');
@@ -470,10 +631,10 @@
         } else {
             log("You have no energy! Get food fast!");
         }
-    }
+    }*/
 
     document.body.onkeyup = function (e) {
-        if (document.activeElement != nameEl) {
+        if (document.activeElement != game.elements.name) {
             if (e.key == "w" || e.key == "ArrowUp") {
                 move(Directions.up());
             }
@@ -496,7 +657,7 @@
             else if (e.key == "e") {
                 eat(1);
             }
-            else if (e.key == "Escape") {
+            /*else if (e.key == "Escape") {
                 if (fightingMode == true && energy >= 3) {
                     setTimeout(function () {
                         fightingMode = false;
@@ -542,7 +703,7 @@
                 }
                 isTown = false;
                 clearInterval(enemyDecisionInterval);
-            } else if (e.key == 'Enter') {
+            }*/ else if (e.key == 'Enter') {
                 if ($('#startscreen').html() != '') {
                     regenDegenInterval = setInterval(function () {
                         if (Math.round(energy) > 0 && health == maxHealth)
@@ -591,7 +752,7 @@
         }
     }
     if ($('startscreen').html != '') {
-        game.playEl.addEventListener('click', function () {
+        game.elements.play.addEventListener('click', function () {
             regenDegenInterval = setInterval(function () {
                 if (Math.round(energy) > 0 && health == maxHealth)
                     energy--;
@@ -650,23 +811,7 @@
         element.id = 'c' + index;
     });*/
 
-    if (game.lootArray[currentCell] == undefined)
-        game.lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
-    game.lootArray[currentCell].take = takeF;
-    if (game.lootArray[currentCell] == undefined)
-        game.lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
-    game.lootAmmo.innerHTML = game.lootArray[currentCell].ammo;
-    game.lootFood.innerHTML = game.lootArray[currentCell].food;
-    game.lootAmmoWrap.style.display = ((game.lootArray[currentCell].ammo == 0) ? 'none' : 'block');
-    game.lootFoodWrap.style.display = ((game.lootArray[currentCell].food == 0) ? 'none' : 'block');
-
-    var cc = qs('#c' + this.currentCell);
-
-    this.player.style.top = cc.getBoundingClientRect().y + 'px';
-    this.player.style.left = cc.getBoundingClientRect().x + 'px';
-
-
-    function shoot(direction) {
+    /*function shoot(direction) {
         if (ammo > 0) {
             var bullet = document.createElement('div');
             bullet.className = 'bullet';
@@ -799,97 +944,17 @@
                 bullet.parentNode.removeChild(bullet);
             }
         }, 600);
-    }
+    }*/
 
     function log(message) {
-        logEl.innerHTML = message + '<br>' + logEl.innerHTML;
+        game.elements.log.innerHTML = message + '<br>' + game.elements.log.innerHTML;
     }
 
     setInterval(function () {
-        name = nameEl.innerHTML;
+        name = game.elements.name.innerHTML;
     }, 1000)
 
-    function eat(amount) {
-        if (energy < maxEnergy && food >= amount) {
-            food -= amount;
-            energy += amount * 3;
-            if (energy > maxEnergy)
-                energy = maxEnergy;
-            foodEl.innerHTML = 'Food: ' + food + ' [E to eat]';
-            energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-        } else if (energy < maxEnergy && food < amount) {
-            log('You have no food!')
-        } else if (energy = maxEnergy) {
-            log("Your energy is full. No need to eat.");
-        }
-    }
-
-    var cc2 = qs('#c' + this.currentCell);
-    var lh = qs('#loot-heading');
-    if (cc2) {
-        if (cc2.innerHTML == "'")
-            lh.innerHTML = "[']" + ' Plains';
-        if (cc2.innerHTML == "*")
-            lh.innerHTML = "[*]" + ' Forest';
-        if (cc2.innerHTML == ",")
-            lh.innerHTML = "[,]" + ' Swamp';
-        if (cc2.innerHTML == "C")
-            lh.innerHTML = "[C]" + ' Chest';
-        if (cc2.innerHTML == " ")
-            lh.innerHTML = "[ ]" + ' Empty';
-        if (cc2.innerHTML == "[L]")
-            lh.innerHTML == "[L]" + 'Lake';
-        if (cc2.innerHTML == "[M]")
-            lh.innerHTML == "[M]" + 'Mountain';
-    }
-
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toGMTString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-
-    function checkCookie() {
-        var checker = getCookie('checker');
-        if (checker == "yup") {
-            /*name = getCookie('name');
-            health = Number(getCookie('health'));
-            maxHealth = Number(getCookie('maxhealth'));
-            ammo = Number(getCookie('ammo'));
-            energy = Number(getCookie('energy'));
-            maxEnergy = Number(getCookie('maxenergy'));
-            food = Number(getCookie('food'));
-            steps = Number(getCookie('steps'));
-            ammoUsed = Number(getCookie('ammoused'));
-            lootArray = JSON.parse(getCookie('loot'));
-            gameProgression = Number(getCookie('gameprogression'));
-            noise.seed(getCookie('seed'));*/
-            //saveFile = getCookie('saveFile');
-        } /*else {
-            setCookie('loot', JSON.stringify(lootArray), 30);
-        }*/
-    }
-
-    checkCookie();
-
-    function saveGame() {
+    /*function saveGame() {
         saveFile = JSON.stringify(global._exp_game);
         saveFile = JSON.stringify([worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, this.currentCell,
             gameProgression, isTown, fightingMode]);
@@ -900,9 +965,9 @@
         });
         saveFile = saveFile.slice(0, -1);
         saveFile = window.btoa(saveFile);
-    }
+    }*/
 
-    function readSaveFile() {
+    /*function readSaveFile() {
         if (saveFile != '') {
             var decodedSaveFile = window.atob(saveFile);
             var split = decodedSaveFile.split('#');
@@ -930,7 +995,7 @@
                 lootArray: loot
             };
         }
-    }
+    }*/
 
     /*function initFromSave() {
         var r = readSaveFile();
@@ -948,30 +1013,15 @@
         lootArray = r.lootArray;
     }*/
 
-    saveGame();
-
-    if (readSaveFile != '')
-        initFromSave();
-
-
-    if (game.lootArray[currentCell] == undefined)
-        game.lootArray[currentCell] = new lootSpawn((qs('#c' + this.currentCell).innerHTML == 'C'));
-    game.lootArray[currentCell].take = takeF;
-
-    game.nameEl.innerHTML = game.name;
-    game.healthEl.innerHTML = 'Health: ' + game.health + '/' + game.maxHealth;
-    game.energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + game.maxEnergy;
-    game.ammoEl.innerHTML = 'Ammo: ' + game.ammo;
-    game.foodEl.innerHTML = 'Food: ' + game.food + ' [E to eat]';
-    game.ammoUsedEl.innerHTML = 'Ammo used: ' + game.ammoUsed;
-    game.stepsEl.innerHTML = 'Steps taken: ' + game.steps;
+    game.elements.name.innerHTML = game.name;
+    game.elements.health.innerHTML = 'Health: ' + game.health + '/' + game.maxHealth;
+    game.elements.energy.innerHTML = 'Energy: ' + Math.round(energy) + '/' + game.maxEnergy;
+    game.elements.ammo.innerHTML = 'Ammo: ' + game.ammo;
+    game.elements.food.innerHTML = 'Food: ' + game.food + ' [E to eat]';
+    game.elements.ammoUsed.innerHTML = 'Ammo used: ' + game.ammoUsed;
+    game.elements.steps.innerHTML = 'Steps taken: ' + game.steps;
     qs('#log-heading').innerHTML = 'Log';
-    game.lootAmmo.innerHTML = game.lootArray[game.currentCell].ammo;
-    game.lootFood.innerHTML = game.lootArray[game.currentCell].food;
-    game.lootAmmoWrap.style.display = ((game.lootArray[game.currentCell].ammo == 0) ? 'none' : 'block');
-    game.lootFoodWrap.style.display = ((game.lootArray[game.currentCell].food == 0) ? 'none' : 'block');
-    game.lootArray[game.currentCell].take = game.takeF;
-    game.logEl.innerHTML = 'You awake into a strange world.';
+    game.elements.log.innerHTML = 'You awake into a strange world.';
     setTimeout(function () {
         log('Your memories are a messy blur.')
     }, 1500);
@@ -993,7 +1043,7 @@
                 this.player.style.top = savePlayerCoordinates.top + 'px';
             }, 200);
             count++;
-        }, (10000000 / gameProgression) * count);
+        }, (10000000 / game.gameProgression) * count);
     }
 
     glitchInterval();
@@ -1017,37 +1067,8 @@
 
     $('#by2kinc').css({ 'clip': 'unset', 'left': '0' });
 
-    noise.seed(readSaveFile().seed);
 
-    for (var x = 0; x < 2500; x += 100) {
-        for (var y = 0; y < 2500; y += 100) {
-            var value = Math.abs(noise.perlin2(x / 10000, y / 10000));
-            value *= 3;
-
-            if (value >= 0.75) {
-                value = " ";
-            } else if (value >= 0.45) {
-                value = ",";
-            } else if (value >= 0.25) {
-                value = "'";
-            } else if (value >= 0) {
-                value = "*";
-            } else {
-                value = '.';
-            }
-            var cell = Math.floor(((x + y * 25) / 100) - 3);
-            if (cell < 0)
-                cell = 0;
-
-            tds[cell].innerHTML = value;
-            if (cell < tds.length - 1) tds[cell + 1].innerHTML = value;
-            if (cell < tds.length - 2) tds[cell + 2].innerHTML = value;
-            tds[cell].innerHTML = value;
-            if (cell < tds.length - 3) tds[cell + 3].innerHTML = value;
-        }
-    }
-
-    for (var i = 0; i < 625; i++) {
+    /*for (var i = 0; i < 625; i++) {
         var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1] + pi[worldSeed + i + 2]) / 3;
         if (randomNum >= 8.5) {
             document.querySelectorAll('td')[i].innerHTML = 'C';
@@ -1056,52 +1077,16 @@
         } else if (randomNum == 0) {
             document.querySelectorAll('td')[i].innerHTML = 'L';
         }
-    }
+    }*/
 
-    function town(index) {
+    /*function town(index) {
         var possibleDirections = ['North', 'East', 'South', 'West'];
         this.townHall = possibleDirections[pi[worldSeed + index] % 4];
         this.pathLengths = [pi[worldSeed + index + 1] % 3 + 2, pi[worldSeed + index + 2] % 3 + 2,
         pi[worldSeed + index + 3] % 3 + 2];
         this.index = index;
-    }
+    }*/
 
-    console.log(new town(1));
-
-    this.currentCellEl = qs('#c' + this.currentCell);
-    if (lootArray[currentCell] == undefined)
-        lootArray[currentCell] = new lootSpawn((this.currentCellEl.innerHTML == 'C'));
-    var currentLoot = lootArray[currentCell];
-
-    lootAmmo.innerHTML = currentLoot.ammo;
-    lootFood.innerHTML = currentLoot.food;
-    lootAmmoWrap.style.display = ((currentLoot.ammo == 0) ? 'none' : 'block');
-    lootFoodWrap.style.display = ((currentLoot.food == 0) ? 'none' : 'block');
-    lootArray[currentCell].take = takeF;
-    if (this.currentCellEl.innerHTML == "'")
-        lootHeading.innerHTML = "[']" + ' Plains';
-    if (this.currentCellEl.innerHTML == "*")
-        lootHeading.innerHTML = "[*]" + ' Forest';
-    if (this.currentCellEl.innerHTML == ",")
-        lootHeading.innerHTML = "[,]" + ' Swamp';
-    if (this.currentCellEl.innerHTML == "C")
-        lootHeading.innerHTML = "[C]" + ' Chest';
-    if (this.currentCellEl.innerHTML == "T") {
-        lootHeading.innerHTML = "[T]" + ' Town';
-        isTown = true;
-    }
-    if (this.currentCellEl.innerHTML == "L")
-        lootHeading.innerHTML = "[L]" + ' Lake';
-    if (this.currentCellEl.innerHTML == "M")
-        lootHeading.innerHTML = "[M]" + ' Mountain';
-
-    if (this.currentCellEl.innerHTML == " ") {
-        lootHeading.innerHTML = "[ ]" + ' Empty';
-    }
-
-    setInterval(function () {
-        saveGame();
-        initFromSave();
-    }, 3000);
     document.querySelector('#loading').style.display = 'none';
-})(this);
+
+})(this, 25, 25, document.querySelector('#box'));
