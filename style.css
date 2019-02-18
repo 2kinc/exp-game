@@ -45,12 +45,6 @@ body {
     transform-origin: 50% 50%;
 }
 
-td {
-    width: 20px;
-    height: 16px;
-    text-align: center;
-}
-
 .bullet {
     background: url(https://docs.google.com/drawings/d/e/2PACX-1vRvOD7wfLZjsv5S_O6hurMZnJO4u0vwxCyvgjk63VUl5phcveesBNzOi9PLn4gNSFir4lFm5sPxnFd8/pub?w=360&h=360);
     height: 18px;
@@ -166,4 +160,30 @@ img {
 
 .clickable:hover::after {
     content: ' ]';
+}
+
+td{
+    -border-radius: 5px;
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    text-align: center;
+    justify-content: center;
+    font-size: 1em;
+    color: white;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+td.current{
+    background-color: black !important;
+    color: red !important;
+}
+
+td:hover {
+    box-shadow: 1px 1px 6px 0px #333333;
+    transform: scale(2);
+    z-index: 5;
+    border-radius: 5px;
 }

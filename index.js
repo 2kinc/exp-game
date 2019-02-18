@@ -787,6 +787,7 @@
                 energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
                 healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
             }, 5000);
+            game.initialize_viewport();
             $('#startscreen').html('');
             $('#startscreen').css('display', 'none');
         });
