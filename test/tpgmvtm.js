@@ -220,6 +220,6 @@
     }
 
     global.game = new Game();
-    global.game.initialize_viewport(w, h);
+    global.game.initialize_viewport();
 
 })(document.querySelector("#tvp"), 25, 25, this);

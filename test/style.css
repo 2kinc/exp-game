@@ -11,7 +11,7 @@ table {
 }
 
 #tvp td{
-    border: 1px white solid;
+    -border-radius: 5px;
     width: 20px;
     height: 20px;
     max-width: 20px;
