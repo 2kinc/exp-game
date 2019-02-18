@@ -189,4 +189,5 @@ td.current{
     display: none;
     position: absolute;
     z-index: 1000;
+    box-shadow: 1px 1px 6px 0px #333333;
 }
