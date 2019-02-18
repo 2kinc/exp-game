@@ -50,13 +50,13 @@
                     var tile = that.getTileElement(x, y);
                     tile.innerHTML = element.terrain;
                     if (element.terrain == ' ') {
-                        tile.style.background = 'black';
+                        tile.style.background = 'blue';
                     } else if (element.terrain == ',') {
                         tile.style.background = 'darkgreen';
                     } else if (element.terrain == "'") {
                         tile.style.background = 'green';
                     } else if (element.terrain == '*') {
-                        tile.style.background = 'brown';
+                        tile.style.background = 'saddlebrown';
                     }
                 });
             }
