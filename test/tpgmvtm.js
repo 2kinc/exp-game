@@ -24,13 +24,13 @@
                         value = 1 - Math.abs(value);
                     }
                     if (value >= 0.75) {
-                        value = " ";
+                        value = "🌊";
                     } else if (value >= 0.45) {
-                        value = ",";
+                        value = "🏜️";
                     } else if (value >= 0.25) {
-                        value = "'";
+                        value = "🌿";
                     } else if (value >= 0) {
-                        value = "*";
+                        value = "🌲";
                     } else {
                         value = '.';
                     }
@@ -49,15 +49,6 @@
                     var y = element.coordinates.y;
                     var tile = that.getTileElement(x, y);
                     tile.innerHTML = element.terrain;
-                    if (element.terrain == ' ') {
-                        tile.style.background = 'blue';
-                    } else if (element.terrain == ',') {
-                        tile.style.background = 'darkgreen';
-                    } else if (element.terrain == "'") {
-                        tile.style.background = 'green';
-                    } else if (element.terrain == '*') {
-                        tile.style.background = 'saddlebrown';
-                    }
                 });
             }
             )
@@ -119,7 +110,7 @@
                     var sx = this.for_id(topleft.x + x);
                     td.id = this.get_tile_id(sx, sy);
                     td.innerText = String(topleft.x + x) + "," + String(topleft.y - y);
-                    td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
+                    //td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
                     tr.appendChild(td);
                 }
                 if (anchor) {
@@ -141,7 +132,7 @@
                     sy = this.for_id(topleft.y - y);
                     td.id = this.get_tile_id(sx, sy);
                     td.innerText = String(topleft.x + x) + "," + String(topleft.y - y);
-                    td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
+                    //td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
                     rows[y].insertBefore(td, rows[y].children[start_index]);
                 }
             }

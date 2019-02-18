@@ -1,3 +1,7 @@
+body {
+    background: #333;
+}
+
 #viewport{
     margin: 100px auto;
 }
@@ -7,7 +11,7 @@ table {
 }
 
 #tvp td{
-    border: 1px black solid;
+    border: 1px white solid;
     width: 20px;
     height: 20px;
     max-width: 20px;
