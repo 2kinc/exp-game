@@ -103,7 +103,8 @@
             water: new this.Tile('.', 'rgb(3,169,244)', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
             dirt: new this.Tile('*', 'rgb(109,76,65)', 'Dirt', 'An abundant substance that plants grow in.'),
             sand: new this.Tile('~', 'rgb(253,216,53)', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
-            grass: new this.Tile(',', 'rgb(76,175,80)', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) })
+            grass: new this.Tile(',', 'rgb(76,175,80)', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
+            cactus: new this.Tile('🌵', 'rgb(253,216,53)', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.')
         }
         this.coordinate = { x: 0, y: 0 };
         this.MapTile = function (coords, loot, terrain) {
@@ -125,7 +126,7 @@
                     // noise.simplex2 and noise.perlin2 for 2d noise
                     var value = noise.simplex2(x / 100, y / 100);
                     if (value < 0) {
-                        value = 1 - Math.abs(value);
+                        value = 1 + value;
                     }
                     if (value >= 0.75) {
                         value = game.tileValues.water;
@@ -136,8 +137,22 @@
                     } else if (value >= 0) {
                         value = game.tileValues.dirt;
                     }
+
                     // ... or noise.simplex3 and noise.perlin3:
-                    var newTile = new that.MapTile({ x: x, y: y }, null, value, null);
+                    var newTile = new that.MapTile({ x: x, y: y }, null, value);
+                    var a = newTile.coordinates.x;
+                    if (a < 0) {
+                        a = pi.length + a;
+                    }
+                    var b = newTile.coordinates.y;
+                    if (b < 0) {
+                        b = pi.length + b;
+                    }
+                    if (((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a+b) % (pi.length - 1)] + pi[Math.abs(a-b)] % (pi.length - 1)) / 4) < 2) {
+                        if (newTile.terrain.name == 'Sand') {
+                            newTile.terrain = game.tileValues.cactus;
+                        }
+                    }
                     this.terrain.push(newTile);
                 }
             }
@@ -316,7 +331,7 @@
             this.renderChunks([a]);
         }
         $(document).mouseover(function (e) {
-            if($(e.target).attr('tooltip-text') != null) {
+            if ($(e.target).attr('tooltip-text') != null) {
                 game.elements.tooltipTitle.innerHTML = $(e.target).attr('tooltip-title');
                 game.elements.tooltipText.innerHTML = $(e.target).attr('tooltip-text');
                 game.elements.tooltip.style.left = e.clientX + 'px';
