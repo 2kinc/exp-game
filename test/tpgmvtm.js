@@ -11,16 +11,16 @@
             return document.querySelector('#c_' + this.for_id(x) + '_' + this.for_id(y));
         }
         var that = this;
-        this.Chunk = function (sideLength, coords, seed) {
+        this.Chunk = function (sideLength, bottomleft, seed) {
             this.terrain = [];
-            for (var x = coords.x; x < sideLength + coords.x; x++) {
-                for (var y = coords.y; y < sideLength + coords.y; y++) {
+            noise.seed(seed);
+            for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
+                for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
                     // All noise functions return values in the range of -1 to 1.
 
                     // noise.simplex2 and noise.perlin2 for 2d noise
                     var value = noise.simplex2(x / 100, y / 100);
-                    value = Math.abs(value * 256);
-
+                    value = Math.abs(value);
                     if (value >= 0.75) {
                         value = " ";
                     } else if (value >= 0.45) {
@@ -38,15 +38,27 @@
                 }
             }
         }
-        this.renderChunk = function (chunk) {
-            var a = chunk.terrain;
+        this.renderChunks = function (chunks) {
             var that = this;
-            a.forEach(function (element) {
-                var x = element.coordinates.x;
-                var y = element.coordinates.y;
-                var tile = that.getTileElement(x, y);
-                tile.innerHTML = element.terrain;
-            });
+            chunks.forEach(function (chunk) {
+                var a = chunk.terrain;
+                a.forEach(function (element) {
+                    var x = element.coordinates.x;
+                    var y = element.coordinates.y;
+                    var tile = that.getTileElement(x, y);
+                    tile.innerHTML = element.terrain;
+                    if (element.terrain == ' ') {
+                        tile.style.background = 'black';
+                    } else if (element.terrain == ',') {
+                        tile.style.background = 'darkgreen';
+                    } else if (element.terrain == "'") {
+                        tile.style.background = 'green';
+                    } else if (element.terrain == '*') {
+                        tile.style.background = 'brown';
+                    }
+                });
+            }
+            )
         }
         this.get_topleft = function () {
             return {
