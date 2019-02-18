@@ -87,11 +87,14 @@
             this.terrain = terrain;
             this.name = name;
             this.description = description;
+            this.itemDrop = properties.itemDrop || new item(name, 1);
             this.properties = properties || null;
         }
         this.tileValues = {
-            water: new tile('.', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', {unbreakable: true}),
-            dirt: new tile('*', 'Dirt', 'An abundant substance that plants grow in.')
+            water: new Tile('.', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', {unbreakable: true}),
+            dirt: new Tile('*', 'Dirt', 'An abundant substance that plants grow in.'),
+            sand: new Tile('~', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
+            grass: new Tile(',', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', {itemDrop: new item('Dirt', 1)})
         }
         this.coordinate = { x: 0, y: 0 };
         this.MapTile = function (coords, loot, terrain) {
