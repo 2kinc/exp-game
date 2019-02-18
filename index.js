@@ -154,14 +154,6 @@
                     tile.style.background = element.terrain.color;
                     tile.setAttribute('tooltip-title', '[' + element.terrain.display_text + '] ' + element.terrain.name);
                     tile.setAttribute('tooltip-text', element.terrain.description);
-                    getAllElementsWithAttribute('tooltip-text').onmouseover = function (event) {
-                        game.elements.tooltipTitle.innerHTML = tile.getAttribute('tooltip-title');
-                        game.elements.tooltipText.innerHTML = tile.getAttribute('tooltip-text');
-                        game.elements.tooltip.style.display = 'block';
-                    }
-                    getAllElementsWithAttribute('tooltip-text').onmouseout = function () {
-                        game.elements.tooltip.style.display = 'none';
-                    }
                 });
             }
             )
@@ -323,10 +315,17 @@
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
         }
-        document.onmousemove = function (event) {
-            game.elements.tooltip.style.top = event.clientY + 20 + 'px';
-            game.elements.tooltip.style.left = event.clientX + 'px';
-        }
+        $(document).mouseover(function (e) {
+            if($(e.target).attr('tooltip-text') != null) {
+                game.elements.tooltipTitle.innerHTML = $(e.target).attr('tooltip-title');
+                game.elements.tooltipText.innerHTML = $(e.target).attr('tooltip-text');
+                game.elements.tooltip.style.left = e.clientX + 'px';
+                game.elements.tooltip.style.top = e.clientY + 20 + 'px';
+                game.elements.tooltip.style.display = 'block';
+            } else {
+                game.elements.tooltip.style.display = 'none';
+            }
+        });
     }
 
     function getAllElementsWithAttribute(attribute) {
