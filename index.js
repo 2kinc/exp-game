@@ -83,12 +83,21 @@
             play: qs('#play_button'),
             name: qs('#name')
         };
+        this.Tile = function (terrain, name, description, properties) {
+            this.terrain = terrain;
+            this.name = name;
+            this.description = description;
+            this.properties = properties || null;
+        }
+        this.tileValues = {
+            water: new tile('.', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', {unbreakable: true}),
+            dirt: new tile('*', 'Dirt', 'An abundant substance that plants grow in.')
+        }
         this.coordinate = { x: 0, y: 0 };
-        this.MapTile = function (coords, loot, terrain, properties) {
+        this.MapTile = function (coords, loot, terrain) {
             this.coordinates = coords;
             this.loot = loot;
             this.terrain = terrain;
-            this.properties = properties;
         }
         this.getTileElement = function (x, y) {
             return document.querySelector('#c_' + this.for_id(x) + '_' + this.for_id(y));
@@ -107,15 +116,13 @@
                         value = 1 - Math.abs(value);
                     }
                     if (value >= 0.75) {
-                        value = "🌊";
+                        value = ".";
                     } else if (value >= 0.45) {
-                        value = "🏜️";
+                        value = "~";
                     } else if (value >= 0.25) {
-                        value = "🌿";
+                        value = ",";
                     } else if (value >= 0) {
-                        value = "🌲";
-                    } else {
-                        value = '.';
+                        value = "*";
                     }
                     // ... or noise.simplex3 and noise.perlin3:
                     var newTile = new that.MapTile({ x: x, y: y }, null, value, null);
@@ -132,13 +139,13 @@
                     var y = element.coordinates.y;
                     var tile = that.getTileElement(x, y);
                     tile.innerHTML = element.terrain;
-                    if (tile.innerHTML == '🌊') {
+                    if (tile.innerHTML == '.') {
                         tile.style.background = 'rgb(3,169,244)';
-                    } else if (tile.innerHTML == '🏜️') {
+                    } else if (tile.innerHTML == '~') {
                         tile.style.background = 'rgb(251,192,45)';
-                    } else if (tile.innerHTML == '🌿') {
+                    } else if (tile.innerHTML == ',') {
                         tile.style.background = 'rgb(139,195,74)';
-                    } else if (tile.innerHTML == '🌲') {
+                    } else if (tile.innerHTML == '*') {
                         tile.style.background = 'rgb(121,85,72)';
                     }
                 });
@@ -247,6 +254,8 @@
             }
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
+            this.elements.player.style.left = qs('td.current').getBoundingClientRect().left;
+            this.elements.player.style.top = qs('td.current').getBoundingClientRect().top;
         };
         this.shift_viewport_vertically = function (distance) {
             this.coordinate.y += distance;
@@ -633,7 +642,7 @@
         }
     }*/
 
-    document.body.onkeyup = function (e) {
+    /*document.body.onkeyup = function (e) {
         if (document.activeElement != game.elements.name) {
             if (e.key == "w" || e.key == "ArrowUp") {
                 move(Directions.up());
@@ -703,7 +712,7 @@
                 }
                 isTown = false;
                 clearInterval(enemyDecisionInterval);
-            }*/ else if (e.key == 'Enter') {
+            } else if (e.key == 'Enter') {
                 if ($('#startscreen').html() != '') {
                     regenDegenInterval = setInterval(function () {
                         if (Math.round(energy) > 0 && health == maxHealth)
@@ -750,7 +759,7 @@
                 }
             }
         }
-    }
+    }*/
     if ($('startscreen').html != '') {
         game.elements.play.addEventListener('click', function () {
             regenDegenInterval = setInterval(function () {
