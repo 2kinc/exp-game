@@ -180,9 +180,8 @@ td.current{
     background-color: black !important;
 }
 
-td:hover {
-    box-shadow: 1px 1px 6px 0px #333333;
-    transform: scale(2);
-    z-index: 5;
-    border-radius: 5px;
+#tooltip {
+    display: none;
+    position: absolute;
+    z-index: 1000;
 }

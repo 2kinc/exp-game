@@ -31,7 +31,7 @@
     Directions.prototype.down = function () { return 2 };
     Directions.prototype.left = function () { return 3 };
 
-    
+
 
     function GameObject() {
         this.coordinates = new Coordinate;
@@ -41,6 +41,8 @@
         this.maxHealth = 10;
         this.steps = 0;
         this.energy = 15;
+        this.maxEnergy = 15;
+        this.food = 15;
         this.ammoUsed = 0;
         this.name = 'Default Noob';
         this.lootArray = [];
@@ -81,20 +83,27 @@
             lootFoodWrap: qs('#lootfood'),
             lootArmourWrap: qs('#lootarmour'),
             play: qs('#play_button'),
-            name: qs('#name')
+            name: qs('#name'),
+            tooltip: qs('#tooltip'),
+            tooltipTitle: qs('#tooltip-title'),
+            tooltipText: qs('#tooltip-text')
         };
-        this.Tile = function (terrain, name, description, properties) {
-            this.terrain = terrain;
+        this.Tile = function (display_text, color, name, description, properties) {
+            this.display_text = display_text;
+            this.color = color;
             this.name = name;
             this.description = description;
-            this.itemDrop = properties.itemDrop || new item(name, 1);
             this.properties = properties || null;
+            this.itemDrop = new item(name, 1);
+            if (properties != null && properties.itemDrop != undefined) {
+                this.itemDrop = this.properties.itemDrop;
+            }
         }
         this.tileValues = {
-            water: new Tile('.', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', {unbreakable: true}),
-            dirt: new Tile('*', 'Dirt', 'An abundant substance that plants grow in.'),
-            sand: new Tile('~', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
-            grass: new Tile(',', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', {itemDrop: new item('Dirt', 1)})
+            water: new this.Tile('.', 'rgb(3,169,244)', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
+            dirt: new this.Tile('*', 'rgb(109,76,65)', 'Dirt', 'An abundant substance that plants grow in.'),
+            sand: new this.Tile('~', 'rgb(253,216,53)', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
+            grass: new this.Tile(',', 'rgb(76,175,80)', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) })
         }
         this.coordinate = { x: 0, y: 0 };
         this.MapTile = function (coords, loot, terrain) {
@@ -119,13 +128,13 @@
                         value = 1 - Math.abs(value);
                     }
                     if (value >= 0.75) {
-                        value = ".";
+                        value = game.tileValues.water;
                     } else if (value >= 0.45) {
-                        value = "~";
+                        value = game.tileValues.sand;
                     } else if (value >= 0.25) {
-                        value = ",";
+                        value = game.tileValues.grass;
                     } else if (value >= 0) {
-                        value = "*";
+                        value = game.tileValues.dirt;
                     }
                     // ... or noise.simplex3 and noise.perlin3:
                     var newTile = new that.MapTile({ x: x, y: y }, null, value, null);
@@ -141,15 +150,17 @@
                     var x = element.coordinates.x;
                     var y = element.coordinates.y;
                     var tile = that.getTileElement(x, y);
-                    tile.innerHTML = element.terrain;
-                    if (tile.innerHTML == '.') {
-                        tile.style.background = 'rgb(3,169,244)';
-                    } else if (tile.innerHTML == '~') {
-                        tile.style.background = 'rgb(251,192,45)';
-                    } else if (tile.innerHTML == ',') {
-                        tile.style.background = 'rgb(139,195,74)';
-                    } else if (tile.innerHTML == '*') {
-                        tile.style.background = 'rgb(121,85,72)';
+                    tile.innerHTML = element.terrain.display_text;
+                    tile.style.background = element.terrain.color;
+                    tile.setAttribute('tooltip-title', '[' + element.terrain.display_text + '] ' + element.terrain.name);
+                    tile.setAttribute('tooltip-text', element.terrain.description);
+                    getAllElementsWithAttribute('tooltip-text').onmouseover = function (event) {
+                        game.elements.tooltipTitle.innerHTML = tile.getAttribute('tooltip-title');
+                        game.elements.tooltipText.innerHTML = tile.getAttribute('tooltip-text');
+                        game.elements.tooltip.style.display = 'block';
+                    }
+                    getAllElementsWithAttribute('tooltip-text').onmouseout = function () {
+                        game.elements.tooltip.style.display = 'none';
                     }
                 });
             }
@@ -312,8 +323,23 @@
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
         }
+        document.onmousemove = function (event) {
+            game.elements.tooltip.style.top = event.clientY + 20 + 'px';
+            game.elements.tooltip.style.left = event.clientX + 'px';
+        }
     }
 
+    function getAllElementsWithAttribute(attribute) {
+        var matchingElements = [];
+        var allElements = document.getElementsByTagName('*');
+        for (var i = 0, n = allElements.length; i < n; i++) {
+            if (allElements[i].getAttribute(attribute) !== null) {
+                // Element exists with attribute. Add to array.
+                matchingElements.push(allElements[i]);
+            }
+        }
+        return matchingElements;
+    }
 
     GameObject.prototype.detectHit = function (bulletEl, target) {
         var b = bulletEl.getBoundingClientRect();
@@ -470,7 +496,7 @@
     };
 
     global.GameObject = new GameObject();
-    
+
     /*GameObject.prototype.move = function (direction) {
         if (this.fightingMode == false && this.energy >= 0.4 && this.isTown == false) {
             if (direction == Directions.up()) {
@@ -767,16 +793,16 @@
         game.elements.play.addEventListener('click', function () {
             regenDegenInterval = setInterval(function () {
                 if (Math.round(energy) > 0 && health == maxHealth)
-                    energy--;
-                if (energy > maxEnergy)
-                    energy = maxEnergy;
-                if (Math.round(energy) == maxEnergy && health < maxHealth) {
-                    energy = maxEnergy;
+                    game.energy--;
+                if (game.energy > game.maxEnergy)
+                    game.energy = game.maxEnergy;
+                if (Math.round(energy) == game.maxEnergy && game.health < game.maxHealth) {
+                    game.energy = game.maxEnergy;
                     health += 3;
                 }
                 if (Math.round(energy) == 0) {
-                    health -= Math.floor(maxHealth / 3);
-                    healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                    game.health -= Math.floor(game.maxHealth / 3);
+                    game.healthEl.innerHTML = 'Health: ' + game.health + '/' + game.maxHealth;
                     log('You have no energy! Get food fast!');
                 }
                 if (health < 0) {
@@ -789,15 +815,15 @@
                         document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
                     }, 2000);
                     setTimeout(function () {
-                        energy = maxEnergy;
-                        health = maxHealth;
+                        game.energy = game.maxEnergy;
+                        game.health = game.maxHealth;
                         location.reload();
                     }, 3000);
                 }
-                if (health > maxHealth)
-                    health = maxHealth;
-                energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-                healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                if (game.health > game.maxHealth)
+                    game.health = game.maxHealth;
+                game.elements.energy.innerHTML = 'Energy: ' + Math.round(game.energy) + '/' + game.maxEnergy;
+                game.elements.health.innerHTML = 'Health: ' + game.health + '/' + game.maxHealth;
             }, 5000);
             game.initialize_viewport();
             $('#startscreen').html('');
@@ -1028,7 +1054,7 @@
 
     game.elements.name.innerHTML = game.name;
     game.elements.health.innerHTML = 'Health: ' + game.health + '/' + game.maxHealth;
-    game.elements.energy.innerHTML = 'Energy: ' + Math.round(energy) + '/' + game.maxEnergy;
+    game.elements.energy.innerHTML = 'Energy: ' + Math.round(game.energy) + '/' + game.maxEnergy;
     game.elements.ammo.innerHTML = 'Ammo: ' + game.ammo;
     game.elements.food.innerHTML = 'Food: ' + game.food + ' [E to eat]';
     game.elements.ammoUsed.innerHTML = 'Ammo used: ' + game.ammoUsed;
