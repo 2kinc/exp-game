@@ -20,7 +20,9 @@
 
                     // noise.simplex2 and noise.perlin2 for 2d noise
                     var value = noise.simplex2(x / 100, y / 100);
-                    value = Math.abs(value);
+                    if (value < 0) {
+                        value = 1 - Math.abs(value);
+                    }
                     if (value >= 0.75) {
                         value = " ";
                     } else if (value >= 0.45) {
@@ -160,6 +162,8 @@
                     that.shift_viewport_horizontally(-1);
                 }
             }
+            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            this.renderChunks([a]);
         };
         this.shift_viewport_vertically = function (distance) {
             this.coordinate.y += distance;
@@ -180,6 +184,8 @@
                 var tl = this.get_bottomleft();
                 this.generate_rows(tl, Math.abs(distance), w);
             }
+            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            this.renderChunks([a]);
         };
         this.shift_viewport_horizontally = function (distance) {
             this.coordinate.x += distance;
@@ -208,6 +214,8 @@
                 this.generate_columns(tl, h, Math.abs(distance), 0);
                 console.log('moving left');
             }
+            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            this.renderChunks([a]);
         }
     }
 
