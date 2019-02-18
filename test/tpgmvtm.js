@@ -49,6 +49,15 @@
                     var y = element.coordinates.y;
                     var tile = that.getTileElement(x, y);
                     tile.innerHTML = element.terrain;
+                    if (tile.innerHTML == '🌊') {
+                        tile.style.background = 'rgb(3,169,244)';
+                    } else if (tile.innerHTML == '🏜️') {
+                        tile.style.background = 'rgb(251,192,45)';
+                    } else if (tile.innerHTML == '🌿') {
+                        tile.style.background = 'rgb(139,195,74)';
+                    } else if (tile.innerHTML == '🌲') {
+                        tile.style.background = 'rgb(121,85,72)';
+                    } 
                 });
             }
             )
