@@ -379,18 +379,18 @@
                 localthat.items.forEach(function (element) {
                     var el = document.createElement('span');
                     el.className = 'clickable';
-                    var k = element;
                     el.innerHTML = 'Take';
                     that.elements.loot.innerHTML += element.amount + ' ' + element.itemName + ' ';
                     that.elements.loot.appendChild(el);
                     console.log(this);
                     el.addEventListener('click', function () {
-                        that.inventory.addItem(k);
-                        var i = localthat.items.indexOf(k);
+                        that.inventory.addItem(element);
+                        var i = localthat.items.indexOf(element);
                         this.items.splice(i, 1);
                         console.log(localthat.items);
                         that.inventory.updateElements();
                         localthat.updateElements();
+                        console.log('you took a thing');
                     });
                     that.elements.loot.innerHTML += '<br>';
                 });
