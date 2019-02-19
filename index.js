@@ -105,7 +105,7 @@
             sand: new this.Tile('~', 'rgb(253,216,53)', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
             grass: new this.Tile(',', 'rgb(76,175,80)', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
             cactus: new this.Tile('🌵', 'rgb(253,216,53)', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
-            tree: new this.Tile('🌲', 'rgb(109,76,65)', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', {itemDrop: new item('Wood', 1)}),
+            tree: new this.Tile('🌲', 'rgb(109,76,65)', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
             wood: new this.Tile('🏽', 'rgb(141,110,99)', 'Wood', 'Strong, organic material used to build structures.')
         }
         this.coordinate = { x: 0, y: 0 };
@@ -150,10 +150,13 @@
                     if (b < 0) {
                         b = pi.length + b;
                     }
-                    if (((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a+b) % (pi.length - 1)] + pi[Math.abs(a-b)] % (pi.length - 1)) / 4) < 2) {
+                    if (((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a + b) % (pi.length - 1)] + pi[Math.abs(a - b)] % (pi.length - 1)) / 4) < 2) {
                         if (newTile.terrain.name == 'Sand') {
                             newTile.terrain = game.tileValues.cactus;
                         }
+                    }
+                    if (newTile.coordinates.x == that.coordinate.x && newTile.coordinates.y == that.coordinate.y) {
+                        newTile.loot = new that.lootSpawn(false);
                     }
                     this.terrain.push(newTile);
                 }
@@ -265,20 +268,29 @@
             this.generate_rows(topleft, h, w);
             var that = this;
             document.onkeypress = function (event) {
+                var d = new Directions();
                 if (event.key === "W" || event.key === "w") {
                     that.shift_viewport_vertically(1);
+                    that.facing = d.up();
+                    that.elements.player.style.transform = 'rotate(0deg)';
                 } else if (event.key === "S" || event.key === "s") {
                     that.shift_viewport_vertically(-1);
+                    that.facing = d.down();
+                    that.elements.player.style.transform = 'rotate(180deg)';
                 } else if (event.key === "D" || event.key === "d") {
                     that.shift_viewport_horizontally(1);
+                    that.facing = d.right();
+                    game.elements.player.style.transform = 'rotate(90deg)';
                 } else if (event.key === "A" || event.key === "a") {
                     that.shift_viewport_horizontally(-1);
+                    that.facing = d.left();
+                    that.elements.player.style.transform = 'rotate(270deg)';
                 }
             }
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
-            this.elements.player.style.left = qs('td.current').getBoundingClientRect().left;
-            this.elements.player.style.top = qs('td.current').getBoundingClientRect().top;
+            this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
+            this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
         };
         this.shift_viewport_vertically = function (distance) {
             this.coordinate.y += distance;
@@ -301,6 +313,8 @@
             }
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
+            game.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
+            game.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
         };
         this.shift_viewport_horizontally = function (distance) {
             this.coordinate.x += distance;
@@ -331,6 +345,8 @@
             }
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
+            game.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
+            game.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
         }
         $(document).mouseover(function (e) {
             if ($(e.target).attr('tooltip-text') != null) {
@@ -343,6 +359,44 @@
                 game.elements.tooltip.style.display = 'none';
             }
         });
+        var that = this;
+        this.lootSpawn = function (chest) {
+            this.items = [];
+            var ammo = new item('ammo', Math.floor(Math.random() * 10));
+            var food = new item('food', Math.floor(Math.random() * 5));
+            var armour = new item('armour', Math.round(Math.random() * 0.6));
+            if (ammo.amount != 0)
+                this.items.push(ammo);
+            if (food.amount != 0)
+                this.items.push(food);
+            if (armour.amount != 0)
+                this.items.push(armour);
+            if (Math.random() >= .99)
+                this.items.push(new item('Tekashi 6ix9ine', 69));
+            var localthat = this;
+            this.updateElements = function () {
+                that.elements.loot.innerHTML = '';
+                localthat.items.forEach(function (element) {
+                    var el = document.createElement('span');
+                    el.className = 'clickable';
+                    var k = element;
+                    el.innerHTML = 'Take';
+                    that.elements.loot.innerHTML += element.amount + ' ' + element.itemName + ' ';
+                    that.elements.loot.appendChild(el);
+                    console.log(this);
+                    el.addEventListener('click', function () {
+                        that.inventory.addItem(k);
+                        var i = localthat.items.indexOf(k);
+                        this.items.splice(i, 1);
+                        console.log(localthat.items);
+                        that.inventory.updateElements();
+                        localthat.updateElements();
+                    });
+                    that.elements.loot.innerHTML += '<br>';
+                });
+            }
+            this.updateElements();
+        };
     }
 
     function getAllElementsWithAttribute(attribute) {
@@ -473,43 +527,6 @@
     game.inventory.updateElements();
 
     console.log(game.inventory);
-
-    GameObject.prototype.lootSpawn = function (chest) {
-        this.items = [];
-        var ammo = new item('ammo', Math.floor(Math.random() * 10));
-        var food = new item('food', Math.floor(Math.random() * 5));
-        var armour = new item('armour', Math.round(Math.random() * 0.6));
-        if (ammo.amount != 0)
-            this.items.push(ammo);
-        if (food.amount != 0)
-            this.items.push(food);
-        if (armour.amount != 0)
-            this.items.push(armour);
-        if (Math.random() >= .99)
-            this.items.push(new item('Tekashi 6ix9ine', 69));
-        this.updateElements = function () {
-            game.elements.lootEl.innerHTML = '';
-            this.items.forEach(function (element) {
-                var el = document.createElement('span');
-                el.className = 'clickable';
-                var k = element;
-                el.innerHTML = 'Take';
-                game.elements.lootEl.innerHTML += element.amount + ' ' + element.itemName + ' ';
-                game.elements.lootEl.appendChild(el);
-                console.log(this);
-                el.addEventListener('click', function () {
-                    game.inventory.addItem(k);
-                    var i = this.items.indexOf(k);
-                    this.items.splice(i, 1);
-                    console.log(this.items);
-                    game.inventory.updateElements();
-                    this.updateElements();
-                });
-                game.elements.lootEl.innerHTML += '<br>';
-            });
-        }
-        this.updateElements();
-    };
 
     global.GameObject = new GameObject();
 
