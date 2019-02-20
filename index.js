@@ -9,6 +9,11 @@
         this.y = y || 0;
     }
 
+    var getMapTileKey = function (tile) {
+        return String(tile.coordinates.x) + "," + String(tile.coordinates.y);
+    };
+
+
     function GameSave() {
         this.playerName = "Player 1";
         this.food = 10;
@@ -31,6 +36,76 @@
     Directions.prototype.down = function () { return 2 };
     Directions.prototype.left = function () { return 3 };
 
+    function MapTile (coords, loot, terrain) {
+        this.coordinates = coords;
+        this.loot = loot;
+        this.terrain = terrain;
+    };
+
+    function Tile(display_text, color, name, description, properties) {
+        this.display_text = display_text;
+        this.color = color;
+        this.name = name;
+        this.description = description;
+        this.properties = properties || null;
+        this.itemDrop = new item(name, 1);
+        if (properties != null && properties.itemDrop != undefined) {
+            this.itemDrop = this.properties.itemDrop;
+        }
+    };
+
+    function Chunk(game, sideLength, bottomleft, seed) {
+        this.terrain = new Map();
+        this.bottomleft = bottomleft;
+        this.sideLength = sideLength;
+        this.seed = seed;
+        noise.seed(seed);
+        for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
+            for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
+                // All noise functions return values in the range of -1 to 1.
+
+                // noise.simplex2 and noise.perlin2 for 2d noise
+                var value = noise.simplex2(x / 100, y / 100);
+                if (value < 0) {
+                    value = 1 + value;
+                }
+                if (value >= 0.75) {
+                    value = game.tileValues.water;
+                } else if (value >= 0.45) {
+                    value = game.tileValues.sand;
+                } else if (value >= 0.25) {
+                    value = game.tileValues.grass;
+                } else if (value >= 0) {
+                    value = game.tileValues.dirt;
+                }
+
+                // ... or noise.simplex3 and noise.perlin3:
+                var newTile = new MapTile({ x: x, y: y }, null, value);
+                var a = newTile.coordinates.x;
+                if (a < 0) {
+                    a = pi.length + a;
+                }
+                var b = newTile.coordinates.y;
+                if (b < 0) {
+                    b = pi.length + b;
+                }
+                var k = ((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a + b) % (pi.length - 1)] + pi[Math.abs(a - b)] % (pi.length - 1)) / 4);
+                if (k < 2 && newTile.terrain.name == 'Sand') {
+                    newTile.terrain = global.GameObject.tileValues.cactus;
+                }
+                if (k < 5 && newTile.terrain.name == 'Dirt') {
+                    newTile.terrain = global.GameObject.tileValues.tree;
+                }
+                if (newTile.coordinates.x == game.coordinate.x && newTile.coordinates.y == game.coordinate.y) {
+                    newTile.loot = new game.lootSpawn(false);
+                }
+                if (game.getMapTile({x:x, y:y}) != undefined)
+                    newTile = game.getMapTile({x:x, y:y});
+                this.terrain.set(getMapTileKey(newTile), newTile);
+            }
+        }
+        var localthat = this;
+    };
 
 
     function GameObject() {
@@ -88,38 +163,18 @@
             tooltipTitle: qs('#tooltip-title'),
             tooltipText: qs('#tooltip-text')
         };
-        this.Tile = function (display_text, color, name, description, properties) {
-            this.display_text = display_text;
-            this.color = color;
-            this.name = name;
-            this.description = description;
-            this.properties = properties || null;
-            this.itemDrop = new item(name, 1);
-            if (properties != null && properties.itemDrop != undefined) {
-                this.itemDrop = this.properties.itemDrop;
-            }
-        };
         this.tileValues = {
-            water: new this.Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
-            dirt: new this.Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
-            sand: new this.Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
-            grass: new this.Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
-            cactus: new this.Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
-            tree: new this.Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
-            wood: new this.Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
+            water: new Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
+            dirt: new Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
+            sand: new Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
+            grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
+            cactus: new Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
+            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
+            wood: new Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
         };
         this.coordinate = { x: 0, y: 0 };
-        this.MapTile = function (coords, loot, terrain) {
-            this.coordinates = coords;
-            this.loot = loot;
-            this.terrain = terrain;
-        };
 
         var worldModifications = new Map();
-
-        var getMapTileKey = function (tile) {
-            return String(tile.coordinates.x) + "," + String(tile.coordinates.y);
-        };
 
         this.setMapTile = function (tile) {
             worldModifications.set(getMapTileKey(tile), tile);
@@ -134,69 +189,12 @@
         };
 
         var that = this;
-        this.Chunk = function (sideLength, bottomleft, seed) {
-            this.terrain = new Map();
-            this.bottomleft = bottomleft;
-            this.sideLength = sideLength;
-            this.seed = seed;
-            noise.seed(seed);
-            for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
-                for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
-                    // All noise functions return values in the range of -1 to 1.
-
-                    // noise.simplex2 and noise.perlin2 for 2d noise
-                    var value = noise.simplex2(x / 100, y / 100);
-                    if (value < 0) {
-                        value = 1 + value;
-                    }
-                    if (value >= 0.75) {
-                        value = global.GameObject.tileValues.water;
-                    } else if (value >= 0.45) {
-                        value = global.GameObject.tileValues.sand;
-                    } else if (value >= 0.25) {
-                        value = global.GameObject.tileValues.grass;
-                    } else if (value >= 0) {
-                        value = global.GameObject.tileValues.dirt;
-                    }
-
-                    // ... or noise.simplex3 and noise.perlin3:
-                    var newTile = new that.MapTile({ x: x, y: y }, null, value);
-                    var a = newTile.coordinates.x;
-                    if (a < 0) {
-                        a = pi.length + a;
-                    }
-                    var b = newTile.coordinates.y;
-                    if (b < 0) {
-                        b = pi.length + b;
-                    }
-                    var k = ((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a + b) % (pi.length - 1)] + pi[Math.abs(a - b)] % (pi.length - 1)) / 4);
-                    if (k < 2 && newTile.terrain.name == 'Sand') {
-                        newTile.terrain = global.GameObject.tileValues.cactus;
-                    }
-                    if (k < 5 && newTile.terrain.name == 'Dirt') {
-                        newTile.terrain = global.GameObject.tileValues.tree;
-                    }
-                    if (newTile.coordinates.x == that.coordinate.x && newTile.coordinates.y == that.coordinate.y) {
-                        newTile.loot = new that.lootSpawn(false);
-                    }
-                    if (that.getMapTile({x:x, y:y}) != undefined)
-                        newTile = that.getMapTile({x:x, y:y});
-                    this.terrain.set(getMapTileKey(newTile), newTile);
-                }
-            }
-            var localthat = this;
-            /*that.worldModifications.forEach(function (element) {
-                var x = element.coordinates.x;
-                var y = element.coordinates.y;
-                localthat.terrain.filter(tile => tile.coordinates.x == x && tile.coordinates.y == y)[0] = element;
-            });*/
-        }
         this.renderChunks = function (chunks) {
             chunks.forEach(function (chunk) {
                 for (var x = chunk.bottomleft.x; x < chunk.bottomleft.x + chunk.sideLength; x++) {
                     for (var y = chunk.bottomleft.y; y < chunk.bottomleft.y + chunk.sideLength; y++) {
                         var tile = that.getTileElement(x, y);
-                        var k = chunk.terrain.get(x + ',' + y).terrain;
+                        var k = chunk.terrain.get(getMapTileKey({coordinates:{x:x,y:y}})).terrain;
                         tile.innerHTML = k.display_text;
                         var b = k.color + Math.floor((that.gameProgression + 1) / 5000 * 256 + 20).toString(16);
                         tile.style.background = '#' + b;
@@ -205,8 +203,9 @@
                     }
                 }
             }
-            )
-        }
+            );
+        };
+
         this.get_topleft = function () {
             return {
                 y: this.coordinate.y + Math.floor(h / 2),
@@ -320,7 +319,7 @@
                     global.GameObject.gameProgression++;
                 }
             }
-            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            var a = new Chunk(this, 25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
             this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
@@ -345,7 +344,7 @@
                 var tl = this.get_bottomleft();
                 this.generate_rows(tl, Math.abs(distance), w);
             }
-            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            var a = new Chunk(this, 25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
             this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
@@ -377,7 +376,7 @@
                 this.generate_columns(tl, h, Math.abs(distance), 0);
                 console.log('moving left');
             }
-            var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
+            var a = new Chunk(this, 25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
             this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
