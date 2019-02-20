@@ -98,7 +98,7 @@
             if (properties != null && properties.itemDrop != undefined) {
                 this.itemDrop = this.properties.itemDrop;
             }
-        }
+        };
         this.tileValues = {
             water: new this.Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
             dirt: new this.Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
@@ -107,19 +107,37 @@
             cactus: new this.Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
             tree: new this.Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
             wood: new this.Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
-        }
+        };
         this.coordinate = { x: 0, y: 0 };
         this.MapTile = function (coords, loot, terrain) {
             this.coordinates = coords;
             this.loot = loot;
             this.terrain = terrain;
-        }
+        };
+
+        var worldModifications = new Map();
+
+        var getMapTileKey = function(tile){
+            return String(tile.x)+","+String(tile.y);
+        };
+
+        this.setMapTile = function (tile) {
+            worldModifications.set(getMapTileKey(tile), tile);
+        };
+
+        this.getMapTile = function(x, y){
+            return worldModifications.get(String(x) + ',' + String(y));
+        };
+
         this.getTileElement = function (x, y) {
             return document.querySelector('#c_' + this.for_id(x) + '_' + this.for_id(y));
-        }
+        };
+
         var that = this;
         this.Chunk = function (sideLength, bottomleft, seed) {
-            this.terrain = [];
+            this.terrain = new Map();
+            this.bottomleft = bottomleft;
+            this.seed = seed;
             noise.seed(seed);
             for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
                 for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
@@ -160,11 +178,19 @@
                     if (newTile.coordinates.x == that.coordinate.x && newTile.coordinates.y == that.coordinate.y) {
                         newTile.loot = new that.lootSpawn(false);
                     }
-                    this.terrain.push(newTile);
+                    if (that.getMapTile(x, y) != undefined) {
+                        newTile = that.getMapTile(x,y);
+                    }
+                    this.terrain.set(getMapTileKey(newTile), newTile);
                 }
             }
+            var localthat = this;
+            /*that.worldModifications.forEach(function (element) {
+                var x = element.coordinates.x;
+                var y = element.coordinates.y;
+                localthat.terrain.filter(tile => tile.coordinates.x == x && tile.coordinates.y == y)[0] = element;
+            });*/
         }
-        var that = this;
         this.renderChunks = function (chunks) {
             chunks.forEach(function (chunk) {
                 var a = chunk.terrain;
@@ -299,6 +325,7 @@
             this.renderChunks([a]);
             this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
+            this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         };
         this.shift_viewport_vertically = function (distance) {
             this.coordinate.y += distance;
