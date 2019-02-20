@@ -7,6 +7,9 @@ body {
     overflow: hidden;
     padding: 30px;
     min-width: 1100px;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
 
 #hugeheading{
@@ -46,6 +49,9 @@ body {
     transition: all 1.5s;
     transition-timing-function: ease-in-out;
     transform-origin: 50% 50%;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
 
 .bullet {
@@ -57,11 +63,14 @@ body {
 }
 
 .card {
-    border: 2px solid #fff;
+    border: 2px solid;
     padding: 10px;
     max-width: 250px;
     z-index: 4;
     background: #333;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
 
 .card div {
@@ -191,4 +200,44 @@ td.current{
     z-index: 1000;
     box-shadow: 1px 1px 6px 0px #333333;
     max-width: 120px;
+}
+
+  
+@-webkit-keyframes glow {
+    0% {
+        color: #fff; 
+        border-color: #fff!important;
+    }
+    
+    10% {
+        color: rgb(216, 198, 243);
+        border-color: rgb(216, 198, 243)!important;
+    }
+
+    20% {
+        color: rgb(253, 222, 176);
+        border-color: rgb(253, 222, 176)!important;
+    }
+
+    30% {
+        color: rgb(253, 249, 197);
+        border-color: rgb(253, 249, 197)!important;
+    }
+
+    40% {
+        color: #fff;
+        border-color: #fff !important;
+    }
+
+    100% {
+        color: #fff;
+        border-color: #fff !important;
+    }
+}
+
+hr {
+    border: 1px solid;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
