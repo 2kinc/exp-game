@@ -100,13 +100,13 @@
             }
         }
         this.tileValues = {
-            water: new this.Tile('.', 'rgb(3,169,244)', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
-            dirt: new this.Tile('*', 'rgb(109,76,65)', 'Dirt', 'An abundant substance that plants grow in.'),
-            sand: new this.Tile('~', 'rgb(253,216,53)', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
-            grass: new this.Tile(',', 'rgb(76,175,80)', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
-            cactus: new this.Tile('🌵', 'rgb(253,216,53)', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
-            tree: new this.Tile('🌲', 'rgb(109,76,65)', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
-            wood: new this.Tile('🏽', 'rgb(141,110,99)', 'Wood', 'Strong, organic material used to build structures.')
+            water: new this.Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
+            dirt: new this.Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
+            sand: new this.Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
+            grass: new this.Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
+            cactus: new this.Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
+            tree: new this.Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
+            wood: new this.Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
         }
         this.coordinate = { x: 0, y: 0 };
         this.MapTile = function (coords, loot, terrain) {
@@ -162,8 +162,8 @@
                 }
             }
         }
+        var that = this;
         this.renderChunks = function (chunks) {
-            var that = this;
             chunks.forEach(function (chunk) {
                 var a = chunk.terrain;
                 a.forEach(function (element) {
@@ -171,7 +171,8 @@
                     var y = element.coordinates.y;
                     var tile = that.getTileElement(x, y);
                     tile.innerHTML = element.terrain.display_text;
-                    tile.style.background = element.terrain.color;
+                    var b = element.terrain.color + ((that.gameProgression + 1) / 10000 * 256).toString(16);
+                    tile.style.background = '#' + b;
                     tile.setAttribute('tooltip-title', '[' + element.terrain.display_text + '] ' + element.terrain.name);
                     tile.setAttribute('tooltip-text', element.terrain.description);
                 });
@@ -263,28 +264,33 @@
             }
             this.updateCenterEl();
         }
+        var that = this;
+
         this.initialize_viewport = function () {
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
-            var that = this;
             document.onkeypress = function (event) {
                 var d = new Directions();
                 if (event.key === "W" || event.key === "w") {
                     that.shift_viewport_vertically(1);
                     that.facing = d.up();
                     that.elements.player.style.transform = 'rotate(0deg)';
+                    that.gameProgression++;
                 } else if (event.key === "S" || event.key === "s") {
                     that.shift_viewport_vertically(-1);
                     that.facing = d.down();
                     that.elements.player.style.transform = 'rotate(180deg)';
+                    that.gameProgression++;
                 } else if (event.key === "D" || event.key === "d") {
                     that.shift_viewport_horizontally(1);
                     that.facing = d.right();
                     game.elements.player.style.transform = 'rotate(90deg)';
+                    that.gameProgression++;
                 } else if (event.key === "A" || event.key === "a") {
                     that.shift_viewport_horizontally(-1);
                     that.facing = d.left();
                     that.elements.player.style.transform = 'rotate(270deg)';
+                    that.gameProgression++;
                 }
             }
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
