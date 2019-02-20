@@ -321,8 +321,9 @@
             }
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
-            global.GameObject.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
-            global.GameObject.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
+            this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
+            this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
+            this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         };
         this.shift_viewport_horizontally = function (distance) {
             this.coordinate.x += distance;
@@ -353,8 +354,9 @@
             }
             var a = new this.Chunk(25, { x: this.get_bottomleft().x, y: this.get_bottomleft().y }, 32422);
             this.renderChunks([a]);
-            global.GameObject.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
-            global.GameObject.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
+            this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
+            this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
+            this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         }
         $(document).mouseover(function (e) {
             if ($(e.target).attr('tooltip-text') != null) {
