@@ -197,7 +197,6 @@
                     for (var y = chunk.bottomleft.y; y < chunk.bottomleft.y + chunk.sideLength; y++) {
                         var tile = that.getTileElement(x, y);
                         var k = chunk.terrain.get(x + ',' + y).terrain;
-                        console.log(k);
                         tile.innerHTML = k.display_text;
                         var b = k.color + Math.floor((that.gameProgression + 1) / 5000 * 256 + 20).toString(16);
                         tile.style.background = '#' + b;
