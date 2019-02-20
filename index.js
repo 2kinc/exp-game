@@ -117,16 +117,16 @@
 
         var worldModifications = new Map();
 
-        var getMapTileKey = function(tile){
-            return String(tile.x)+","+String(tile.y);
+        var getMapTileKey = function (tile) {
+            return String(tile.coordinates.x) + "," + String(tile.coordinates.y);
         };
 
         this.setMapTile = function (tile) {
             worldModifications.set(getMapTileKey(tile), tile);
         };
 
-        this.getMapTile = function(x, y){
-            return worldModifications.get(String(x) + ',' + String(y));
+        this.getMapTile = function (coordinates) {
+            return worldModifications.get(String(coordinates.x) + ',' + String(coordinates.y));
         };
 
         this.getTileElement = function (x, y) {
@@ -137,6 +137,7 @@
         this.Chunk = function (sideLength, bottomleft, seed) {
             this.terrain = new Map();
             this.bottomleft = bottomleft;
+            this.sideLength = sideLength;
             this.seed = seed;
             noise.seed(seed);
             for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
@@ -178,9 +179,8 @@
                     if (newTile.coordinates.x == that.coordinate.x && newTile.coordinates.y == that.coordinate.y) {
                         newTile.loot = new that.lootSpawn(false);
                     }
-                    if (that.getMapTile(x, y) != undefined) {
-                        newTile = that.getMapTile(x,y);
-                    }
+                    if (that.getMapTile({x:x, y:y}) != undefined)
+                        newTile = that.getMapTile({x:x, y:y});
                     this.terrain.set(getMapTileKey(newTile), newTile);
                 }
             }
@@ -193,17 +193,18 @@
         }
         this.renderChunks = function (chunks) {
             chunks.forEach(function (chunk) {
-                var a = chunk.terrain;
-                a.forEach(function (element) {
-                    var x = element.coordinates.x;
-                    var y = element.coordinates.y;
-                    var tile = that.getTileElement(x, y);
-                    tile.innerHTML = element.terrain.display_text;
-                    var b = element.terrain.color + Math.floor((that.gameProgression + 1) / 5000 * 256 + 20).toString(16);
-                    tile.style.background = '#' + b;
-                    tile.setAttribute('tooltip-title', '[' + element.terrain.display_text + '] ' + element.terrain.name);
-                    tile.setAttribute('tooltip-text', element.terrain.description);
-                });
+                for (var x = chunk.bottomleft.x; x < chunk.bottomleft.x + chunk.sideLength; x++) {
+                    for (var y = chunk.bottomleft.y; y < chunk.bottomleft.y + chunk.sideLength; y++) {
+                        var tile = that.getTileElement(x, y);
+                        var k = chunk.terrain.get(x + ',' + y).terrain;
+                        console.log(k);
+                        tile.innerHTML = k.display_text;
+                        var b = k.color + Math.floor((that.gameProgression + 1) / 5000 * 256 + 20).toString(16);
+                        tile.style.background = '#' + b;
+                        tile.setAttribute('tooltip-title', '[' + k.display_text + '] ' + k.name);
+                        tile.setAttribute('tooltip-text', k.description);
+                    }
+                }
             }
             )
         }
@@ -303,7 +304,6 @@
                     that.facing = d.up();
                     that.elements.player.style.transform = 'rotate(0deg)';
                     global.GameObject.gameProgression++;
-                    console.log(that.gameProgression);
                 } else if (event.key === "S" || event.key === "s") {
                     that.shift_viewport_vertically(-1);
                     that.facing = d.down();
@@ -355,7 +355,6 @@
         this.shift_viewport_horizontally = function (distance) {
             this.coordinate.x += distance;
             if (distance > 0) {
-                console.log(el.children);
                 for (var i = 0; i < h; i++) {
                     var row = el.children;
                     var k = i;
@@ -419,7 +418,6 @@
                     el.innerHTML = 'Take';
                     that.elements.loot.innerHTML += element.amount + ' ' + element.itemName + ' ';
                     that.elements.loot.appendChild(el);
-                    console.log(this);
                     el.addEventListener('click', function () {
                         that.inventory.addItem(element);
                         var i = localthat.items.indexOf(element);
