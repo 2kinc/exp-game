@@ -48,7 +48,7 @@
         this.name = name;
         this.description = description;
         this.properties = properties || null;
-        this.itemDrop = new item(name, 1);
+        this.itemDrop = new Item(name, 1);
         if (properties != null && properties.itemDrop != undefined) {
             this.itemDrop = this.properties.itemDrop;
         }
@@ -171,11 +171,16 @@
             water: new Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
             dirt: new Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
             sand: new Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
-            grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
+            grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new Item('Dirt', 1) }),
             cactus: new Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
-            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thicc trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
+            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thicc trunk that extends up into the sky.', { itemDrop: new Item('Wood', 1) }),
             wood: new Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
         };
+
+        this.itemValues = {
+            ammo: new Item('ammo', 1)
+        }; 
+        
         this.coordinate = { x: 0, y: 0 };
 
         var worldModifications = new Map();
@@ -400,9 +405,9 @@
         var that = this;
         this.lootSpawn = function (chest) {
             this.items = [];
-            var ammo = new item('ammo', Math.floor(Math.random() * 10));
-            var food = new item('food', Math.floor(Math.random() * 5));
-            var armour = new item('armour', Math.round(Math.random() * 0.6));
+            var ammo = new Item('ammo', Math.floor(Math.random() * 10));
+            var food = new Item('food', Math.floor(Math.random() * 5));
+            var armour = new Item('armour', Math.round(Math.random() * 0.6));
             if (ammo.amount != 0)
                 this.items.push(ammo);
             if (food.amount != 0)
@@ -410,7 +415,7 @@
             if (armour.amount != 0)
                 this.items.push(armour);
             if (Math.random() >= .99)
-                this.items.push(new item('Tekashi 6ix9ine', 69));
+                this.items.push(new Item('Tekashi 6ix9ine', 69));
             var localthat = this;
             this.updateElements = function () {
                 that.elements.loot.innerHTML = '';
@@ -422,14 +427,14 @@
                     span.addEventListener('click', function () {
                         that.inventory.addItem(element);
                         var i = localthat.items.indexOf(element);
-                        this.items.splice(i, 1);
+                        localthat.items.splice(i, 1);
                         console.log(localthat.items);
                         that.inventory.updateElements();
                         localthat.updateElements();
                         console.log('you took a thing');
                     });
                     that.elements.loot.appendChild(span);
-                    that.elements.loot.innerHTML += '<br>';
+                    that.elements.loot.appendChild(document.createElement('br'));
                 });
             }
             this.updateElements();
@@ -518,7 +523,7 @@
         }
     }
 
-    function item(item, amount) {
+    function Item (item, amount) {
         this.itemName = item;
         this.amount = amount;
     }
@@ -532,7 +537,7 @@
             //oops, inventory has no more space
         } else if (ITEM.amount + t > this.space) {
             ITEM.amount -= (this.space - t);
-            var tempItem = new item(ITEM.itemName, this.space - t);
+            var tempItem = new Item(ITEM.itemName, this.space - t);
             this.items.push(tempItem);
         } else {
             this.items.push(ITEM);
@@ -544,15 +549,15 @@
         }
     };
 
-    var anItem = new item('b lasagna', 123);
-    var shoes = new item('shoes', 150);
-    var tekashi = new item('6ix9ine', 69);
+    var anItem = new Item('b lasagna', 123);
+    var shoes = new Item('shoes', 150);
+    var tekashi = new Item('6ix9ine', 69);
 
     //inventory1.addItem(anItem);
 
-    //inventory1.addItem(new item('shoes', 300));
+    //inventory1.addItem(new Item('shoes', 300));
 
-    //global.GameObject.inventory.addItem(new item('shoes', 300));
+    //global.GameObject.inventory.addItem(new Item('shoes', 300));
 
     //global.GameObject.inventory.addItem(shoes);
 
