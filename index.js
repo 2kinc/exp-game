@@ -93,7 +93,7 @@
                 if (k < 2 && newTile.terrain.name == 'Sand') {
                     newTile.terrain = global.GameObject.tileValues.cactus;
                 }
-                if (k < 5 && newTile.terrain.name == 'Dirt') {
+                if (k < 4 && newTile.terrain.name == 'Dirt') {
                     newTile.terrain = global.GameObject.tileValues.tree;
                 }
                 if (newTile.coordinates.x == game.coordinate.x && newTile.coordinates.y == game.coordinate.y) {
@@ -163,13 +163,17 @@
             tooltipTitle: qs('#tooltip-title'),
             tooltipText: qs('#tooltip-text')
         };
+        this.stats = {
+            steps: 0,
+            ammoUsed: 0
+        };
         this.tileValues = {
             water: new Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
             dirt: new Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
             sand: new Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
             grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new item('Dirt', 1) }),
             cactus: new Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
-            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thick trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
+            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thicc trunk that extends up into the sky.', { itemDrop: new item('Wood', 1) }),
             wood: new Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
         };
         this.coordinate = { x: 0, y: 0 };
@@ -411,12 +415,11 @@
             this.updateElements = function () {
                 that.elements.loot.innerHTML = '';
                 localthat.items.forEach(function (element) {
-                    var el = document.createElement('span');
-                    el.className = 'clickable';
-                    el.innerHTML = 'Take';
+                    var span = document.createElement('span');
+                    span.className = 'clickable';
+                    span.innerHTML = 'Take';
                     that.elements.loot.innerHTML += element.amount + ' ' + element.itemName + ' ';
-                    that.elements.loot.appendChild(el);
-                    el.addEventListener('click', function () {
+                    span.addEventListener('click', function () {
                         that.inventory.addItem(element);
                         var i = localthat.items.indexOf(element);
                         this.items.splice(i, 1);
@@ -425,6 +428,7 @@
                         localthat.updateElements();
                         console.log('you took a thing');
                     });
+                    that.elements.loot.appendChild(span);
                     that.elements.loot.innerHTML += '<br>';
                 });
             }
@@ -1114,8 +1118,8 @@
     global.GameObject.elements.energy.innerHTML = 'Energy: ' + Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
     global.GameObject.elements.ammo.innerHTML = 'Ammo: ' + global.GameObject.ammo;
     global.GameObject.elements.food.innerHTML = 'Food: ' + global.GameObject.food + ' [E to eat]';
-    global.GameObject.elements.ammoUsed.innerHTML = 'Ammo used: ' + global.GameObject.ammoUsed;
-    global.GameObject.elements.steps.innerHTML = 'Steps taken: ' + global.GameObject.steps;
+    global.GameObject.elements.ammoUsed.innerHTML = 'Ammo used: ' + global.GameObject.stats.ammoUsed;
+    global.GameObject.elements.steps.innerHTML = 'Steps taken: ' + global.GameObject.stats.steps;
     qs('#log-heading').innerHTML = 'Log';
     global.GameObject.elements.log.innerHTML = 'You awake into a strange world.';
     setTimeout(function () {

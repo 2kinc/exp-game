@@ -37,10 +37,10 @@
   - HP (Current/Max)
   - Armour (equipped) (in progress on master branch)
   - XP
-  - Inventory (list of items) (future)
+  - Inventory (list of items) (in progress)
   - Food (Numeric, will be replaced with food item)
   - Ammo (Numeric, will be replaced with ammo item)
-- Items (future)
+- Items (in progress)
   - Food
   - Ammo
   - Fuel
@@ -53,6 +53,8 @@
     - Furnaces
     - Resource harvesters
   - Chests
-- Structures (Placed by arranging certain blocks in a certain pattern) (future)
+- Structures (Placed by arranging certain blocks in a certain pattern or naturally spawning, creates sub area) (future)
   - Houses
-  - 
+  - Lakes
+  - Mines
+  - Mountains
