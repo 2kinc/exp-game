@@ -7,6 +7,9 @@ body {
     overflow: hidden;
     padding: 30px;
     min-width: 1100px;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
 
 #hugeheading{
@@ -39,16 +42,16 @@ body {
     border: 2px solid #fff;
     width: 500px;
     height: 500px;
+    max-width: 500px;
+    max-height: 500px;
+    overflow: hidden;
     margin: auto;
-    transition: all 1.5s, box-shadow 0.3s;
+    transition: all 1.5s;
     transition-timing-function: ease-in-out;
     transform-origin: 50% 50%;
-}
-
-td {
-    width: 20px;
-    height: 16px;
-    text-align: center;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
 
 .bullet {
@@ -60,12 +63,14 @@ td {
 }
 
 .card {
-    border: 2px solid #fff;
+    border: 2px solid;
     padding: 10px;
     max-width: 250px;
     z-index: 4;
     background: #333;
-    transition: box-shadow 0.3s;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
 
 .card div {
@@ -140,14 +145,99 @@ img {
     height: 100%;
 }
 
-.card:hover {
-    -webkit-box-shadow: 0 0 5px 6px rgba(0,0,0,0.4);  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-    -moz-box-shadow:    0 0 5px 6px rgba(0,0,0,0.4);  /* Firefox 3.5 - 3.6 */
-    box-shadow:         0 0 5px 6px rgba(0,0,0,0.4);  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+.shaded {
+    color: #aaa;
 }
 
-#box:hover {
-    -webkit-box-shadow: 0 0 5px 6px rgba(0,0,0,0.4);  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-    -moz-box-shadow:    0 0 5px 6px rgba(0,0,0,0.4);  /* Firefox 3.5 - 3.6 */
-    box-shadow:         0 0 5px 6px rgba(0,0,0,0.4);  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+.clickable {
+    cursor: pointer;
+}
+
+.clickable::before {
+    content: '[';
+}
+
+.clickable::after {
+    content: ']';
+}
+
+.clickable:hover {
+    background: #fff;
+    color: #333;
+}
+
+.clickable:hover::before {
+    content: '[ ';
+}
+
+.clickable:hover::after {
+    content: ' ]';
+}
+
+td{
+    -border-radius: 5px;
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    text-align: center;
+    justify-content: center;
+    font-size: 1em;
+    margin: 0;
+    color: rgba(0,0,0,0.7);
+    overflow: hidden;
+    transition: all 0.3s;
+    line-height: 1em;
+}
+
+td.current{
+    background-color: black !important;
+}
+
+#tooltip {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    box-shadow: 1px 1px 6px 0px #333333;
+    max-width: 120px;
+}
+
+  
+@-webkit-keyframes glow {
+    0% {
+        color: #fff; 
+        border-color: #fff!important;
+    }
+    
+    10% {
+        color: rgb(216, 198, 243);
+        border-color: rgb(216, 198, 243)!important;
+    }
+
+    20% {
+        color: rgb(253, 222, 176);
+        border-color: rgb(253, 222, 176)!important;
+    }
+
+    30% {
+        color: rgb(253, 249, 197);
+        border-color: rgb(253, 249, 197)!important;
+    }
+
+    40% {
+        color: #fff;
+        border-color: #fff !important;
+    }
+
+    100% {
+        color: #fff;
+        border-color: #fff !important;
+    }
+}
+
+hr {
+    border: 1px solid;
+    -webkit-animation: glow 2.5s ease-in-out infinite alternate;
+    -moz-animation: glow 2.5s ease-in-out infinite alternate;
+    animation: glow 2.5s ease-in-out infinite alternate;
 }
