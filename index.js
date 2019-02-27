@@ -517,8 +517,9 @@
             });
             this.elements.spaceused.percent.innerHTML = ' (' + b / this.space * 100 + '% occupied)';
             var j = this;
+            j.elements.stats.innerHTML = "";
             this.items.forEach(function (element) {
-                j.elements.stats.innerHTML = element.amount + ' ' + element.itemName + shadedText(' (' + element.amount / j.space * 100 + '% of inventory)') + '<br>';
+                j.elements.stats.innerHTML += element.amount + ' ' + element.itemName + shadedText(' (' + element.amount / j.space * 100 + '% of inventory)') + '<br>';
             });
         }
     }
