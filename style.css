@@ -12,22 +12,22 @@ body {
     animation: glow 2.5s ease-in-out infinite alternate;
 }
 
-#hugeheading{
-    font-size: 12em; 
-    position: absolute; 
-    width: 100%; 
-    text-align: center; 
+#hugeheading {
+    font-size: 12em;
+    position: absolute;
+    width: 100%;
+    text-align: center;
     left: calc(0px + 0.1em);
 }
 
 #by2kinc{
-    position: absolute; 
-    left: 0; 
-    width: 100%; 
-    text-align: center; 
-    font-size: 5em; 
-    top: calc(4em); 
-    clip: unset; 
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 5em;
+    top: calc(4em);
+    clip: unset;
     transform: none!important;
 }
 
@@ -202,13 +202,13 @@ td.current{
     max-width: 120px;
 }
 
-  
+
 @-webkit-keyframes glow {
     0% {
-        color: #fff; 
+        color: #fff;
         border-color: #fff!important;
     }
-    
+
     10% {
         color: rgb(216, 198, 243);
         border-color: rgb(216, 198, 243)!important;
