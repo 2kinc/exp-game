@@ -48,7 +48,7 @@
         this.name = name;
         this.description = description;
         this.properties = properties || null;
-        this.itemDrop = new Item(name, 1);
+        this.itemDrop = new GameObject.prototype.Item(name, 1);
         if (properties != null && properties.itemDrop != undefined) {
             this.itemDrop = this.properties.itemDrop;
         }
@@ -165,14 +165,15 @@
             water: new Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', { unbreakable: true }),
             dirt: new Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
             sand: new Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
-            grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new Item('Dirt', 1) }),
+            grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', { itemDrop: new this.Item('Dirt', 1) }),
             cactus: new Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', { damage: 1 }),
-            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thicc trunk that extends up into the sky.', { itemDrop: new Item('Wood', 1) }),
+            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thicc trunk that extends up into the sky.', { itemDrop: new this.Item('Wood', 1) }),
             wood: new Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
         };
 
         this.itemValues = {
-            ammo: new Item('ammo', 1)
+            ammo: new this.Item('ammo', 1),
+            food: new this.Item('food', 1)
         };
 
         this.coordinate = { x: 0, y: 0 };
@@ -399,9 +400,9 @@
         var that = this;
         this.lootSpawn = function (chest) {
             this.items = [];
-            var ammo = new Item('ammo', Math.floor(Math.random() * 10));
-            var food = new Item('food', Math.floor(Math.random() * 5));
-            var armour = new Item('armour', Math.round(Math.random() * 0.6));
+            var ammo = new GameObject.prototype.Item('ammo', Math.floor(Math.random() * 10));
+            var food = new GameObject.prototype.Item('food', Math.floor(Math.random() * 5));
+            var armour = new GameObject.prototype.Item('armour', Math.round(Math.random() * 0.6));
             if (ammo.amount != 0)
                 this.items.push(ammo);
             if (food.amount != 0)
@@ -409,7 +410,7 @@
             if (armour.amount != 0)
                 this.items.push(armour);
             if (Math.random() >= .99)
-                this.items.push(new Item('Tekashi 6ix9ine', 69));
+                this.items.push(new GameObject.prototype.Item('Tekashi 6ix9ine', 69));
             var localthat = this;
             this.updateElements = function () {
                 that.elements.loot.innerHTML = '';
@@ -539,22 +540,10 @@
     }
 
 
-    function Item (item, amount) {
+    GameObject.prototype.Item = function (item, amount) {
         this.itemName = item;
         this.amount = amount;
     }
-
-    var anItem = new Item('b lasagna', 123);
-    var shoes = new Item('shoes', 150);
-    var tekashi = new Item('6ix9ine', 69);
-
-    //inventory1.addItem(anItem);
-
-    //inventory1.addItem(new Item('shoes', 300));
-
-    //global.GameObject.inventory.addItem(new Item('shoes', 300));
-
-    //global.GameObject.inventory.addItem(shoes);
 
     global.GameObject = new GameObject();
 
