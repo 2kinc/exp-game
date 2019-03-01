@@ -15,7 +15,10 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133299888-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'UA-133299888-1');
@@ -30,9 +33,9 @@
 </head>
 
 <body>
-    <div id="loading" style="position: absolute; height: 100%; width: 100%; 
+    <div id="loading" style="position: absolute; height: 100%; width: 100%;
 				left: 0; top: 0; background: #333; z-index: 1000; text-align: center; font-size: 1.5em">
-        <img src="loading.gif" height="120px" width="120px" alt="Loading Animation" style="display: block; 
+        <img src="loading.gif" height="120px" width="120px" alt="Loading Animation" style="display: block;
 				margin: auto; margin-top: 15%;">
         loading...
     </div>
@@ -46,8 +49,7 @@
     </div>
     <div class="left-side">
         <div id="stats" class="card">
-            <div id="name" class="heading" title="Click to edit name" contenteditable="true" autocomplete="off"
-                autocorrect="off" autocapitalize="off" spellcheck="false">
+            <div id="name" class="heading" title="Click to edit name" contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                 Loading...
             </div>
             <hr>
@@ -101,14 +103,17 @@
             </div>
         </div>
     </div>
-<div>E.X.P by 2K inc 
-Ken Zhou         Coder
-Dmitry Kornilov  Coder
-Kavin Velmurugan Coder
-Euan Chase       Coder
-	</div>
-    
-	<div id="box"></div>
+    <div id="credits">
+        <span>
+            E. X. P. by 2K inc.<br><br>
+            Ken Zhou - Coder, Designer<br>
+            Kavin Velmurugan - Coder, Designer <br>
+            Dmitry Kornilov - Coder <br>
+            Euan Chase -  Coder
+        </span>
+    </div>
+
+    <div id="box"></div>
 
     <div id="player">
         <img src="player.png" height="20px" width="20px" draggable="false">
@@ -126,6 +131,10 @@ Euan Chase       Coder
         <div id="tooltip-title" class="heading"></div>
         <hr>
         <div id="tooltip-text"></div>
+    </div>
+
+    <div>
+        <span class="clickable" onclick="credits.roll();" style="font-size: 1.5em;">Credits</span>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
