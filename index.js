@@ -464,6 +464,8 @@
             console.log(a);
             this.elements.spaceused.innerText = '';
             var o = this;
+            o.elements.spaceused.occupied.innerHTML='';
+            o.elements.spaceused.available.innerHTML='';
             a.forEach(function (element) {
                 if (element == "$") {
                     o.elements.spaceused.occupied.innerHTML += element;
