@@ -473,11 +473,11 @@
                     o.elements.spaceused.available.innerHTML += element;
                 }
             });
-            this.elements.spaceused.percent.innerHTML = ' (' + b / this.space * 100 + '% occupied)';
+            this.elements.spaceused.percent.innerHTML = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
             var j = this;
             j.elements.stats.innerHTML = "";
             this.items.forEach(function (element) {
-                j.elements.stats.innerHTML += element.amount + ' ' + element.itemName + shadedText(' (' + element.amount / j.space * 100 + '% of inventory)') + '<br>';
+                j.elements.stats.innerHTML += element.amount + ' ' + element.itemName + shadedText(' (' + parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + '<br>';
             });
         };
         this.addItem = function (ITEM) {
