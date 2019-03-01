@@ -23,7 +23,7 @@
         this.hp = 10;
         this.maxhp = 10;
         this.armour = 0;
-        this.inventory = new Inventory(150);
+        this.inventory = new GameObject.Inventory(150);
     }
 
     var qs = function (selector) {
@@ -62,14 +62,10 @@
         noise.seed(seed);
         for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
             for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
-                // All noise functions return values in the range of -1 to 1.
-
-                // noise.simplex2 and noise.perlin2 for 2d noise
                 var value = noise.simplex2(x / 100, y / 100);
                 if (value < 0) {
                     value = 1 + value;
-                }
-                if (value >= 0.75) {
+                } if (value >= 0.75) {
                     value = game.tileValues.water;
                 } else if (value >= 0.45) {
                     value = game.tileValues.sand;
@@ -78,8 +74,6 @@
                 } else if (value >= 0) {
                     value = game.tileValues.dirt;
                 }
-
-                // ... or noise.simplex3 and noise.perlin3:
                 var newTile = new MapTile({ x: x, y: y }, null, value);
                 var a = newTile.coordinates.x;
                 if (a < 0) {
@@ -132,7 +126,7 @@
         this.isTown = false;
         this.armour = false;
         this.generatedMap;
-        this.inventory = new Inventory(150);
+        this.inventory = new this.Inventory(150);
         this.elements = {
             player: qs('#player'),
             box: qs('#box'),
@@ -179,8 +173,8 @@
 
         this.itemValues = {
             ammo: new Item('ammo', 1)
-        }; 
-        
+        };
+
         this.coordinate = { x: 0, y: 0 };
 
         var worldModifications = new Map();
@@ -441,46 +435,7 @@
         };
     }
 
-    function getAllElementsWithAttribute(attribute) {
-        var matchingElements = [];
-        var allElements = document.getElementsByTagName('*');
-        for (var i = 0, n = allElements.length; i < n; i++) {
-            if (allElements[i].getAttribute(attribute) !== null) {
-                // Element exists with attribute. Add to array.
-                matchingElements.push(allElements[i]);
-            }
-        }
-        return matchingElements;
-    }
-
-    GameObject.prototype.detectHit = function (bulletEl, target) {
-        var b = bulletEl.getBoundingClientRect();
-        var t = target.getBoundingClientRect();
-        return (b.top <= t.top + 20
-            && b.top >= t.top - 20
-            && target.style.display != 'none'
-            && b.left >= t.left - 20
-            && b.left <= t.left + 20);
-    };
-
-    GameSave.prototype.load = function () {
-        var data = window.localStorage.getItem("exp-game/save");
-        if (data != null)
-            return JSON.parse(data);
-        return new GameObject();
-    };
-
-    GameSave.prototype.save = function () {
-        window.localStorage.setItem('exp-game/save', JSON.stringify(global._exp_game));
-    }
-
-    //global._exp_game = ((global._exp_game != null) ? global._exp_game : (new GameSave()).load());
-
-    function shadedText(text) {
-        return "<span class='shaded'>" + text + "</span>";
-    }
-
-    function Inventory(space, items) {
+    GameObject.prototype.Inventory = function(space, items) {
         this.space = space;
         this.items = items || [];
         this.elements = {
@@ -521,34 +476,73 @@
             this.items.forEach(function (element) {
                 j.elements.stats.innerHTML += element.amount + ' ' + element.itemName + shadedText(' (' + element.amount / j.space * 100 + '% of inventory)') + '<br>';
             });
-        }
+        };
+        this.addItem = function (ITEM) {
+            var t = 0;
+            this.items.forEach(function (element) {
+                t += element.amount;
+            });
+            if (t == this.space) {
+                //oops, inventory has no more space
+            } else if (ITEM.amount + t > this.space) {
+                ITEM.amount -= (this.space - t);
+                var tempItem = new Item(ITEM.itemName, this.space - t);
+                this.items.push(tempItem);
+            } else {
+                this.items.push(ITEM);
+            }
+            if (this.items.filter(item => (item.itemName == ITEM.itemName))[1] != undefined) {
+                this.items.filter(item => (item.itemName == ITEM.itemName))[0].amount += ITEM.amount;
+                var r = this.items.indexOf(ITEM);
+                this.items.splice(r, 1);
+            }
+        };
     }
+
+    function getAllElementsWithAttribute(attribute) {
+        var matchingElements = [];
+        var allElements = document.getElementsByTagName('*');
+        for (var i = 0, n = allElements.length; i < n; i++) {
+            if (allElements[i].getAttribute(attribute) !== null) {
+                // Element exists with attribute. Add to array.
+                matchingElements.push(allElements[i]);
+            }
+        }
+        return matchingElements;
+    }
+
+    GameObject.prototype.detectHit = function (bulletEl, target) {
+        var b = bulletEl.getBoundingClientRect();
+        var t = target.getBoundingClientRect();
+        return (b.top <= t.top + 20
+            && b.top >= t.top - 20
+            && target.style.display != 'none'
+            && b.left >= t.left - 20
+            && b.left <= t.left + 20);
+    };
+
+    GameSave.prototype.load = function () {
+        var data = window.localStorage.getItem("exp-game/save");
+        if (data != null)
+            return JSON.parse(data);
+        return new GameObject();
+    };
+
+    GameSave.prototype.save = function () {
+        window.localStorage.setItem('exp-game/save', JSON.stringify(global._exp_game));
+    }
+
+    //global._exp_game = ((global._exp_game != null) ? global._exp_game : (new GameSave()).load());
+
+    function shadedText(text) {
+        return "<span class='shaded'>" + text + "</span>";
+    }
+
 
     function Item (item, amount) {
         this.itemName = item;
         this.amount = amount;
     }
-
-    Inventory.prototype.addItem = function (ITEM) {
-        var t = 0;
-        this.items.forEach(function (element) {
-            t += element.amount;
-        });
-        if (t == this.space) {
-            //oops, inventory has no more space
-        } else if (ITEM.amount + t > this.space) {
-            ITEM.amount -= (this.space - t);
-            var tempItem = new Item(ITEM.itemName, this.space - t);
-            this.items.push(tempItem);
-        } else {
-            this.items.push(ITEM);
-        }
-        if (this.items.filter(item => (item.itemName == ITEM.itemName))[1] != undefined) {
-            this.items.filter(item => (item.itemName == ITEM.itemName))[0].amount += ITEM.amount;
-            var r = this.items.indexOf(ITEM);
-            this.items.splice(r, 1);
-        }
-    };
 
     var anItem = new Item('b lasagna', 123);
     var shoes = new Item('shoes', 150);
@@ -594,7 +588,7 @@
             if (!this.lootArray[this.currentCell])
                 this.lootArray[this.currentCell] = new lootSpawn((this.currentCellEl.innerHTML == 'C'));
             var currentLoot = this.lootArray[this.currentCell];
-    
+
             this.lootAmmo.innerHTML = this.currentLoot.ammo;
             this.lootFood.innerHTML = this.currentLoot.food;
             this.lootAmmoWrap.style.display = ((this.currentLoot.ammo == 0) ? 'none' : 'block');
