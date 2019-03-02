@@ -475,7 +475,9 @@
                     var span = document.createElement('span');
                     span.className = 'clickable';
                     span.innerText = 'Take';
-                    that.elements.loot.innerText += element.amount + ' × ' + element.displayText + ' ' + element.name + ' ';
+                    var p = document.createElement('span');
+                    p.innerText = element.amount + ' × ' + element.displayText + ' ' + element.name + ' ';
+                    that.elements.loot.appendChild(p);
                     span.addEventListener('click', function () {
                         that.inventory.addItem(element);
                         var i = localthat.items.indexOf(element);
