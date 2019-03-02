@@ -1,4 +1,4 @@
-(function(global, w, h, el) {
+(function (global, w, h, el) {
 
     if (!window.localStorage) {
         throw "Your browser does not support Local Storage";
@@ -9,7 +9,7 @@
         this.y = y || 0;
     }
 
-    var getMapTileKey = function(tile) {
+    var getMapTileKey = function (tile) {
         return String(tile.coordinates.x) + "," + String(tile.coordinates.y);
     };
 
@@ -26,21 +26,21 @@
         this.inventory = new GameObject.Inventory(150);
     }
 
-    var qs = function(selector) {
+    var qs = function (selector) {
         return document.querySelector(selector);
     };
 
     function Directions() {}
-    Directions.prototype.up = function() {
+    Directions.prototype.up = function () {
         return 0
     };
-    Directions.prototype.right = function() {
+    Directions.prototype.right = function () {
         return 1
     };
-    Directions.prototype.down = function() {
+    Directions.prototype.down = function () {
         return 2
     };
-    Directions.prototype.left = function() {
+    Directions.prototype.left = function () {
         return 3
     };
 
@@ -179,6 +179,23 @@
             steps: 0,
             ammoUsed: 0
         };
+
+        this.itemValues = {
+            ammo: new this.Item('⁍', 'ffffff', 'Ammo', 'Small pellets used to power your gun.'),
+            dirt: new this.Item('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
+            wood: new this.Item('🏽', '826054', 'Wood', 'Strong organic material used to build structures.'),
+            armour: new this.Item('🛡️', 'ffffff', 'Armour', 'Shields your vulnerable soul from attackers. Could also be spelled "armor".'),
+            potato: new this.Item('🥔', 'ffffff', 'Potato', 'A good but not very tasty source of food.', {
+                energy: 2
+            }),
+            tomato: new this.Item('🍅', 'ffffff', 'Tomato', 'A juicy tomato that will please your appetite.', {
+                energy: 2
+            }),
+            grapes: new this.Item('🍇', 'ffffff', 'Grapes', 'A hearty bunch of grapes.', {
+                energy: 3
+            })
+        };
+
         this.tileValues = {
             water: new Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', {
                 unbreakable: true
@@ -186,20 +203,15 @@
             dirt: new Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
             sand: new Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
             grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', {
-                itemDrop: new this.Item('Dirt', 1)
+                itemDrop: this.itemValues.dirt
             }),
             cactus: new Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', {
                 damage: 1
             }),
-            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thicc trunk that extends up into the sky.', {
-                itemDrop: new this.Item('Wood', 1)
+            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thick trunk.', {
+                itemDrop: this.itemValues.wood
             }),
-            wood: new Tile('🏽', '826054', 'Wood', 'Strong, organic material used to build structures.')
-        };
-
-        this.itemValues = {
-            ammo: new this.Item('ammo', 1),
-            food: new this.Item('food', 1)
+            wood: new Tile('🏽', '826054', 'Wood', 'Strong organic material used to build structures.')
         };
 
         this.coordinate = {
@@ -209,21 +221,21 @@
 
         var worldModifications = new Map();
 
-        this.setMapTile = function(tile) {
+        this.setMapTile = function (tile) {
             worldModifications.set(getMapTileKey(tile), tile);
         };
 
-        this.getMapTile = function(coordinates) {
+        this.getMapTile = function (coordinates) {
             return worldModifications.get(String(coordinates.x) + ',' + String(coordinates.y));
         };
 
-        this.getTileElement = function(x, y) {
+        this.getTileElement = function (x, y) {
             return document.querySelector('#c_' + this.for_id(x) + '_' + this.for_id(y));
         };
 
         var that = this;
-        this.renderChunks = function(chunks) {
-            chunks.forEach(function(chunk) {
+        this.renderChunks = function (chunks) {
+            chunks.forEach(function (chunk) {
                 for (var x = chunk.bottomleft.x; x < chunk.bottomleft.x + chunk.sideLength; x++) {
                     for (var y = chunk.bottomleft.y; y < chunk.bottomleft.y + chunk.sideLength; y++) {
                         var tile = that.getTileElement(x, y);
@@ -243,37 +255,37 @@
             });
         };
 
-        this.get_topleft = function() {
+        this.get_topleft = function () {
             return {
                 y: this.coordinate.y + Math.floor(h / 2),
                 x: this.coordinate.x - Math.floor(w / 2)
             }
         };
-        this.get_bottomleft = function() {
+        this.get_bottomleft = function () {
             return {
                 x: this.coordinate.x - Math.floor(w / 2),
                 y: this.coordinate.y - Math.floor(h / 2)
             }
         }
-        this.get_topright = function() {
+        this.get_topright = function () {
             return {
                 x: this.coordinate.x + Math.floor(w / 2),
                 y: this.coordinate.y + Math.floor(h / 2)
             }
         }
-        this.get_bottomright = function() {
+        this.get_bottomright = function () {
             return {
                 x: this.coordinate.x + Math.floor(w / 2),
                 y: this.coordinate.y - Math.floor(h / 2)
             }
         }
-        this.for_id = function(n) {
+        this.for_id = function (n) {
             return String(Math.abs(n)) + (n < 0 ? "n" : "");
         };
-        this.get_tile_id = function(sx, sy) {
+        this.get_tile_id = function (sx, sy) {
             return "c_" + sx + "_" + sy;
         };
-        this.updateCenterEl = function() {
+        this.updateCenterEl = function () {
             var c = document.querySelector("td.current");
             if (c) {
                 c.classList.remove("current");
@@ -283,7 +295,7 @@
                 c.classList.add("current");
             }
         }
-        this.generate_rows = function(topleft, n_rows, n_cols, start_index) {
+        this.generate_rows = function (topleft, n_rows, n_cols, start_index) {
             var anchor = null;
             if (start_index >= 0) {
                 anchor = el.children[start_index];
@@ -311,7 +323,7 @@
             }
             this.updateCenterEl();
         };
-        this.generate_columns = function(topleft, n_rows, n_cols, start_index) {
+        this.generate_columns = function (topleft, n_rows, n_cols, start_index) {
             for (var x = 0; x < n_cols; x++) {
                 var sx = this.for_id(topleft.x + x);
                 var sy = this.for_id(topleft.y);
@@ -328,10 +340,10 @@
             this.updateCenterEl();
         }
 
-        this.initialize_viewport = function() {
+        this.initialize_viewport = function () {
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
-            document.onkeypress = function(event) {
+            document.onkeypress = function (event) {
                 var d = new Directions();
                 if (event.key === "W" || event.key === "w") {
                     that.shift_viewport_vertically(1);
@@ -364,7 +376,7 @@
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
             this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         };
-        this.shift_viewport_vertically = function(distance) {
+        this.shift_viewport_vertically = function (distance) {
             this.coordinate.y += distance;
             if (distance > 0) {
                 console.log("moving up");
@@ -392,7 +404,7 @@
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
             this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         };
-        this.shift_viewport_horizontally = function(distance) {
+        this.shift_viewport_horizontally = function (distance) {
             this.coordinate.x += distance;
             if (distance > 0) {
                 for (var i = 0; i < h; i++) {
@@ -427,7 +439,7 @@
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
             this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         }
-        $(document).mouseover(function(e) {
+        $(document).mouseover(function (e) {
             if ($(e.target).attr('tooltip-text') != null) {
                 global.GameObject.elements.tooltipTitle.innerHTML = $(e.target).attr('tooltip-title');
                 global.GameObject.elements.tooltipText.innerHTML = $(e.target).attr('tooltip-text');
@@ -439,28 +451,30 @@
             }
         });
         var that = this;
-        this.lootSpawn = function(chest) {
+        this.lootSpawn = function (chest) {
             this.items = [];
-            var ammo = new GameObject.prototype.Item('ammo', Math.floor(Math.random() * 10));
-            var food = new GameObject.prototype.Item('food', Math.floor(Math.random() * 5));
-            var armour = new GameObject.prototype.Item('armour', Math.round(Math.random() * 0.6));
+            var ammo = that.itemValues.ammo;
+            ammo.amount = Math.floor(Math.random() * 10);
+            var food = [that.itemValues.potato, that.itemValues.tomato, that.itemValues.grapes];
+            food = food[Math.floor(Math.random() * food.length)];
+            food.amount = Math.floor(Math.random() * 3);
+            var armour = that.itemValues.armour;
+            armour.amount = Math.round(Math.random() - 0.25);
             if (ammo.amount != 0)
                 this.items.push(ammo);
             if (food.amount != 0)
                 this.items.push(food);
             if (armour.amount != 0)
                 this.items.push(armour);
-            if (Math.random() >= .99)
-                this.items.push(new GameObject.prototype.Item('Tekashi 6ix9ine', 69));
             var localthat = this;
-            this.updateElements = function() {
+            this.updateElements = function () {
                 that.elements.loot.innerHTML = '';
-                localthat.items.forEach(function(element) {
+                localthat.items.forEach(function (element) {
                     var span = document.createElement('span');
                     span.className = 'clickable';
                     span.innerHTML = 'Take';
-                    that.elements.loot.innerHTML += element.amount + ' ' + element.itemName + ' ';
-                    span.addEventListener('click', function() {
+                    that.elements.loot.innerText += element.amount + ' × ' + element.displayText + ' ' + element.name + ' ';
+                    span.addEventListener('click', function () {
                         that.inventory.addItem(element);
                         var i = localthat.items.indexOf(element);
                         localthat.items.splice(i, 1);
@@ -477,7 +491,7 @@
         };
     }
 
-    GameObject.prototype.Inventory = function(space, items) {
+    GameObject.prototype.Inventory = function (space, items) {
         this.space = space;
         this.items = items || [];
         this.elements = {
@@ -489,7 +503,7 @@
             },
             stats: document.getElementById('inventory-stats')
         };
-        this.updateElements = function() {
+        this.updateElements = function () {
             var a = [];
             for (var i = 0; i < 15; i++) {
                 a[i] = '#';
@@ -505,25 +519,25 @@
             console.log(a);
             this.elements.spaceused.innerText = '';
             var o = this;
-            o.elements.spaceused.occupied.innerHTML = '';
-            o.elements.spaceused.available.innerHTML = '';
-            a.forEach(function(element) {
+            o.elements.spaceused.occupied.innerText = '';
+            o.elements.spaceused.available.innerText = '';
+            a.forEach(function (element) {
                 if (element == "$") {
-                    o.elements.spaceused.occupied.innerHTML += element;
+                    o.elements.spaceused.occupied.innerText += element;
                 } else {
-                    o.elements.spaceused.available.innerHTML += element;
+                    o.elements.spaceused.available.innerText += element;
                 }
             });
-            this.elements.spaceused.percent.innerHTML = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
+            this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
             var j = this;
             j.elements.stats.innerHTML = "";
-            this.items.forEach(function(element) {
-                j.elements.stats.innerHTML += element.amount + ' ' + element.itemName + shadedText(' (' + parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + '<br>';
+            this.items.forEach(function (element) {
+                j.elements.stats.innerHTML += element.amount + ' ' + element.displayText + ' ' + element.name + shadedText(' (' + parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + '<br>';
             });
         };
-        this.addItem = function(ITEM) {
+        this.addItem = function (ITEM) {
             var t = 0;
-            this.items.forEach(function(element) {
+            this.items.forEach(function (element) {
                 t += element.amount;
             });
             if (t == this.space) {
@@ -555,7 +569,7 @@
         return matchingElements;
     }
 
-    GameObject.prototype.detectHit = function(bulletEl, target) {
+    GameObject.prototype.detectHit = function (bulletEl, target) {
         var b = bulletEl.getBoundingClientRect();
         var t = target.getBoundingClientRect();
         return (b.top <= t.top + 20 &&
@@ -565,14 +579,14 @@
             b.left <= t.left + 20);
     };
 
-    GameSave.prototype.load = function() {
+    GameSave.prototype.load = function () {
         var data = window.localStorage.getItem("exp-game/save");
         if (data != null)
             return JSON.parse(data);
         return new GameObject();
     };
 
-    GameSave.prototype.save = function() {
+    GameSave.prototype.save = function () {
         window.localStorage.setItem('exp-game/save', JSON.stringify(global._exp_game));
     }
 
@@ -583,20 +597,24 @@
     }
 
 
-    GameObject.prototype.Item = function(item, amount) {
-        this.itemName = item;
-        this.amount = amount;
+    GameObject.prototype.Item = function (display_text, color, name, description, properties, amount) {
+        this.displayText = display_text;
+        this.color = color;
+        this.name = name;
+        this.description = description;
+        this.properties = properties || null;
+        this.amount = amount || 1;
     }
 
     global.GameObject = new GameObject();
 
     global.credits = document.querySelector('#credits');
-    global.credits.roll = function() {
+    global.credits.roll = function () {
         global.credits.style.display = 'block';
         global.credits.style.animationName = 'creditsroll';
         global.credits.style.animationDuration = '7s';
         global.credits.style.animationTimingFunction = 'linear';
-        setTimeout(function() {
+        setTimeout(function () {
             global.credits.style.display = 'none';
         }, 7000);
     }
@@ -894,8 +912,8 @@
         }
     }*/
     if ($('startscreen').html != '') {
-        global.GameObject.elements.play.addEventListener('click', function() {
-            regenDegenInterval = setInterval(function() {
+        global.GameObject.elements.play.addEventListener('click', function () {
+            regenDegenInterval = setInterval(function () {
                 if (Math.round(energy) > 0 && health == maxHealth)
                     global.GameObject.energy--;
                 if (global.GameObject.energy > global.GameObject.maxEnergy)
@@ -912,13 +930,13 @@
                 if (health < 0) {
                     var saveHTML = document.body.innerHTML;
                     document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-                    setTimeout(function() {
+                    setTimeout(function () {
                         document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
                     }, 1000);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
                     }, 2000);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         global.GameObject.energy = global.GameObject.maxEnergy;
                         global.GameObject.health = global.GameObject.maxHealth;
                         location.reload();
@@ -1093,7 +1111,7 @@
         global.GameObject.elements.log.innerHTML = message + '<br>' + global.GameObject.elements.log.innerHTML;
     }
 
-    setInterval(function() {
+    setInterval(function () {
         name = global.GameObject.elements.name.innerHTML;
     }, 1000)
 
@@ -1165,32 +1183,32 @@
     global.GameObject.elements.steps.innerHTML = 'Steps taken: ' + global.GameObject.stats.steps;
     qs('#log-heading').innerHTML = 'Log';
     global.GameObject.elements.log.innerHTML = 'You awake into a strange world.';
-    setTimeout(function() {
+    setTimeout(function () {
         log('Your memories are a messy blur.')
     }, 1500);
-    setTimeout(function() {
+    setTimeout(function () {
         log('Distant flashbacks of the battlefield swirl through your mind.')
     }, 3000);
 
     var count = 1;
 
     function glitchInterval() {
-        setTimeout(function() {
+        setTimeout(function () {
             var savePlayerCoordinates = this.player.getBoundingClientRect();
             $('html').css({
                 'position': 'absolute',
                 'left': '89px'
             });
-            setTimeout(function() {
+            setTimeout(function () {
                 $('html').css('transform', 'scale(1.2), rotate(180deg)')
             }, 100);
-            setTimeout(function() {
+            setTimeout(function () {
                 $('html').css({
                     'filter': 'invert(1)',
                     'left': '0'
                 })
             }, 150);
-            setTimeout(function() {
+            setTimeout(function () {
                 $('html').css({
                     'filter': 'none',
                     'transform': 'none',
