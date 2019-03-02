@@ -460,6 +460,8 @@
             food.amount = Math.floor(Math.random() * 3);
             var armour = that.itemValues.armour;
             armour.amount = Math.round(Math.random() - 0.25);
+            if (armour.amount < 0)
+                armour.amount = 0;
             if (ammo.amount != 0)
                 this.items.push(ammo);
             if (food.amount != 0)
@@ -472,7 +474,7 @@
                 localthat.items.forEach(function (element) {
                     var span = document.createElement('span');
                     span.className = 'clickable';
-                    span.innerHTML = 'Take';
+                    span.innerText = 'Take';
                     that.elements.loot.innerText += element.amount + ' × ' + element.displayText + ' ' + element.name + ' ';
                     span.addEventListener('click', function () {
                         that.inventory.addItem(element);
@@ -532,7 +534,13 @@
             var j = this;
             j.elements.stats.innerHTML = "";
             this.items.forEach(function (element) {
-                j.elements.stats.innerHTML += element.amount + ' ' + element.displayText + ' ' + element.name + shadedText(' (' + parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + '<br>';
+                j.elements.stats.innerHTML +=
+                    element.amount + ' ' +
+                    element.displayText + ' ' +
+                    element.name +
+                    shadedText(' (' + 
+                    parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + 
+                    '<br>';
             });
         };
         this.addItem = function (ITEM) {
@@ -544,13 +552,13 @@
                 //oops, inventory has no more space
             } else if (ITEM.amount + t > this.space) {
                 ITEM.amount -= (this.space - t);
-                var tempItem = new Item(ITEM.itemName, this.space - t);
+                var tempItem = new Item(ITEM.displayText, ITEM.color, ITEM.name, ITEM.description, ITEM.properties, this.space - t);
                 this.items.push(tempItem);
             } else {
                 this.items.push(ITEM);
             }
-            if (this.items.filter(item => (item.itemName == ITEM.itemName))[1] != undefined) {
-                this.items.filter(item => (item.itemName == ITEM.itemName))[0].amount += ITEM.amount;
+            if (this.items.filter(item => (item.name == ITEM.name))[1] != null) {
+                this.items.filter(item => (item.name == ITEM.name))[0].amount += ITEM.amount;
                 var r = this.items.indexOf(ITEM);
                 this.items.splice(r, 1);
             }
