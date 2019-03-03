@@ -486,7 +486,7 @@
                         that.inventory.updateElements();
                         localthat.updateElements();
                         console.log('you took a thing');
-                    });M =
+                    });
                     that.elements.loot.appendChild(span);
                     that.elements.loot.appendChild(document.createElement('br'));
                 });
@@ -496,6 +496,7 @@
     }
 
     GameObject.prototype.Inventory = function (space, items) {
+        var that = this;
         this.space = space;
         this.items = items || [];
         this.elements = {
@@ -541,30 +542,31 @@
                     element.displayText + ' ' +
                     element.name +
                     shadedText(' (' +
-                    parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
+                        parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
                     '<br>';
             });
         };
         this.addItem = function (ITEM) {
             var t = 0;
-            this.items.forEach(function (element) {
+            that.items.forEach(function (element) {
                 t += element.amount;
             });
-            if (t == this.space) {
+            if (t >= that.space) {
                 //oops, inventory has no more space
-            } else if (ITEM.amount + t > this.space) {
-                ITEM.amount -= (this.space - t);
-                var tempItem = ITEM;
-                tempItem.amount = this.space - t;
-                this.items.push(tempItem);
             } else {
-                this.items.push(ITEM);
+                if (ITEM.amount + t > that.space)
+                    ITEM.amount = that.space - t;
+                ITEM.amount = Math.abs(ITEM.amount);                
+                var existing = that.items.filter(item => (item.name === ITEM.name));
+                if (existing.length == 0) {
+                    that.items.push(ITEM);
+                    console.log('new item');
+                } else {
+                    existing[0].amount += ITEM.amount;
+                    console.log('replaced existing');
+                }
             }
-            if (this.items.filter(item => (item.name == ITEM.name))[1] != null) {
-                this.items.filter(item => (item.name == ITEM.name))[0].amount += ITEM.amount;
-                var r = this.items.indexOf(ITEM);
-                this.items.splice(r, 1);
-            }
+            console.log(t);
         };
     }
 
