@@ -31,16 +31,16 @@
     };
 
     function Directions() {}
-    Directions.prototype.up = function () {
+    Directions.prototype.up = () => {
         return 0
     };
-    Directions.prototype.right = function () {
+    Directions.prototype.right = () => {
         return 1
     };
-    Directions.prototype.down = function () {
+    Directions.prototype.down = () => {
         return 2
     };
-    Directions.prototype.left = function () {
+    Directions.prototype.left = () => {
         return 3
     };
 
@@ -116,7 +116,7 @@
                 this.terrain.set(getMapTileKey(newTile), newTile);
             }
         }
-        var localthat = this;
+        // var localthat = this;
     };
 
 
@@ -266,19 +266,19 @@
                 x: this.coordinate.x - Math.floor(w / 2),
                 y: this.coordinate.y - Math.floor(h / 2)
             }
-        }
+        };
         this.get_topright = function () {
             return {
                 x: this.coordinate.x + Math.floor(w / 2),
                 y: this.coordinate.y + Math.floor(h / 2)
             }
-        }
+        };
         this.get_bottomright = function () {
             return {
                 x: this.coordinate.x + Math.floor(w / 2),
                 y: this.coordinate.y - Math.floor(h / 2)
             }
-        }
+        };
         this.for_id = function (n) {
             return String(Math.abs(n)) + (n < 0 ? "n" : "");
         };
@@ -294,7 +294,7 @@
             if (c) {
                 c.classList.add("current");
             }
-        }
+        };
         this.generate_rows = function (topleft, n_rows, n_cols, start_index) {
             var anchor = null;
             if (start_index >= 0) {
@@ -366,7 +366,7 @@
                     that.elements.player.style.transform = 'rotate(270deg)';
                     global.GameObject.gameProgression++;
                 }
-            }
+            };
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
                 y: this.get_bottomleft().y
@@ -486,7 +486,7 @@
                         that.inventory.updateElements();
                         localthat.updateElements();
                         console.log('you took a thing');
-                    });
+                    });M =
                     that.elements.loot.appendChild(span);
                     that.elements.loot.appendChild(document.createElement('br'));
                 });
@@ -540,8 +540,8 @@
                     element.amount + ' ' +
                     element.displayText + ' ' +
                     element.name +
-                    shadedText(' (' + 
-                    parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + 
+                    shadedText(' (' +
+                    parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
                     '<br>';
             });
         };
@@ -554,7 +554,8 @@
                 //oops, inventory has no more space
             } else if (ITEM.amount + t > this.space) {
                 ITEM.amount -= (this.space - t);
-                var tempItem = new Item(ITEM.displayText, ITEM.color, ITEM.name, ITEM.description, ITEM.properties, this.space - t);
+                var tempItem = ITEM;
+                tempItem.amount = this.space - t;
                 this.items.push(tempItem);
             } else {
                 this.items.push(ITEM);
@@ -598,7 +599,7 @@
 
     GameSave.prototype.save = function () {
         window.localStorage.setItem('exp-game/save', JSON.stringify(global._exp_game));
-    }
+    };
 
     //global._exp_game = ((global._exp_game != null) ? global._exp_game : (new GameSave()).load());
 
@@ -614,7 +615,7 @@
         this.description = description;
         this.properties = properties || null;
         this.amount = amount || 1;
-    }
+    };
 
     global.GameObject = new GameObject();
 
@@ -627,7 +628,7 @@
         setTimeout(function () {
             global.credits.style.display = 'none';
         }, 7000);
-    }
+    };
 
     /*GameObject.prototype.move = function (direction) {
         if (this.fightingMode == false && this.energy >= 0.4 && this.isTown == false) {
@@ -1123,7 +1124,7 @@
 
     setInterval(function () {
         name = global.GameObject.elements.name.innerHTML;
-    }, 1000)
+    }, 1000);
 
     /*function saveGame() {
         saveFile = JSON.stringify(global._exp_game);
