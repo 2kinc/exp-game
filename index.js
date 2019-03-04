@@ -553,6 +553,7 @@
             if (t >= that.space) {
                 //oops, inventory has no more space
             } else {
+                //the next line is extremely important: make a clone of the original ITEM, so the update to the clone's properties will not affect ITEM
                 var tmp = Object.assign({}, ITEM);
                 if (tmp.amount + t > that.space)
                 tmp.amount = that.space - t;
