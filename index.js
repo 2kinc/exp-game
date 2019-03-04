@@ -509,14 +509,13 @@
             stats: document.getElementById('inventory-stats')
         };
         this.updateElements = function () {
-            var a = [];
-            for (var i = 0; i < 15; i++) {
-                a[i] = '#';
-            }
+            var a = ['#','#','#','#','#'
+                    ,'#','#','#','#','#'
+                    ,'#','#','#','#','#'];
             var b = 0;
-            for (var k = 0; k < this.items.length; k++) {
-                b += this.items[k].amount;
-            }
+            this.items.forEach(function(a){ 
+                b+=a.amount;
+            });
             var c = Math.round(b / this.space * 15);
             for (var i = 0; i < c; i++) {
                 a[i] = '$';
@@ -554,15 +553,16 @@
             if (t >= that.space) {
                 //oops, inventory has no more space
             } else {
-                if (ITEM.amount + t > that.space)
-                    ITEM.amount = that.space - t;
-                ITEM.amount = Math.abs(ITEM.amount);                
-                var existing = that.items.filter(item => (item.name === ITEM.name));
-                if (existing.length == 0) {
-                    that.items.push(ITEM);
+                var tmp = Object.assign({}, ITEM);
+                if (tmp.amount + t > that.space)
+                tmp.amount = that.space - t;
+                tmp.amount = Math.abs(tmp.amount);                
+                var existing = that.items.filter(item => (item.name === tmp.name));
+                if (existing.length === 0) {
+                    that.items.push(tmp);
                     console.log('new item');
                 } else {
-                    existing[0].amount += ITEM.amount;
+                    existing[0].amount += tmp.amount;
                     console.log('replaced existing');
                 }
             }
