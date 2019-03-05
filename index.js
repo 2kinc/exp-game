@@ -343,7 +343,7 @@
         this.initialize_viewport = function () {
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
-            document.onkeypress = function (event) {
+            document.onkeyup = function (event) {
                 if (document.activeElement != that.elements.name) {
                     var d = new Directions();
                     if (event.key === "W" || event.key === "w") {
@@ -368,6 +368,7 @@
                         global.GameObject.gameProgression++;
                     }
                 }
+                global.credits.style.display = 'none';
             };
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
@@ -534,7 +535,7 @@
                     o.elements.spaceused.available.innerText += element;
                 }
             });
-            this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
+            this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(1)) + '% occupied)';
             var j = this;
             j.elements.stats.innerHTML = "";
             this.items.forEach(function (element) {
@@ -543,7 +544,7 @@
                     element.displayText + ' ' +
                     element.name +
                     shadedText(' (' +
-                        parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
+                        parseFloat((element.amount / j.space * 100).toFixed(1)) + '% of inventory)') +
                     '<br>';
             });
         };

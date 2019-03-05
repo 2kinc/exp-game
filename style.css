@@ -277,13 +277,13 @@ hr {
 }
 
 #loading {
-    position: absolute; 
-    height: 100%; 
+    position: absolute;
+    height: 100%;
     width: 100%;
-    left: 0; 
-    top: 0; 
-    background: #333; 
-    z-index: 100000; 
-    text-align: center; 
+    left: 0;
+    top: 0;
+    background: #333;
+    z-index: 100000;
+    text-align: center;
     font-size: 1.5em;
 }
