@@ -30,7 +30,7 @@
         return document.querySelector(selector);
     };
 
-    function Directions() {}
+    function Directions() { }
     Directions.prototype.up = () => {
         return 0
     };
@@ -106,9 +106,9 @@
                     newTile.loot = new game.lootSpawn(false);
                 }
                 if (game.getMapTile({
-                        x: x,
-                        y: y
-                    }) != undefined)
+                    x: x,
+                    y: y
+                }) != undefined)
                     newTile = game.getMapTile({
                         x: x,
                         y: y
@@ -344,27 +344,29 @@
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
             document.onkeypress = function (event) {
-                var d = new Directions();
-                if (event.key === "W" || event.key === "w") {
-                    that.shift_viewport_vertically(1);
-                    that.facing = d.up();
-                    that.elements.player.style.transform = 'rotate(0deg)';
-                    global.GameObject.gameProgression++;
-                } else if (event.key === "S" || event.key === "s") {
-                    that.shift_viewport_vertically(-1);
-                    that.facing = d.down();
-                    that.elements.player.style.transform = 'rotate(180deg)';
-                    global.GameObject.gameProgression++;
-                } else if (event.key === "D" || event.key === "d") {
-                    that.shift_viewport_horizontally(1);
-                    that.facing = d.right();
-                    that.elements.player.style.transform = 'rotate(90deg)';
-                    global.GameObject.gameProgression++;
-                } else if (event.key === "A" || event.key === "a") {
-                    that.shift_viewport_horizontally(-1);
-                    that.facing = d.left();
-                    that.elements.player.style.transform = 'rotate(270deg)';
-                    global.GameObject.gameProgression++;
+                if (document.activeElement != that.elements.name) {
+                    var d = new Directions();
+                    if (event.key === "W" || event.key === "w") {
+                        that.shift_viewport_vertically(1);
+                        that.facing = d.up();
+                        that.elements.player.style.transform = 'rotate(0deg)';
+                        global.GameObject.gameProgression++;
+                    } else if (event.key === "S" || event.key === "s") {
+                        that.shift_viewport_vertically(-1);
+                        that.facing = d.down();
+                        that.elements.player.style.transform = 'rotate(180deg)';
+                        global.GameObject.gameProgression++;
+                    } else if (event.key === "D" || event.key === "d") {
+                        that.shift_viewport_horizontally(1);
+                        that.facing = d.right();
+                        that.elements.player.style.transform = 'rotate(90deg)';
+                        global.GameObject.gameProgression++;
+                    } else if (event.key === "A" || event.key === "a") {
+                        that.shift_viewport_horizontally(-1);
+                        that.facing = d.left();
+                        that.elements.player.style.transform = 'rotate(270deg)';
+                        global.GameObject.gameProgression++;
+                    }
                 }
             };
             var a = new Chunk(this, 25, {
@@ -509,12 +511,12 @@
             stats: document.getElementById('inventory-stats')
         };
         this.updateElements = function () {
-            var a = ['#','#','#','#','#'
-                    ,'#','#','#','#','#'
-                    ,'#','#','#','#','#'];
+            var a = ['#', '#', '#', '#', '#'
+                , '#', '#', '#', '#', '#'
+                , '#', '#', '#', '#', '#'];
             var b = 0;
-            this.items.forEach(function(a){ 
-                b+=a.amount;
+            this.items.forEach(function (a) {
+                b += a.amount;
             });
             var c = Math.round(b / this.space * 15);
             for (var i = 0; i < c; i++) {
@@ -556,8 +558,8 @@
                 //the next line is extremely important: make a clone of the original ITEM, so the update to the clone's properties will not affect ITEM
                 var tmp = Object.assign({}, ITEM);
                 if (tmp.amount + t > that.space)
-                tmp.amount = that.space - t;
-                tmp.amount = Math.abs(tmp.amount);                
+                    tmp.amount = that.space - t;
+                tmp.amount = Math.abs(tmp.amount);
                 var existing = that.items.filter(item => (item.name === tmp.name));
                 if (existing.length === 0) {
                     that.items.push(tmp);

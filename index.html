@@ -33,8 +33,7 @@
 </head>
 
 <body>
-    <div id="loading" style="position: absolute; height: 100%; width: 100%;
-				left: 0; top: 0; background: #333; z-index: 1000; text-align: center; font-size: 1.5em">
+    <div id="loading">
         <img src="loading.gif" height="120px" width="120px" alt="Loading Animation" style="display: block;
 				margin: auto; margin-top: 15%;">
         loading...
@@ -100,6 +99,7 @@
                 <div id="spaceused"><span id='occupied'></span><span id='available' class='shaded'></span>
                     <span id='percent'></span></div>
                 <div id="inventory-stats"></div>
+                <div id="inventory-slots"></div>
             </div>
         </div>
     </div>
@@ -134,7 +134,7 @@
     </div>
 
     <div>
-        <span class="clickable" onclick="credits.roll();" style="font-size: 1.5em;">Credits</span>
+        <span class="clickable" onclick="credits.roll();" style="font-size: 1.5em; position: absolute; left: 3em; top: 80vh;">Credits</span>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
