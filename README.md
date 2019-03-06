@@ -19,3 +19,4 @@ Controls:
 If you are a developer, <b>please post to-do's in the wiki.</b> 
 
 If you want to become a developer, please contact **mailofrealcev@gmail.com** or **dev.velp@gmail.com**, or make a pull request.
+//good job
