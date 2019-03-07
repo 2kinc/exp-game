@@ -3,7 +3,7 @@
     if (!window.localStorage) {
         throw "Your browser does not support Local Storage";
     }
-
+//hello
     function Coordinate(x, y) {
         this.x = x || 0;
         this.y = y || 0;
@@ -24,6 +24,8 @@
         this.maxhp = 10;
         this.armour = 0;
         this.inventory = new GameObject.Inventory(150);
+        this.maxarmour = 5;
+        //you need a lot of hp because we're gonna add caves and bosses and etc
     }
 
     var qs = function (selector) {
@@ -142,9 +144,15 @@
         this.gameProgression = 0;
         this.regenDegenInterval;
         this.isTown = false;
-        this.armour = false;
+        this.armour = 0;
+        //armour starts at 0, is multiplied by 5 and added to hp
+        this.maxarmour = 5;
         this.generatedMap;
         this.inventory = new this.Inventory(150);
+        /* how will the inventory system work
+        food is 1 space, armour is 1 or 3 or 5, bullets is 0.1? Max inventory 150? Has to be more when we add more stuff
+        */
+        this.ducksPresent = false; //we needed that
         this.elements = {
             player: qs('#player'),
             box: qs('#box'),
@@ -155,6 +163,7 @@
             play: qs("#play_button"),
             food: qs('#food'),
             loot: qs('#loot'),
+            armour: qs('#armour'),
             name: qs('#name'),
             ammo: qs('#ammo'),
             health: qs('#health'),
@@ -194,11 +203,16 @@
             grapes: new this.Item('🍇', 'ffffff', 'Grapes', 'A hearty bunch of grapes.', {
                 energy: 3
             }),
+<<<<<<< HEAD
             meat: new this.Item('🍖', 'ffffff', 'Meat', 'A good and non-vegetarian way to fill your stomach.', {
                 energy: 4
             });
             pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few monthss old.', {
                 energy: 7
+=======
+            orange: new this.Item('🍊', 'ffffff', 'Orange', 'A small, orange fruit you can fit in your hand.', {
+                energy: 3
+>>>>>>> 02ded826ace5112111875e72ad43746a29c482ce
             })
         };
 
@@ -464,7 +478,7 @@
             this.items = [];
             var ammo = that.itemValues.ammo;
             ammo.amount = Math.floor(Math.random() * 10);
-            var food = [that.itemValues.potato, that.itemValues.tomato, that.itemValues.grapes];
+            var food = [that.itemValues.potato, that.itemValues.tomato, that.itemValues.grapes, that.itemValues.orange];
             food = food[Math.floor(Math.random() * food.length)];
             food.amount = Math.floor(Math.random() * 3);
             var armour = that.itemValues.armour;
@@ -513,9 +527,10 @@
                 main: document.getElementById('spaceused'),
                 occupied: document.getElementById('occupied'),
                 available: document.getElementById('available'),
-                percent: document.getElementById('percent')
+                percent: document.getElementById('percent'),
             },
-            stats: document.getElementById('inventory-stats')
+            stats: document.getElementById('inventory-stats'),
+            slots: document.getElementById('inventory-slots')
         };
         this.updateElements = function () {
             var a = ['#', '#', '#', '#', '#'
@@ -544,7 +559,8 @@
             this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(1)) + '% occupied)';
             var j = this;
             j.elements.stats.innerHTML = "";
-            this.items.forEach(function (element) {
+            j.elements.slots.innerHTML = '';
+            this.items.forEach(function (element, index) {
                 j.elements.stats.innerHTML +=
                     element.amount + ' ' +
                     element.displayText + ' ' +
@@ -552,8 +568,16 @@
                     shadedText(' (' +
                         parseFloat((element.amount / j.space * 100).toFixed(1)) + '% of inventory)') +
                     '<br>';
+                var slot = document.createElement('div');
+                var label = document.createElement('span');
+                label.className = 'inv-slot-lbl';
+                label.innerText = element.amount;
+                slot.className = 'inv-slot';
+                slot.innerText = element.displayText;
+                slot.appendChild(label);
+                j.elements.slots.appendChild(slot);
             });
-        };
+        }
         this.addItem = function (ITEM) {
             var t = 0;
             that.items.forEach(function (element) {
@@ -562,7 +586,7 @@
             if (t >= that.space) {
                 //oops, inventory has no more space
             } else {
-                //the next line is extremely important: make a clone of the original ITEM, so the update to the clone's properties will not affect ITEM
+                //the next line is extremey important: make a clone of the original ITEM, so the update to the clone's properties will not affect ITEM
                 var tmp = Object.assign({}, ITEM);
                 if (tmp.amount + t > that.space)
                     tmp.amount = that.space - t;
@@ -570,13 +594,10 @@
                 var existing = that.items.filter(item => (item.name === tmp.name));
                 if (existing.length === 0) {
                     that.items.push(tmp);
-                    console.log('new item');
                 } else {
                     existing[0].amount += tmp.amount;
-                    console.log('replaced existing');
                 }
             }
-            console.log(t);
         };
     }
 

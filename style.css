@@ -287,3 +287,22 @@ hr {
     text-align: center;
     font-size: 1.5em;
 }
+
+.inv-slot {
+    border: 2px solid #fff;
+    min-height: 50px;
+    min-width: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    font-size: 30px;
+    display: inline;
+    position: relative;
+}
+
+.inv-slot-lbl {
+    z-index: 100;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: initial;
+}
