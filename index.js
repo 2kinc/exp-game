@@ -190,7 +190,7 @@
         };
 
         this.itemValues = {
-            ammo: new this.Item('⁍', 'ffffff', 'Ammo', 'Small pellets used to power your gun.'),
+            ammo: new this.Item('⚫', 'ffffff', 'Ammo', 'Small pellets used to power your gun.'),
             dirt: new this.Item('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
             wood: new this.Item('🏽', '826054', 'Wood', 'Strong organic material used to build structures.'),
             armour: new this.Item('🛡️', 'ffffff', 'Armour', 'Shields your vulnerable soul from attackers. Could also be spelled "armor".'),
@@ -203,16 +203,14 @@
             grapes: new this.Item('🍇', 'ffffff', 'Grapes', 'A hearty bunch of grapes.', {
                 energy: 3
             }),
-<<<<<<< HEAD
             meat: new this.Item('🍖', 'ffffff', 'Meat', 'A good and non-vegetarian way to fill your stomach.', {
                 energy: 4
-            });
+            }),
             pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few monthss old.', {
                 energy: 7
-=======
+            }),
             orange: new this.Item('🍊', 'ffffff', 'Orange', 'A small, orange fruit you can fit in your hand.', {
                 energy: 3
->>>>>>> 02ded826ace5112111875e72ad43746a29c482ce
             })
         };
 
@@ -366,22 +364,22 @@
             document.onkeyup = function (event) {
                 if (document.activeElement != that.elements.name) {
                     var d = new Directions();
-                    if (event.key === "W" || event.key === "w") {
+                    if (event.key.toLowerCase() === "w" || event.key.toLowerCase() === "arrowup") {
                         that.shift_viewport_vertically(1);
                         that.facing = d.up();
                         that.elements.player.style.transform = 'rotate(0deg)';
                         global.GameObject.gameProgression++;
-                    } else if (event.key === "S" || event.key === "s") {
+                    } else if (event.key.toLowerCase() === "s" || event.key.toLowerCase() === "arrowdown") {
                         that.shift_viewport_vertically(-1);
                         that.facing = d.down();
                         that.elements.player.style.transform = 'rotate(180deg)';
                         global.GameObject.gameProgression++;
-                    } else if (event.key === "D" || event.key === "d") {
+                    } else if (event.key.toLowerCase() === "d" || event.key.toLowerCase() === "arrowright") {
                         that.shift_viewport_horizontally(1);
                         that.facing = d.right();
                         that.elements.player.style.transform = 'rotate(90deg)';
                         global.GameObject.gameProgression++;
-                    } else if (event.key === "A" || event.key === "a") {
+                    } else if (event.key.toLowerCase() === "a" || event.key.toLowerCase() === "arrowleft") {
                         that.shift_viewport_horizontally(-1);
                         that.facing = d.left();
                         that.elements.player.style.transform = 'rotate(270deg)';
@@ -478,7 +476,7 @@
             this.items = [];
             var ammo = that.itemValues.ammo;
             ammo.amount = Math.floor(Math.random() * 10);
-            var food = [that.itemValues.potato, that.itemValues.tomato, that.itemValues.grapes, that.itemValues.orange];
+            var food = [that.itemValues.meat, that.itemValues.potato, that.itemValues.tomato, that.itemValues.grapes, that.itemValues.orange, that.itemValues.pie];
             food = food[Math.floor(Math.random() * food.length)];
             food.amount = Math.floor(Math.random() * 3);
             var armour = that.itemValues.armour;
