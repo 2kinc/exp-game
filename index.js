@@ -30,7 +30,7 @@
         return document.querySelector(selector);
     };
 
-    function Directions() { }
+    function Directions() {}
     Directions.prototype.up = () => {
         return 0
     };
@@ -193,6 +193,12 @@
             }),
             grapes: new this.Item('🍇', 'ffffff', 'Grapes', 'A hearty bunch of grapes.', {
                 energy: 3
+            }),
+            meat: new this.Item('🍖', 'ffffff', 'Meat', 'A good and non-vegetarian way to fill your stomach.', {
+                energy: 4
+            });
+            pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few monthss old.', {
+                energy: 7
             })
         };
 
@@ -312,7 +318,7 @@
                     var sx = this.for_id(topleft.x + x);
                     td.id = this.get_tile_id(sx, sy);
                     td.innerText = String(topleft.x + x) + "," + String(topleft.y - y);
-                    //td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
+                    //////////td.style.background = "rgb(" + Math.abs(topleft.x + x) * 8 % 256 + ',' + Math.abs(topleft.y - y) * 8 % 256 + ', 0)';
                     tr.appendChild(td);
                 }
                 if (anchor) {
