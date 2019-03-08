@@ -184,6 +184,7 @@
             tooltipTitle: qs('#tooltip-title'),
             tooltipText: qs('#tooltip-text')
         };
+        
         this.stats = {
             steps: 0,
             ammoUsed: 0
@@ -206,7 +207,7 @@
             meat: new this.Item('🍖', 'ffffff', 'Meat', 'A good and non-vegetarian way to fill your stomach.', {
                 energy: 4
             }),
-            pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few monthss old.', {
+            pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few months old.', {
                 energy: 7
             }),
             orange: new this.Item('🍊', 'ffffff', 'Orange', 'A small, orange fruit you can fit in your hand.', {

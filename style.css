@@ -290,13 +290,15 @@ hr {
 
 .inv-slot {
     border: 2px solid #fff;
-    min-height: 50px;
-    min-width: 50px;
-    max-width: 50px;
-    max-height: 50px;
+    min-height: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    max-height: 40px;
     font-size: 30px;
-    display: inline;
+    display: inline-block;
     position: relative;
+    text-align: center;
+    padding: 0.1px 0;
 }
 
 .inv-slot-lbl {
@@ -305,4 +307,13 @@ hr {
     bottom: 5px;
     right: 5px;
     font-size: initial;
+}
+
+#inventory-slots {
+    margin-top: 1em;
+    max-width: 220px;
+    width: 100000px;
+    max-height: 44px;
+    overflow-x: auto;
+    whitespace: nowrap;
 }
