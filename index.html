@@ -53,13 +53,9 @@
             </div>
             <hr>
             <div class="main">
-                <span id="health">Loading...</span>
+                <span id="hp">Loading...</span>
                 <br>
                 <span id="energy">Loading...</span>
-                <br>
-                <span id="ammo">Loading...</span>
-                <br>
-                <span id="food">Loading...</span>
                 <hr>
                 <span id="ammo-used">Loading...</span>
                 <br>
@@ -123,9 +119,9 @@
         <img src="enemy.png" height="20px" width="20px" draggable="false">
     </div>
 
-    <div id="fight-health"></div>
+    <div id="fight-hp"></div>
 
-    <div id="enemy-health"></div>
+    <div id="enemy-hp"></div>
 
     <div id="tooltip" class="card">
         <div id="tooltip-title" class="heading"></div>
@@ -138,6 +134,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.3/firebase.js"></script>
     <script src="mgGlitch.js"></script>
     <script src="perlin.js"></script>
     <script src="pi.js"></script>

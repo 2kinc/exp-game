@@ -4,6 +4,19 @@
         throw "Your browser does not support Local Storage";
     }
 
+    //firebase stuff
+    var config = {
+        apiKey: "AIzaSyADD6YWKrzibRMwJNi1FwUR0jcR0GitZPI",
+        authDomain: "k-inc-232222.firebaseapp.com",
+        databaseURL: "https://k-inc-232222.firebaseio.com",
+        projectId: "k-inc-232222",
+        storageBucket: "",
+        messagingSenderId: "827804821456"
+    };
+    var app = firebase.initializeApp(config);
+    var database = app.database().ref().child('exp');
+    var auth = app.auth();
+
     function Coordinate(x, y) {
         this.x = x || 0;
         this.y = y || 0;
@@ -16,14 +29,11 @@
 
     function GameSave() {
         this.playerName = "Player 1";
-        this.food = 10;
-        this.ammo = 100;
         this.energy = 15;
         this.maxEnergy = 15;
         this.hp = 10;
         this.maxhp = 10;
-        this.armour = 0;
-        this.inventory = new GameObject.Inventory(150);
+        this.inventory = new GameObject.prototype.Inventory(150);
     }
 
     var qs = function (selector) {
@@ -123,20 +133,18 @@
     function GameObject() {
         this.coordinates = new Coordinate;
         this.facing = (new Directions).up();
-        this.ammo = 100;
-        this.health = 10;
-        this.maxHealth = 10;
+        this.hp = 10;
+        this.maxhp = 10;
         this.steps = 0;
         this.energy = 15;
         this.maxEnergy = 15;
-        this.food = 15;
         this.ammoUsed = 0;
         this.name = 'Default Noob';
         this.lootArray = [];
         this.fightingMode = false;
         this.saveBoxHTML;
         this.playerFightingOrigin;
-        this.enemyHealth = this.enemyMaxHealth;
+        this.enemyhp = this.enemyMaxhp;
         this.playerIsShooting = false;
         this.enemyDecisionInterval;
         this.gameProgression = 0;
@@ -150,14 +158,14 @@
             box: qs('#box'),
             log: qs('#log'),
             enemy: qs('#enemy'),
-            enemyHealth: qs('#enemy-health'),
+            enemyhp: qs('#enemy-hp'),
             lootHeading: qs('#loot-heading'),
             play: qs("#play_button"),
             food: qs('#food'),
             loot: qs('#loot'),
             name: qs('#name'),
             ammo: qs('#ammo'),
-            health: qs('#health'),
+            hp: qs('#hp'),
             energy: qs('#energy'),
             ammoUsed: qs('#ammo-used'),
             steps: qs('#steps-taken'),
@@ -697,21 +705,21 @@
                 this.box.style.borderWidth = '5px';
                 this.player.style.top = this.box.offsetHeight - 140 + 'px';
                 this.enemy.style.top = this.box.offsetHeight - 300 + 'px';
-                this.enemyHealth = this.enemyMaxHealth;
+                this.enemyhp = this.enemyMaxhp;
                 var that = this;
                 setTimeout(function () {
                     var b = that.box.getBoundingClientRect();
                     that.enemy.style.left = that.player.style.left;
-                    that.enemyHealthEl.innerHTML = 'Enemy health: ' + that.enemyHealth + '/' + that.enemyMaxHealth;
-                    that.fightHealthEl.innerHTML = 'Health: ' + that.health + '/' + that.maxHealth;
-                    that.enemyHealthEl.style.left = b.left + 'px';
-                    that.enemyHealthEl.style.top = b.top - 15 + 'px';
-                    that.enemyHealthEl.style.width = b.width + 'px';
-                    that.fightHealthEl.style.left = b.left + 'px';
-                    that.fightHealthEl.style.top = b.top + 2 + b.height + 'px';
-                    that.fightHealthEl.style.width = b.width + 'px';
-                    that.fightHealthEl.style.display = 'block';
-                    that.enemyHealthEl.style.display = 'block';
+                    that.enemyhpEl.innerHTML = 'Enemy hp: ' + that.enemyhp + '/' + that.enemyMaxhp;
+                    that.fighthpEl.innerHTML = 'hp: ' + that.hp + '/' + that.maxhp;
+                    that.enemyhpEl.style.left = b.left + 'px';
+                    that.enemyhpEl.style.top = b.top - 15 + 'px';
+                    that.enemyhpEl.style.width = b.width + 'px';
+                    that.fighthpEl.style.left = b.left + 'px';
+                    that.fighthpEl.style.top = b.top + 2 + b.height + 'px';
+                    that.fighthpEl.style.width = b.width + 'px';
+                    that.fighthpEl.style.display = 'block';
+                    that.enemyhpEl.style.display = 'block';
                     that.enemy.style.display = 'block';
                 }, 1000);
                 enemyDecisionInterval = setInterval(function () {
@@ -735,11 +743,11 @@
                     if (that.enemyCoordinates.left <= that.box.getBoundingClientRect().left + 12)
                         that.enemy.style.left = that.box.getBoundingClientRect().left + 12 + 'px';
                     that.enemy.style.left = that.box.getBoundingClientRect().left + 172 + 'px';
-                    if (that.enemyHealth <= 0)
+                    if (that.enemyhp <= 0)
                         clearInterval(enemyDecisionInterval);
-                    that.enemyHealthEl.innerHTML = 'Enemy health: ' + that.enemyHealth + '/' + that.enemyMaxHealth;
-                    that.fightHealthEl.innerHTML = 'Health: ' + that.health + '/' + that.maxHealth;
-                    that.healthEl.innerHTML = 'Health: ' + that.health + '/' + that.maxHealth;
+                    that.enemyhpEl.innerHTML = 'Enemy hp: ' + that.enemyhp + '/' + that.enemyMaxhp;
+                    that.fighthpEl.innerHTML = 'hp: ' + that.hp + '/' + that.maxhp;
+                    that.hpEl.innerHTML = 'hp: ' + that.hp + '/' + that.maxhp;
                 }, 320);
             }
             if (this.isTown == true) {
@@ -849,8 +857,8 @@
                     enemy.style.display = 'none';
                     clearInterval(x);
                     this.playerIsShooting = false;
-                    fightHealthEl.style.display = 'none';
-                    enemyHealthEl.style.display = 'none';
+                    fighthpEl.style.display = 'none';
+                    enemyhpEl.style.display = 'none';
                     gameProgression += 10;
                     energy -= 3;
                     energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
@@ -869,8 +877,8 @@
                     enemy.style.display = 'none';
                     clearInterval(x);
                     this.playerIsShooting = false;
-                    fightHealthEl.style.display = 'none';
-                    enemyHealthEl.style.display = 'none';
+                    fighthpEl.style.display = 'none';
+                    enemyhpEl.style.display = 'none';
                     gameProgression += 10;
                     energy -= 3;
                     energyEl.innerHTML = 'Energy' + Math.round(energy) + '/' + maxEnergy;
@@ -882,20 +890,20 @@
             } else if (e.key == 'Enter') {
                 if ($('#startscreen').html() != '') {
                     regenDegenInterval = setInterval(function () {
-                        if (Math.round(energy) > 0 && health == maxHealth)
+                        if (Math.round(energy) > 0 && hp == maxhp)
                             energy--;
                         if (energy > maxEnergy)
                             energy = maxEnergy;
-                        if (Math.round(energy) == maxEnergy && health < maxHealth) {
+                        if (Math.round(energy) == maxEnergy && hp < maxhp) {
                             energy = maxEnergy;
-                            health += 3;
+                            hp += 3;
                         }
                         if (Math.round(energy) == 0) {
-                            health -= Math.floor(maxHealth / 3);
-                            healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                            hp -= Math.floor(maxhp / 3);
+                            hpEl.innerHTML = 'hp: ' + hp + '/' + maxhp;
                             log('You have no energy! Get food fast!');
                         }
-                        if (health < 0) {
+                        if (hp < 0) {
                             var saveHTML = document.body.innerHTML;
                             document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
                             setTimeout(function () {
@@ -905,7 +913,7 @@
                                 document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
                             }, 2000);
                             setTimeout(function () {
-                                health = maxHealth;
+                                hp = maxhp;
                                 energy = maxEnergy;
                                 ammo = 100;
                                 food = 100;
@@ -915,10 +923,10 @@
                                 location.reload();
                             }, 3000);
                         }
-                        if (health > maxHealth)
-                            health = maxHealth;
+                        if (hp > maxhp)
+                            hp = maxhp;
                         energyEl.innerHTML = 'Energy: ' + Math.round(energy) + '/' + maxEnergy;
-                        healthEl.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                        hpEl.innerHTML = 'hp: ' + hp + '/' + maxhp;
                         saveGame();
                     }, 5000);
                     $('#startscreen').html('');
@@ -930,20 +938,20 @@
     if ($('startscreen').html != '') {
         global.GameObject.elements.play.addEventListener('click', function () {
             regenDegenInterval = setInterval(function () {
-                if (Math.round(energy) > 0 && health == maxHealth)
+                if (Math.round(energy) > 0 && hp == maxhp)
                     global.GameObject.energy--;
                 if (global.GameObject.energy > global.GameObject.maxEnergy)
                     global.GameObject.energy = global.GameObject.maxEnergy;
-                if (Math.round(energy) == global.GameObject.maxEnergy && global.GameObject.health < global.GameObject.maxHealth) {
+                if (Math.round(energy) == global.GameObject.maxEnergy && global.GameObject.hp < global.GameObject.maxhp) {
                     global.GameObject.energy = global.GameObject.maxEnergy;
-                    global.GameObject.health += 3;
+                    global.GameObject.hp += 3;
                 }
                 if (Math.round(energy) == 0) {
-                    global.GameObject.health -= Math.floor(global.GameObject.maxHealth / 3);
-                    global.GameObject.healthEl.innerHTML = 'Health: ' + global.GameObject.health + '/' + global.GameObject.maxHealth;
+                    global.GameObject.hp -= Math.floor(global.GameObject.maxhp / 3);
+                    global.GameObject.hpEl.innerHTML = 'HP: ' + global.GameObject.hp + '/' + global.GameObject.maxhp;
                     log('You have no energy! Get food fast!');
                 }
-                if (health < 0) {
+                if (hp < 0) {
                     var saveHTML = document.body.innerHTML;
                     document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
                     setTimeout(function () {
@@ -954,14 +962,14 @@
                     }, 2000);
                     setTimeout(function () {
                         global.GameObject.energy = global.GameObject.maxEnergy;
-                        global.GameObject.health = global.GameObject.maxHealth;
+                        global.GameObject.hp = global.GameObject.maxhp;
                         location.reload();
                     }, 3000);
                 }
-                if (global.GameObject.health > global.GameObject.maxHealth)
-                    global.GameObject.health = global.GameObject.maxHealth;
+                if (global.GameObject.hp > global.GameObject.maxhp)
+                    global.GameObject.hp = global.GameObject.maxhp;
                 global.GameObject.elements.energy.innerHTML = 'Energy: ' + Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-                global.GameObject.elements.health.innerHTML = 'Health: ' + global.GameObject.health + '/' + global.GameObject.maxHealth;
+                global.GameObject.elements.hp.innerHTML = 'HP: ' + global.GameObject.hp + '/' + global.GameObject.maxhp;
             }, 5000);
             global.GameObject.initialize_viewport();
             $('#startscreen').html('');
@@ -1015,9 +1023,9 @@
                     console.log('yay!');
                     clearInterval(x);
                     bullet.parentNode.removeChild(bullet);
-                    enemyHealth--;
+                    enemyhp--;
                     gameProgression += 3;
-                    if (enemyHealth <= 0) {
+                    if (enemyhp <= 0) {
                         setTimeout(function () {
                             fightingMode = false;
                         }, 1500)
@@ -1032,8 +1040,8 @@
                         enemy.style.display = 'none';
                         clearInterval(x);
                         this.playerIsShooting = false;
-                        fightHealthEl.style.display = 'none';
-                        enemyHealthEl.style.display = 'none';
+                        fighthpEl.style.display = 'none';
+                        enemyhpEl.style.display = 'none';
                         gameProgression += 100;
                         saveGame();
                     }
@@ -1074,8 +1082,8 @@
             if (detectHit(bullet, this.player)) {
                 console.log('boo!');
                 bullet.parentNode.removeChild(bullet);
-                health--;
-                if (health <= 0) {
+                hp--;
+                if (hp <= 0) {
                     setTimeout(function () {
                         fightingMode = false;
                     }, 1500)
@@ -1086,8 +1094,8 @@
                     enemy.style.display = 'none';
                     clearInterval(x);
                     this.playerIsShooting = false;
-                    fightHealthEl.style.display = 'none';
-                    enemyHealthEl.style.display = 'none';
+                    fighthpEl.style.display = 'none';
+                    enemyhpEl.style.display = 'none';
                     setTimeout(function () {
                         this.player.style.top = qs('#c' + this.currentCell).getBoundingClientRect().y + 'px';
                         this.player.style.left = qs('#c' + this.currentCell).getBoundingClientRect().x + 'px';
@@ -1104,16 +1112,16 @@
                     }, 2000);
                     setTimeout(function () {
                         energy = maxEnergy;
-                        health = maxHealth;
+                        hp = maxhp;
                         ammo = 100;
                         food = 10;
                         location.reload();
                     }, 3000);
                 }
-                health.innerHTML = 'Health: ' + health + '/' + maxHealth;
+                hp.innerHTML = 'hp: ' + hp + '/' + maxhp;
                 clearInterval(x);
             }
-            health.innerHTML = 'Health: ' + health + '/' + maxHealth;
+            hp.innerHTML = 'hp: ' + hp + '/' + maxhp;
         }, 33);
         setTimeout(function () {
             clearInterval(x);
@@ -1133,7 +1141,7 @@
 
     /*function saveGame() {
         saveFile = JSON.stringify(global._exp_game);
-        saveFile = JSON.stringify([worldSeed, health, maxHealth, energy, maxEnergy, ammo, food, this.currentCell,
+        saveFile = JSON.stringify([worldSeed, hp, maxhp, energy, maxEnergy, ammo, food, this.currentCell,
             gameProgression, isTown, fightingMode]);
         global.GameObject.lootArray.forEach(function (element, index) {
             if (element != null) {
@@ -1159,8 +1167,8 @@
             });
             return {
                 seed: Number(split[0]),
-                health: Number(split[1]),
-                maxHealth: Number(split[2]),
+                hp: Number(split[1]),
+                maxhp: Number(split[2]),
                 energy: Number(split[3]),
                 maxEnergy: Number(split[4]),
                 ammo: Number(split[5]),
@@ -1177,8 +1185,8 @@
     /*function initFromSave() {
         var r = readSaveFile();
         noise.seed(r.seed);
-        health = r.health;
-        maxHealth = r.maxHealth;
+        hp = r.hp;
+        maxhp = r.maxhp;
         energy = r.energy;
         maxEnergy = r.maxEnergy;
         ammo = r.ammo;
@@ -1191,10 +1199,8 @@
     }*/
 
     global.GameObject.elements.name.innerHTML = global.GameObject.name;
-    global.GameObject.elements.health.innerHTML = 'Health: ' + global.GameObject.health + '/' + global.GameObject.maxHealth;
+    global.GameObject.elements.hp.innerHTML = 'HP: ' + global.GameObject.hp + '/' + global.GameObject.maxhp;
     global.GameObject.elements.energy.innerHTML = 'Energy: ' + Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-    global.GameObject.elements.ammo.innerHTML = 'Ammo: ' + global.GameObject.ammo;
-    global.GameObject.elements.food.innerHTML = 'Food: ' + global.GameObject.food + ' [E to eat]';
     global.GameObject.elements.ammoUsed.innerHTML = 'Ammo used: ' + global.GameObject.stats.ammoUsed;
     global.GameObject.elements.steps.innerHTML = 'Steps taken: ' + global.GameObject.stats.steps;
     qs('#log-heading').innerHTML = 'Log';
