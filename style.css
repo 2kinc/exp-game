@@ -277,13 +277,43 @@ hr {
 }
 
 #loading {
-    position: absolute; 
-    height: 100%; 
+    position: absolute;
+    height: 100%;
     width: 100%;
-    left: 0; 
-    top: 0; 
-    background: #333; 
-    z-index: 100000; 
-    text-align: center; 
+    left: 0;
+    top: 0;
+    background: #333;
+    z-index: 100000;
+    text-align: center;
     font-size: 1.5em;
+}
+
+.inv-slot {
+    border: 2px solid #fff;
+    min-height: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    font-size: 30px;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    padding: 0.1px 0;
+}
+
+.inv-slot-lbl {
+    z-index: 100;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: initial;
+}
+
+#inventory-slots {
+    margin-top: 1em;
+    max-width: 220px;
+    width: 100000px;
+    max-height: 44px;
+    overflow-x: auto;
+    whitespace: nowrap;
 }
