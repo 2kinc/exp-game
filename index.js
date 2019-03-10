@@ -14,7 +14,8 @@
         messagingSenderId: "827804821456"
     };
     var app = firebase.initializeApp(config);
-    var database = app.database().ref().child('exp');
+    var database = app.database();
+    var databaseref = database.ref().child('exp');
     var auth = app.auth();
 
     function Coordinate(x, y) {
@@ -503,6 +504,19 @@
             }
             this.updateElements();
         };
+        this.save = function () {
+            var savedGame = new GameSave();
+            for (var k in that) {
+                if (savedGame[k] != undefined)
+                    savedGame[k] = that[k];
+            };
+            database.ref('/keys/exp').once('value').then(function (snapshot) {
+                var value = snapshot.val().keyname;
+                savedGame = { savefile: XORCipher.encode(value.toString(), JSON.stringify(savedGame)) };
+                databaseref.child('/' + auth.currentUser.uid).set(savedGame);
+                console.log(savedGame);
+            });
+        }
     }
 
     GameObject.prototype.Inventory = function (space, items) {
@@ -605,8 +619,23 @@
 
     GameSave.prototype.load = function () {
         var data = window.localStorage.getItem("exp-game/save");
-        if (data != null)
-            return JSON.parse(data);
+        var value = '';
+        database.ref('/keys/exp').once('value').then(function (snapshot) {
+            value = snapshot.val().keyname;
+        });
+        if (auth.currentUser != null) {
+            databaseref.child('/' + auth.currentUser.uid).once('value').then(function (snapshot) {
+                data = XORCipher.decode(value, snapshot.val());
+            });
+        }
+        if (data != null) {
+            var newData = JSON.parse(data);
+            var newGameObject = new GameObject();
+            for (var b in newData) {
+                newGameObject[b] = newData[b];
+            }
+            return newGameObject;
+        }
         return new GameObject();
     };
 
@@ -630,7 +659,13 @@
         this.amount = amount || 1;
     };
 
-    global.GameObject = new GameObject();
+    global.GameObject = new GameSave().load();
+
+    auth.onAuthStateChanged(function (user) {
+        if (user) {
+            global.GameObject = new GameSave().load();
+        }
+    });
 
     global.credits = document.querySelector('#credits');
     global.credits.roll = function () {
