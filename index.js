@@ -182,7 +182,8 @@
             name: qs('#name'),
             tooltip: qs('#tooltip'),
             tooltipTitle: qs('#tooltip-title'),
-            tooltipText: qs('#tooltip-text')
+            tooltipText: qs('#tooltip-text'),
+            optionsButton: qs('#effects-button')
         };
         this.stats = {
             steps: 0,
@@ -983,7 +984,7 @@
                 }
                 if (Math.round(energy) == 0) {
                     global.GameObject.hp -= Math.floor(global.GameObject.maxhp / 3);
-                    global.GameObject.hpEl.innerHTML = 'HP: ' + global.GameObject.hp + '/' + global.GameObject.maxhp;
+                    global.GameObject.hpEl.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
                     log('You have no energy! Get food fast!');
                 }
                 if (hp < 0) {
@@ -1003,8 +1004,8 @@
                 }
                 if (global.GameObject.hp > global.GameObject.maxhp)
                     global.GameObject.hp = global.GameObject.maxhp;
-                global.GameObject.elements.energy.innerHTML = 'Energy: ' + Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-                global.GameObject.elements.hp.innerHTML = 'HP: ' + global.GameObject.hp + '/' + global.GameObject.maxhp;
+                global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
+                global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
             }, 5000);
             global.GameObject.initialize_viewport();
             $('#startscreen').html('');
@@ -1234,10 +1235,10 @@
     }*/
 
     global.GameObject.elements.name.innerHTML = global.GameObject.name;
-    global.GameObject.elements.hp.innerHTML = 'HP: ' + global.GameObject.hp + '/' + global.GameObject.maxhp;
-    global.GameObject.elements.energy.innerHTML = 'Energy: ' + Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-    global.GameObject.elements.ammoUsed.innerHTML = 'Ammo used: ' + global.GameObject.stats.ammoUsed;
-    global.GameObject.elements.steps.innerHTML = 'Steps taken: ' + global.GameObject.stats.steps;
+    global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
+    global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
+    global.GameObject.elements.ammoUsed.innerHTML = global.GameObject.stats.ammoUsed;
+    global.GameObject.elements.steps.innerHTML = global.GameObject.stats.steps;
     qs('#log-heading').innerHTML = 'Log';
     global.GameObject.elements.log.innerHTML = 'You awake into a strange world.';
     setTimeout(function () {
