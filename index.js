@@ -627,18 +627,20 @@
             value = snapshot.val().keyname;
         });
         if (auth.currentUser != null) {
-            databaseref.child('/' + auth.currentUser.uid).once('value').then(function (snapshot) {
-                data = XORCipher.decode(value, snapshot.val());
+            databaseref.child('/' + auth.currentUser.uid + '/savefile').once('value').then(function (snapshot) {
+                if (snapshot.val() != undefined) {
+                    data = XORCipher.decode(value, snapshot.val());
+                }
             });
         }
-        if (data != null) {
+        /*if (data != null || data != undefined) {
             var newData = JSON.parse(data);
             var newGameObject = new GameObject();
             for (var b in newData) {
                 newGameObject[b] = newData[b];
             }
             return newGameObject;
-        }
+        }*/
         return new GameObject();
     };
 
