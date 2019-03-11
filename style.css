@@ -1,8 +1,8 @@
 body {
-    font-family: monospace;
+    font-family: 'Ubuntu Mono', monospace;
     background: #333;
     user-select: none !important;
-    font-size: 12px;
+    font-size: 14px;
     color: white;
     overflow: hidden;
     padding: 30px;
@@ -337,12 +337,13 @@ hr {
 }
 
 html.effects-on * {
-    -text-shadow: 0.05em 0.05em 0.05em red, -0.05em -0.05em 0.05em blue;
-    text-shadow: 0.6px 0.6px 1.3px red, -0.6px -0.6px 1.3px blue;
+    text-shadow: 0.8px 0px 0px rgb(255, 0, 0), 
+    -0.8px 0px 0px rgb(70, 70, 255), 
+    0px 0px 0.05em rgba(219, 245, 255, 0.6);
 }
 
 html.effects-on hr, html.effects-on .card {
-    -box-shadow: 0.05em 0.05em 0.05em red, -0.05em -0.05em 0.05em blue;
+    box-shadow: 0.4px 0.4px 1.3px red, -0.4px -0.4px 1.3px blue;
 }
 
 .modal {
