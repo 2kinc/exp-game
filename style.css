@@ -243,6 +243,8 @@ hr {
     -webkit-animation: glow 2.5s ease-in-out infinite alternate;
     -moz-animation: glow 2.5s ease-in-out infinite alternate;
     animation: glow 2.5s ease-in-out infinite alternate;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
 #credits {
@@ -335,11 +337,12 @@ hr {
 }
 
 html.effects-on * {
-    text-shadow: 0.5px 0.5px 0px red, -0.5px -0.5px 0px blue, -1px -1px 0px green;
+    -text-shadow: 0.05em 0.05em 0.05em red, -0.05em -0.05em 0.05em blue;
+    text-shadow: 0.6px 0.6px 1.3px red, -0.6px -0.6px 1.3px blue;
 }
 
 html.effects-on hr, html.effects-on .card {
-    box-shadow: 0.5px 0.5px 0px red, -0.5px -0.5px 0px blue, -1px 1px 2px green;
+    -box-shadow: 0.05em 0.05em 0.05em red, -0.05em -0.05em 0.05em blue;
 }
 
 .modal {

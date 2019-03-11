@@ -183,7 +183,9 @@
             tooltip: qs('#tooltip'),
             tooltipTitle: qs('#tooltip-title'),
             tooltipText: qs('#tooltip-text'),
-            optionsButton: qs('#effects-button')
+            optionsButton: qs('#options-button'),
+            optionsModal: qs('#options-modal'),
+            effectsButton: qs('#effects-button')
         };
         this.stats = {
             steps: 0,
@@ -191,7 +193,7 @@
         };
 
         this.itemValues = {
-            ammo: new this.Item('⁍', 'ffffff', 'Ammo', 'Small pellets used to power your gun.'),
+            ammo: new this.Item('⚫', 'ffffff', 'Ammo', 'Small pellets used to power your gun.'),
             dirt: new this.Item('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
             wood: new this.Item('🏽', '826054', 'Wood', 'Strong organic material used to build structures.'),
             armour: new this.Item('🛡️', 'ffffff', 'Armour', 'Shields your vulnerable soul from attackers. Could also be spelled "armor".'),
@@ -1241,6 +1243,22 @@
     global.GameObject.elements.steps.innerHTML = global.GameObject.stats.steps;
     qs('#log-heading').innerHTML = 'Log';
     global.GameObject.elements.log.innerHTML = 'You awake into a strange world.';
+    global.GameObject.elements.optionsButton.addEventListener('click', function () {
+        var duck = global.GameObject.elements.optionsModal.style.display;
+        if (duck == 'none')
+            global.GameObject.elements.optionsModal.style.display = 'block';
+        else if (duck == 'block')
+            global.GameObject.elements.optionsModal.style.display = 'none'
+    });
+    global.GameObject.elements.effectsButton.addEventListener('click', function () {
+        if (qs('html.effects-on') != null) {
+            global.GameObject.elements.effectsButton.innerText = 'OFF';
+            qs('html.effects-on').classList.remove('effects-on');
+        } else {
+            global.GameObject.elements.effectsButton.innerText = 'ON';
+            qs('html').classList.add('effects-on');
+        }
+    })
     setTimeout(function () {
         log('Your memories are a messy blur.')
     }, 1500);
