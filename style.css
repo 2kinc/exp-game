@@ -8,9 +8,6 @@ body {
     overflow: hidden;
     padding: 30px;
     min-width: 1100px;
-    text-shadow: 0px 0.7px 0.7px rgba(255, 0, 0, 0.7), 
-    0px -1.1px 0.7px rgba(0, 0, 255, 0.7),
-    0px 0px 0.3em white;
 }
 
 #hugeheading {
@@ -302,17 +299,17 @@ hr {
 }
 
 html.effects-on * {
-    -text-shadow: 0.8px 0px 0px rgb(255, 0, 0),
-        -0.8px 0px 0px rgb(70, 70, 255),
-        0px 0px 0.05em rgba(219, 245, 255, 0.6);
+    text-shadow: 0px 0.7px 0.7px rgba(255, 0, 0, 0.7), 
+    0px -1.1px 0.7px rgba(0, 0, 255, 0.7),
+    0px 0px 0.3em white;
     animation: textShadow 1.6s infinite;
 }
 
 html.effects-on hr,
 html.effects-on .card {
-    -box-shadow: 0.8px 0px 0px rgb(255, 0, 0),
-        -0.8px 0px 0px rgb(70, 70, 255),
-        0px 0px 0.05em rgba(219, 245, 255, 0.6);
+    box-shadow: 0px 0.7px 0.7px rgba(255, 0, 0, 0.7), 
+    0px -1.1px 0.7px rgba(0, 0, 255, 0.7),
+    0px 0px 0.3em white;
 }
 
 .modal {

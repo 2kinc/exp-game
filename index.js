@@ -41,7 +41,7 @@
         return document.querySelector(selector);
     };
 
-    function Directions() { }
+    function Directions() {}
     Directions.prototype.up = () => {
         return 0
     };
@@ -117,9 +117,9 @@
                     newTile.loot = new game.lootSpawn(false);
                 }
                 if (game.getMapTile({
-                    x: x,
-                    y: y
-                }) != undefined)
+                        x: x,
+                        y: y
+                    }) != undefined)
                     newTile = game.getMapTile({
                         x: x,
                         y: y
@@ -185,7 +185,8 @@
             tooltipText: qs('#tooltip-text'),
             optionsButton: qs('#options-button'),
             optionsModal: qs('#options-modal'),
-            effectsButton: qs('#effects-button')
+            effectsButton: qs('#effects-button'),
+            inventorySlots: qs('#inventory-slots')
         };
         this.stats = {
             steps: 0,
@@ -515,7 +516,9 @@
             };
             database.ref('/keys/exp').once('value').then(function (snapshot) {
                 var value = snapshot.val().keyname;
-                savedGame = { savefile: XORCipher.encode(value.toString(), JSON.stringify(savedGame)) };
+                savedGame = {
+                    savefile: XORCipher.encode(value.toString(), JSON.stringify(savedGame))
+                };
                 databaseref.child('/' + auth.currentUser.uid).set(savedGame);
                 console.log(savedGame);
             });
@@ -533,12 +536,11 @@
                 available: document.getElementById('available'),
                 percent: document.getElementById('percent')
             },
-            stats: document.getElementById('inventory-stats')
+            stats: document.getElementById('inventory-stats'), 
+            slots: document.getElementById('inventory-slots')
         };
         this.updateElements = function () {
-            var a = ['#', '#', '#', '#', '#'
-                , '#', '#', '#', '#', '#'
-                , '#', '#', '#', '#', '#'];
+            var a = ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'];
             var b = 0;
             this.items.forEach(function (a) {
                 b += a.amount;
@@ -570,6 +572,14 @@
                     shadedText(' (' +
                         parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
                     '<br>';
+                var slot = document.createElement('div');
+                slot.className = 'inv-slot';
+                slot.innerText = element.displayText;
+                var label = document.createElement('div');
+                label.className = 'inv-slot-label';
+                label.innerText = element.amount;
+                slot.appendChild(label);
+                j.elements.slots.appendChild(slot);
             });
         };
         this.addItem = function (ITEM) {
