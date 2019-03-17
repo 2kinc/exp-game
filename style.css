@@ -67,6 +67,7 @@ body {
     border: 2px solid;
     padding: 10px;
     max-width: 250px;
+    overflow-x: auto;
     z-index: 4;
     background: #333;
     -webkit-animation: glow 2.5s ease-in-out infinite alternate;
@@ -147,7 +148,7 @@ img {
 }
 
 .shaded {
-    color: #55aaff;
+    color: cyan;
 }
 
 .clickable {
@@ -265,7 +266,7 @@ hr {
     padding: 0.1px 0;
 }
 
-.inv-slot-lbl {
+.inv-slot-label {
     z-index: 100;
     position: absolute;
     bottom: 5px;
@@ -275,11 +276,7 @@ hr {
 
 #inventory-slots {
     margin-top: 1em;
-    max-width: 220px;
-    width: 100000px;
     max-height: 44px;
-    overflow-x: auto;
-    whitespace: nowrap;
 }
 
 #hp::before {
@@ -416,35 +413,6 @@ html.effects-on .card {
     100% {
         opacity: 0.24387;
     }
-}
-
-html.effects-on::after {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: rgba(18, 16, 16, 0.1);
-    opacity: 0;
-    z-index: 2;
-    pointer-events: none;
-    animation: flicker 0.15s infinite;
-}
-
-html.effects-on::before {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    z-index: 2;
-    background-size: 100% 2px, 3px 100%;
-    pointer-events: none;
 }
 
 html {

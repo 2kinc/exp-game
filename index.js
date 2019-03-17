@@ -41,7 +41,7 @@
         return document.querySelector(selector);
     };
 
-    function Directions() {}
+    function Directions() { }
     Directions.prototype.up = () => {
         return 0
     };
@@ -117,9 +117,9 @@
                     newTile.loot = new game.lootSpawn(false);
                 }
                 if (game.getMapTile({
-                        x: x,
-                        y: y
-                    }) != undefined)
+                    x: x,
+                    y: y
+                }) != undefined)
                     newTile = game.getMapTile({
                         x: x,
                         y: y
@@ -205,6 +205,15 @@
                 energy: 2
             }),
             grapes: new this.Item('🍇', 'ffffff', 'Grapes', 'A hearty bunch of grapes.', {
+                energy: 3
+            }),
+            meat: new this.Item('🍖', 'ffffff', 'Meat', 'A good and non-vegetarian way to fill your stomach.', {
+                energy: 4
+            }),
+            pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few monthss old.', {
+                energy: 7
+            }),
+            orange: new this.Item('🍊', 'ffffff', 'Orange', 'A small, orange fruit you can fit in your hand.', {
                 energy: 3
             })
         };
@@ -470,7 +479,13 @@
             this.items = [];
             var ammo = that.itemValues.ammo;
             ammo.amount = Math.floor(Math.random() * 10);
-            var food = [that.itemValues.potato, that.itemValues.tomato, that.itemValues.grapes];
+            var food = [that.itemValues.potato,
+            that.itemValues.tomato,
+            that.itemValues.grapes,
+            that.itemValues.pie,
+            that.itemValues.meat,
+            that.itemValues.orange
+            ];
             food = food[Math.floor(Math.random() * food.length)];
             food.amount = Math.floor(Math.random() * 3);
             var armour = that.itemValues.armour;
@@ -502,6 +517,8 @@
                         localthat.updateElements();
                         console.log('you took a thing');
                     });
+                    p.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
+                    p.setAttribute('tooltip-text', element.description);
                     that.elements.loot.appendChild(span);
                     that.elements.loot.appendChild(document.createElement('br'));
                 });
@@ -536,7 +553,7 @@
                 available: document.getElementById('available'),
                 percent: document.getElementById('percent')
             },
-            stats: document.getElementById('inventory-stats'), 
+            stats: document.getElementById('inventory-stats'),
             slots: document.getElementById('inventory-slots')
         };
         this.updateElements = function () {
@@ -564,6 +581,7 @@
             this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
             var j = this;
             j.elements.stats.innerHTML = "";
+            j.elements.slots.innerHTML = "";
             this.items.forEach(function (element) {
                 j.elements.stats.innerHTML +=
                     element.amount + ' ' +
@@ -572,9 +590,13 @@
                     shadedText(' (' +
                         parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
                     '<br>';
+                j.elements.stats.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
+                j.elements.stats.setAttribute('tooltip-text', element.description);
                 var slot = document.createElement('div');
                 slot.className = 'inv-slot';
                 slot.innerText = element.displayText;
+                slot.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
+                slot.setAttribute('tooltip-text', element.description);
                 var label = document.createElement('div');
                 label.className = 'inv-slot-label';
                 label.innerText = element.amount;
