@@ -640,6 +640,15 @@
                 }
             }
         };
+        this.useItem = function (ITEM) {
+            if (ITEM.properties.energy != undefined) {
+                global.GameObject.energy += ITEM.properties.energy;
+            }
+            if (global.GameObject.tileValues[ITEM.name.toLowerCase()] != undefined) {
+                setMapTile(global.GameObject.tileValues[ITEM.name.toLowerCase()]);
+            }
+            ITEM.amount--;
+        }
     }
 
     function getAllElementsWithAttribute(attribute) {
@@ -712,7 +721,7 @@
         this.color = color;
         this.name = name;
         this.description = description;
-        this.properties = properties || null;
+        this.properties = properties || {};
         this.amount = amount || 1;
     };
 
