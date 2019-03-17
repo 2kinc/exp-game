@@ -1,4 +1,6 @@
 (function (global, w, h, el) {
+    NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+    HTMLCollection.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
 
     if (!window.localStorage) {
         throw "Your browser does not support Local Storage";
@@ -210,7 +212,7 @@
             meat: new this.Item('🍖', 'ffffff', 'Meat', 'A good and non-vegetarian way to fill your stomach.', {
                 energy: 4
             }),
-            pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few monthss old.', {
+            pie: new this.Item('🥧', 'ffffff', 'Pie', 'A good, fat apple pie. Probably a few months old.', {
                 energy: 7
             }),
             orange: new this.Item('🍊', 'ffffff', 'Orange', 'A small, orange fruit you can fit in your hand.', {
@@ -403,7 +405,6 @@
         this.shift_viewport_vertically = function (distance) {
             this.coordinate.y += distance;
             if (distance > 0) {
-                console.log("moving up");
                 for (var i = 0; i < distance; i++) {
                     el.removeChild(el.lastChild);
                 }
@@ -411,7 +412,6 @@
                 var tl = this.get_topleft();
                 this.generate_rows(tl, distance, w, 0);
             } else if (distance < 0) {
-                console.log("moving down");
                 for (var i = 0; i < Math.abs(distance); i++) {
                     el.removeChild(el.children[0]);
                 }
@@ -440,7 +440,6 @@
                 }
                 var tl = this.get_topright();
                 this.generate_columns(tl, h, distance, -1);
-                console.log('moving right');
             } else if (distance < 0) {
                 for (var i = 0; i < h; i++) {
                     var row = el.children;
@@ -452,7 +451,6 @@
 
                 var tl = this.get_topleft();
                 this.generate_columns(tl, h, Math.abs(distance), 0);
-                console.log('moving left');
             }
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
@@ -512,10 +510,8 @@
                         that.inventory.addItem(element);
                         var i = localthat.items.indexOf(element);
                         localthat.items.splice(i, 1);
-                        console.log(localthat.items);
                         that.inventory.updateElements();
                         localthat.updateElements();
-                        console.log('you took a thing');
                     });
                     p.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                     p.setAttribute('tooltip-text', element.description);
@@ -533,8 +529,19 @@
             };
             database.ref('/keys/exp').once('value').then(function (snapshot) {
                 var value = snapshot.val().keyname;
+                function encryptDecrypt(input) {
+                    var key = value.split(''); //Can be any chars, and any size array
+                    var output = [];
+                    
+                    for (var i = 0; i < input.length; i++) {
+                        var charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
+                        output.push(String.fromCharCode(charCode));
+                    }
+                    return output.join("");
+                }
+
                 savedGame = {
-                    savefile: XORCipher.encode(value.toString(), JSON.stringify(savedGame))
+                    savefile: encryptDecrypt(JSON.stringify(savedGame))
                 };
                 databaseref.child('/' + auth.currentUser.uid).set(savedGame);
                 console.log(savedGame);
@@ -566,7 +573,6 @@
             for (var i = 0; i < c; i++) {
                 a[i] = '$';
             }
-            console.log(a);
             this.elements.spaceused.innerText = '';
             var o = this;
             o.elements.spaceused.occupied.innerText = '';
@@ -583,20 +589,29 @@
             j.elements.stats.innerHTML = "";
             j.elements.slots.innerHTML = "";
             this.items.forEach(function (element) {
-                j.elements.stats.innerHTML +=
+                var p = document.createElement('span');
+                p.innerHTML =
                     element.amount + ' ' +
                     element.displayText + ' ' +
                     element.name +
                     shadedText(' (' +
-                        parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
-                    '<br>';
-                j.elements.stats.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
-                j.elements.stats.setAttribute('tooltip-text', element.description);
+                        parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + 
+                        '<br>';
+                p.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
+                p.setAttribute('tooltip-text', element.description);
+                j.elements.stats.appendChild(p);
                 var slot = document.createElement('div');
                 slot.className = 'inv-slot';
                 slot.innerText = element.displayText;
                 slot.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                 slot.setAttribute('tooltip-text', element.description);
+                slot.addEventListener('click', function () {
+                    j.selectedItem = element;
+                    for (var item of j.elements.slots.children) {
+                        item.classList.remove('inv-slot-selected');
+                    }
+                    slot.classList.add('inv-slot-selected');
+                });
                 var label = document.createElement('div');
                 label.className = 'inv-slot-label';
                 label.innerText = element.amount;
@@ -620,13 +635,10 @@
                 var existing = that.items.filter(item => (item.name === tmp.name));
                 if (existing.length === 0) {
                     that.items.push(tmp);
-                    console.log('new item');
                 } else {
                     existing[0].amount += tmp.amount;
-                    console.log('replaced existing');
                 }
             }
-            console.log(t);
         };
     }
 
@@ -658,21 +670,29 @@
         database.ref('/keys/exp').once('value').then(function (snapshot) {
             value = snapshot.val().keyname;
         });
+        function encryptDecrypt(input) {
+            var key = value.split(''); //Can be any chars, and any size array
+            var output = [];
+            
+            for (var i = 0; i < input.length; i++) {
+                var charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
+                output.push(String.fromCharCode(charCode));
+            }
+            return output.join("");
+        }
         if (auth.currentUser != null) {
-            databaseref.child('/' + auth.currentUser.uid + '/savefile').once('value').then(function (snapshot) {
-                if (snapshot.val() != undefined) {
-                    data = XORCipher.decode(value, snapshot.val());
+            databaseref.child('/' + auth.currentUser.uid).once('value').then(function (snapshot) {
+                if (snapshot.val().savefile != undefined) {
+                    data = JSON.parse(encryptDecrypt(snapshot.val().savefile));
+                    var newGameObject = new GameObject();
+                    Object.assign(newGameObject, data);
+                    console.log(newGameObject);
+                    console.log(data);
+                    console.log('loaded');
+                    return newGameObject;
                 }
             });
         }
-        /*if (data != null || data != undefined) {
-            var newData = JSON.parse(data);
-            var newGameObject = new GameObject();
-            for (var b in newData) {
-                newGameObject[b] = newData[b];
-            }
-            return newGameObject;
-        }*/
         return new GameObject();
     };
 

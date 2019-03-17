@@ -418,3 +418,8 @@ html.effects-on .card {
 html {
     height: 100vh;
 }
+
+.inv-slot-selected {
+    border-color: yellow;
+    background: rgba(255, 255, 0, 0.6)
+}
