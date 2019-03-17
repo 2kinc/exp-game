@@ -274,6 +274,34 @@
                         tile.style.background = '#' + b;
                         tile.setAttribute('tooltip-title', '[' + k.display_text + '] ' + k.name);
                         tile.setAttribute('tooltip-text', k.description);
+                        if (chunk.terrain.get(getMapTileKey({
+                            coordinates: {
+                                x: x + 1,
+                                y: y
+                            }
+                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
+                            coordinates: {
+                                x: x + 1,
+                                y: y
+                            }
+                        })).terrain.name) {
+                            tile.style.borderRight = '2px #ffffffaa solid';
+                            tile.style.paddingRight = '-2px';
+                        }
+                        if (chunk.terrain.get(getMapTileKey({
+                            coordinates: {
+                                x: x,
+                                y: y + 1
+                            }
+                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
+                            coordinates: {
+                                x: x,
+                                y: y + 1
+                            }
+                        })).terrain.name) {
+                            tile.style.borderTop = '2px #ffffffaa solid';
+                            tile.style.paddingTop = '-2px';
+                        }
                     }
                 }
             });
@@ -532,7 +560,7 @@
                 function encryptDecrypt(input) {
                     var key = value.split(''); //Can be any chars, and any size array
                     var output = [];
-                    
+
                     for (var i = 0; i < input.length; i++) {
                         var charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
                         output.push(String.fromCharCode(charCode));
@@ -595,8 +623,8 @@
                     element.displayText + ' ' +
                     element.name +
                     shadedText(' (' +
-                        parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') + 
-                        '<br>';
+                        parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
+                    '<br>';
                 p.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                 p.setAttribute('tooltip-text', element.description);
                 j.elements.stats.appendChild(p);
@@ -682,7 +710,7 @@
         function encryptDecrypt(input) {
             var key = value.split(''); //Can be any chars, and any size array
             var output = [];
-            
+
             for (var i = 0; i < input.length; i++) {
                 var charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
                 output.push(String.fromCharCode(charCode));
