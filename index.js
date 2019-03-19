@@ -583,6 +583,7 @@
             stats: document.getElementById('inventory-stats'),
             slots: document.getElementById('inventory-slots')
         };
+        this.inventoryIndex = 0;
         this.updateElements = function () {
             var a = ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'];
             var b = 0;
@@ -620,6 +621,11 @@
                 p.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                 p.setAttribute('tooltip-text', element.description);
                 j.elements.stats.appendChild(p);
+            });
+            for (var i = this.inventoryIndex; i < this.inventoryIndex + 5; i++) {
+                var element = this.items[i];
+                if (element == null)
+                    return;
                 var slot = document.createElement('div');
                 slot.className = 'inv-slot';
                 slot.innerText = element.displayText;
@@ -637,7 +643,7 @@
                 label.innerText = element.amount;
                 slot.appendChild(label);
                 j.elements.slots.appendChild(slot);
-            });
+            }
         };
         this.addItem = function (ITEM) {
             var t = 0;
