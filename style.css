@@ -319,7 +319,7 @@ hr {
     );
     animation: colors 100s infinite;
     background-opacity: 0.5;
-    padding: 0.3em 0.5em;
+    padding: 0.4em 0.5em;
     height: 100%;
     border-top-right-radius: 2px;
 }
@@ -351,7 +351,7 @@ hr {
     );
     animation: colors 100s infinite;
     background-opacity: 0.5;
-    padding: 0.3em 0.5em;
+    padding: 0.4em 0.5em;
     height: 100%;
     border-top-right-radius: 2px;
 }

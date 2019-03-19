@@ -138,10 +138,8 @@
         this.facing = (new Directions).up();
         this.hp = 10;
         this.maxhp = 10;
-        this.steps = 0;
         this.energy = 15;
         this.maxEnergy = 15;
-        this.ammoUsed = 0;
         this.name = 'Default Noob';
         this.lootArray = [];
         this.fightingMode = false;
@@ -170,8 +168,6 @@
             ammo: qs('#ammo'),
             hp: qs('#hp'),
             energy: qs('#energy'),
-            ammoUsed: qs('#ammo-used'),
-            steps: qs('#steps-taken'),
             ammoTakes: qs('#ammotakes'),
             foodTakes: qs('#foodtakes'),
             lootAmmo: qs('#lootammonum'),
@@ -189,10 +185,6 @@
             optionsModal: qs('#options-modal'),
             effectsButton: qs('#effects-button'),
             inventorySlots: qs('#inventory-slots')
-        };
-        this.stats = {
-            steps: 0,
-            ammoUsed: 0
         };
 
         this.itemValues = {
@@ -1330,8 +1322,6 @@
     global.GameObject.elements.name.innerHTML = global.GameObject.name;
     global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
     global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-    global.GameObject.elements.ammoUsed.innerHTML = global.GameObject.stats.ammoUsed;
-    global.GameObject.elements.steps.innerHTML = global.GameObject.stats.steps;
     qs('#log-heading').innerHTML = 'Log';
     global.GameObject.elements.log.innerHTML = 'You awake into a strange world.';
     global.GameObject.elements.optionsButton.addEventListener('click', function () {
