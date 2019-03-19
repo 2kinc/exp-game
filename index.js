@@ -608,7 +608,6 @@
             this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
             var j = this;
             j.elements.stats.innerHTML = "";
-            j.elements.slots.innerHTML = "";
             this.items.forEach(function (element) {
                 var p = document.createElement('span');
                 p.innerHTML =
@@ -626,8 +625,8 @@
                 var element = this.items[i];
                 if (element == null)
                     return;
-                var slot = document.createElement('div');
-                slot.className = 'inv-slot';
+                var slot = document.querySelectorAll('.inv-slot')[i - this.inventoryIndex];
+                slot.innerText = '';
                 slot.innerText = element.displayText;
                 slot.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                 slot.setAttribute('tooltip-text', element.description);
@@ -642,7 +641,6 @@
                 label.className = 'inv-slot-label';
                 label.innerText = element.amount;
                 slot.appendChild(label);
-                j.elements.slots.appendChild(slot);
             }
         };
         this.addItem = function (ITEM) {
