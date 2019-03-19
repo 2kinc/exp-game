@@ -48,14 +48,11 @@
             or Click to play</div>
     </div>
     <div class="left-side">
-        <div id="stats" class="card">
-            <div id="name" class="heading" title="Click to edit name" contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <div class="main">
+            <p id="hp">Loading...</p>
+            <p id="energy">Loading...</p>
+            <div id="name" contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                 Loading...
-            </div>
-            <hr>
-            <div class="main">
-                <p id="hp">Loading...</p>
-                <p id="energy">Loading...</p>
             </div>
         </div>
 
@@ -70,6 +67,7 @@
             </div>
         </div>
     </div>
+    <div id="inventory-slots"></div>
 
     <div class="right-side">
         <div class="card">
@@ -87,11 +85,10 @@
             <hr>
             <div id="inventory">
                 <div id="spaceused">
-                  <span id='occupied'></span><span id='available' class='shaded'></span>
-                  <span id='percent'></span>
+                    <span id='occupied'></span><span id='available' class='shaded'></span>
+                    <span id='percent'></span>
                 </div>
                 <div id="inventory-stats"></div>
-                <div id="inventory-slots"></div>
             </div>
         </div>
     </div>

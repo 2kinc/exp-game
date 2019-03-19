@@ -274,6 +274,7 @@ hr {
     position: relative;
     text-align: center;
     padding: 0.1px 0;
+    background: #ffffff99;
 }
 
 .inv-slot-label {
@@ -287,6 +288,13 @@ hr {
 #inventory-slots {
     margin-top: 1em;
     max-height: 44px;
+    position: absolute;
+    top: 1.5em;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 220px;
 }
 
 #hp {
@@ -495,4 +503,9 @@ html {
 
 td:hover {
     outline: 2px white solid;
+}
+
+#name {
+    background: #ffffff99;
+    padding: 0.5em;
 }
