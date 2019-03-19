@@ -90,6 +90,7 @@ body {
     max-width: 250px;
     overflow-x: auto;
     z-index: 4;
+    background: #333;
 }
 
 .card div {
