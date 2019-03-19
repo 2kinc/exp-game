@@ -74,9 +74,6 @@ body {
     left: 0;
     right: 0;
     margin: 0 auto;
-    transition: all 1.5s;
-    transition-timing-function: ease-in-out;
-    transform-origin: 50% 50%;
 }
 
 .bullet {
@@ -204,7 +201,6 @@ td {
     margin: 0;
     color: rgba(255, 255, 255, 0.7);
     overflow: hidden;
-    transition: all 0.3s;
     line-height: 1em;
     box-sizing: border-box;
 }
@@ -300,6 +296,7 @@ hr {
     height: 2em;
     vertical-align: middle;
     line-height: 2em;
+    margin: 0;
 }
 
 #hp::after {
@@ -337,6 +334,7 @@ hr {
     height: 2em;
     vertical-align: middle;
     line-height: 2em;
+    margin: 0;
 }
 
 #energy::after {
@@ -492,4 +490,8 @@ html {
 .inv-slot-selected {
     border-color: yellow;
     background: rgba(255, 255, 0, 0.6)
+}
+
+td:hover {
+    outline: 2px white solid;
 }
