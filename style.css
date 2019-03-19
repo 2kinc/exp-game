@@ -275,6 +275,8 @@ hr {
     text-align: center;
     padding: 0.1px 0;
     background: #ffffff99;
+    vertical-align: middle;
+    top: -20px;
 }
 
 .inv-slot-label {
@@ -286,10 +288,8 @@ hr {
 }
 
 #inventory-slots {
-    margin-top: 1em;
-    max-height: 44px;
     position: absolute;
-    top: 1.5em;
+    top: 1.3em;
     left: 0;
     right: 0;
     margin-left: auto;
