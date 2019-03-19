@@ -294,7 +294,7 @@ hr {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    width: 220px;
+    width: 300px;
 }
 
 #hp {
@@ -511,5 +511,43 @@ td:hover {
 }
 
 #inv-scroll-left {
-    /*tbd, writing, commit to save*/
+    display: inline-block;
+    font-size: 1.5em;
+    width: 20px;
+    cursor: pointer;
+    text-align: center;
+    height: 44px;
+    position: relative;
+    margin: 0;
+    top: -27px;
+}
+
+#inv-scroll-right {
+    display: inline-block;
+    font-size: 1.5em;
+    width: 20px;
+    cursor: pointer;
+    text-align: center;
+    height: 44px;
+    position: relative;
+    margin: 0;
+    top: -27px;
+}
+
+.grid-background {
+    background: repeating-linear-gradient(
+        315deg,
+        transparent,
+        transparent 10px,
+        #00000077 10px,
+        #00000077 11px
+    ),
+    repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        #00000077 10px,
+        #00000077 11px
+    );
+    animation: colors 100s infinite;
 }
