@@ -295,13 +295,16 @@ hr {
 #hp {
     border-bottom: 2px white solid;
     font-size: 1.8em;
-    padding: 0.3em 0;
     padding-left: 0.3em;
     background: #ffffff99;
+    height: 2em;
+    vertical-align: middle;
+    line-height: 2em;
 }
 
 #hp::after {
     content: '💙';
+    margin: 0;
     margin-left: 1em;
     background: repeating-linear-gradient(
         315deg,
@@ -319,21 +322,26 @@ hr {
     );
     animation: colors 100s infinite;
     background-opacity: 0.5;
-    padding: 0.4em 0.5em;
-    height: 100%;
     border-top-right-radius: 2px;
+    display: block;
+    float: right;
+    height: 2em;
+    padding: 0 0.3em;
 }
 
 #energy {
     border-bottom: 2px white solid;
     font-size: 1.8em;
-    padding: 0.3em 0;
     padding-left: 0.3em;
     background: #ffffff99;
+    height: 2em;
+    vertical-align: middle;
+    line-height: 2em;
 }
 
 #energy::after {
     content: '⚡';
+    margin: 0;
     margin-left: 1em;
     background: repeating-linear-gradient(
         315deg,
@@ -351,17 +359,11 @@ hr {
     );
     animation: colors 100s infinite;
     background-opacity: 0.5;
-    padding: 0.4em 0.5em;
-    height: 100%;
     border-top-right-radius: 2px;
-}
-
-#ammo-used::before {
-    content: 'AMMO USED: ';
-}
-
-#steps-taken::before {
-    content: 'STEPS TAKEN: ';
+    display: block;
+    float: right;
+    height: 2em;
+    padding: 0 0.3em;
 }
 
 html.effects-on * {
