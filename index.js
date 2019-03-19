@@ -184,7 +184,9 @@
             optionsButton: qs('#options-button'),
             optionsModal: qs('#options-modal'),
             effectsButton: qs('#effects-button'),
-            inventorySlots: qs('#inventory-slots')
+            inventorySlots: qs('#inventory-slots'),
+            inventoryScrollLeft: qs('#inv-scroll-left'),
+            inventoryScrollRight: qs('#inv-scroll-right')
         };
 
         this.itemValues = {
@@ -566,7 +568,7 @@
                 databaseref.child('/' + auth.currentUser.uid).set(savedGame);
                 console.log(savedGame);
             });
-        }
+        };
     }
 
     GameObject.prototype.Inventory = function (space, items) {
@@ -575,13 +577,15 @@
         this.items = items || [];
         this.elements = {
             spaceused: {
-                main: document.getElementById('spaceused'),
-                occupied: document.getElementById('occupied'),
-                available: document.getElementById('available'),
-                percent: document.getElementById('percent')
+                main: qs('#spaceused'),
+                occupied: qs('#occupied'),
+                available: qs('#available'),
+                percent: qs('#percent')
             },
-            stats: document.getElementById('inventory-stats'),
-            slots: document.getElementById('inventory-slots')
+            stats: qs('#inventory-stats'),
+            slots: qs('#inventory-slots'),
+            scrollleft: qs('#inv-scroll-left'),
+            scrollright: qs('#inv-scroll-right')
         };
         this.inventoryIndex = 0;
         this.updateElements = function () {
@@ -643,6 +647,20 @@
                 slot.appendChild(label);
             }
         };
+        this.elements.scrollleft.addEventListener('click', function () {
+            if (that.items[that.inventoryIndex - 1] != null)
+                that.inventoryIndex--;
+            else
+                return;
+            that.updateElements();
+        });
+        this.elements.scrollright.addEventListener('click', function () {
+            if (that.items[that.inventoryIndex + 5] != null)
+                that.inventoryIndex++;
+            else
+                return;
+            that.updateElements();
+        });
         this.addItem = function (ITEM) {
             var t = 0;
             that.items.forEach(function (element) {
