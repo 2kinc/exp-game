@@ -118,13 +118,16 @@ body {
 }
 
 #name:hover {
-    background: #fff;
     color: #333;
+    filter: saturate(1.5);
+    border: 2px white solid;
 }
 
 #name:focus {
-    background: #fff;
     color: #333;
+    filter: saturate(1.5);
+    border: 2px white solid;
+    border-top-width: 0;
 }
 
 #enemy {
@@ -288,7 +291,7 @@ hr {
 
 #inventory-slots {
     position: absolute;
-    top: 1.3em;
+    top: 4em;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -505,8 +508,8 @@ td:hover {
 }
 
 #name {
-    background: #ffffff99;
     padding: 0.5em;
+    font-size: 1.2em;
 }
 
 #inv-scroll-left {
@@ -518,7 +521,7 @@ td:hover {
     height: 44px;
     position: relative;
     margin: 0;
-    top: -27px;
+    top: -29px;
 }
 
 #inv-scroll-right {
@@ -530,7 +533,7 @@ td:hover {
     height: 44px;
     position: relative;
     margin: 0;
-    top: -27px;
+    top: -29px;
 }
 
 .grid-background {
