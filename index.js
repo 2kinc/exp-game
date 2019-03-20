@@ -641,8 +641,9 @@
                 slot.setAttribute('tooltip-text', element.description);
                 slot.addEventListener('click', function() {
                     j.selectedItem = element;
-                    for (var item of j.elements.slots.children) {
+                    for (var item of qs('#main-slots-container').children) {
                         item.classList.remove('inv-slot-selected');
+                        console.log(item);
                     }
                     slot.classList.add('inv-slot-selected');
                 });
