@@ -207,9 +207,8 @@ td {
 }
 
 #tooltip {
-    display: none;
     position: absolute;
-    z-index: 1000;
+    opacity: 0;
     box-shadow: 1px 1px 6px 0px #333333;
     max-width: 120px;
 }
@@ -551,3 +550,9 @@ td:hover {
     );
     animation: colors 100s infinite;
 }
+
+/*.hide-without-display-none {
+    max-width: 0;
+    max-height: 0;
+    overflow: hidden;
+}*/
