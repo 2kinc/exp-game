@@ -483,7 +483,7 @@
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
             this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         }
-        
+
         $(document).mousemove(function(e) {
             global.GameObject.elements.tooltip.style.left = e.clientX + 15 + 'px';
             global.GameObject.elements.tooltip.style.top = e.clientY + 15 + 'px';
@@ -555,26 +555,28 @@
                 if (savedGame[k] != undefined)
                     savedGame[k] = that[k];
             };
-            database.ref('/keys/exp').once('value').then(function(snapshot) {
-                var value = snapshot.val().keyname;
+            if (auth.currentUser != null) {
+                database.ref('/keys/exp').once('value').then(function(snapshot) {
+                    var value = snapshot.val().keyname;
 
-                function encryptDecrypt(input) {
-                    var key = value.split(''); //Can be any chars, and any size array
-                    var output = [];
+                    function encryptDecrypt(input) {
+                        var key = value.split(''); //Can be any chars, and any size array
+                        var output = [];
 
-                    for (var i = 0; i < input.length; i++) {
-                        var charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
-                        output.push(String.fromCharCode(charCode));
+                        for (var i = 0; i < input.length; i++) {
+                            var charCode = input.charCodeAt(i) ^ key[i % key.length].charCodeAt(0);
+                            output.push(String.fromCharCode(charCode));
+                        }
+                        return output.join("");
                     }
-                    return output.join("");
-                }
 
-                savedGame = {
-                    savefile: encryptDecrypt(JSON.stringify(savedGame))
-                };
-                databaseref.child('/' + auth.currentUser.uid).set(savedGame);
-                console.log(savedGame);
-            });
+                    savedGame = {
+                        savefile: encryptDecrypt(JSON.stringify(savedGame))
+                    };
+                    databaseref.child('/' + auth.currentUser.uid).set(savedGame);
+                    console.log(savedGame);
+                });
+            };
         };
     }
 
@@ -584,9 +586,7 @@
         this.items = items || [];
         this.elements = {
             spaceused: {
-                main: qs('#spaceused'),
-                occupied: qs('#occupied'),
-                available: qs('#available'),
+                main: qs('#inv-status-container'),
                 percent: qs('#percent')
             },
             stats: qs('#inventory-stats'),
@@ -605,17 +605,15 @@
             for (var i = 0; i < c; i++) {
                 a[i] = '$';
             }
-            this.elements.spaceused.innerText = '';
             var o = this;
-            o.elements.spaceused.occupied.innerText = '';
-            o.elements.spaceused.available.innerText = '';
-            a.forEach(function(element) {
+            /*a.forEach(function(element) {
                 if (element == "$") {
                     o.elements.spaceused.occupied.innerText += element;
                 } else {
                     o.elements.spaceused.available.innerText += element;
                 }
-            });
+            });*/
+            this.elements.spaceused.main.innerText = b + '/' + that.space + ' slots used';
             this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
             var j = this;
             j.elements.stats.innerHTML = "";
@@ -698,6 +696,7 @@
             }
             ITEM.amount--;
         }
+        this.updateElements();
     }
 
     function getAllElementsWithAttribute(attribute) {
@@ -743,8 +742,7 @@
             databaseref.child('/' + auth.currentUser.uid).once('value').then(function(snapshot) {
                 if (snapshot.val().savefile != undefined) {
                     data = JSON.parse(encryptDecrypt(snapshot.val().savefile));
-                    var newGameObject = new GameObject();
-                    Object.assign(newGameObject, data);
+                    var newGameObject = Object.assign(new GameObject(), data);
                     console.log(newGameObject);
                     console.log(data);
                     console.log('loaded');
@@ -753,10 +751,6 @@
             });
         }
         return new GameObject();
-    };
-
-    GameSave.prototype.save = function() {
-        window.localStorage.setItem('exp-game/save', JSON.stringify(global._exp_game));
     };
 
     //global._exp_game = ((global._exp_game != null) ? global._exp_game : (new GameSave()).load());

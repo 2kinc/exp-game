@@ -118,16 +118,15 @@ body {
 }
 
 #name:hover {
-    color: #333;
     filter: saturate(1.5);
     border: 2px white solid;
+    border-top: none;
 }
 
 #name:focus {
-    color: #333;
     filter: saturate(1.5);
     border: 2px white solid;
-    border-top-width: 0;
+    border-top: none;
 }
 
 #enemy {
@@ -276,9 +275,14 @@ hr {
     position: relative;
     text-align: center;
     padding: 0.1px 0;
-    background: #ffffff99;
+    background: #00000099;
     vertical-align: middle;
     top: -20px;
+}
+
+.inv-slot:nth-child(odd) {
+    border-left: none;
+    border-right: none;
 }
 
 .inv-slot-label {
@@ -559,3 +563,10 @@ td:hover {
     max-height: 0;
     overflow: hidden;
 }*/
+
+#inv-status-container {
+    margin-top: -29px;
+    text-align: center;
+    padding: 0.2em 0;
+    width: 252px;
+}
