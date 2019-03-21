@@ -157,7 +157,6 @@
         this.elements = {
             player: qs('#player'),
             box: qs('#box'),
-            log: qs('#log'),
             enemy: qs('#enemy'),
             enemyhp: qs('#enemy-hp'),
             lootHeading: qs('#loot-heading'),
@@ -614,22 +613,7 @@
                 }
             });*/
             this.elements.spaceused.main.innerText = b + '/' + that.space + ' slots used';
-            this.elements.spaceused.percent.innerText = ' (' + parseFloat((b / this.space * 100).toFixed(2)) + '% occupied)';
             var j = this;
-            j.elements.stats.innerHTML = "";
-            this.items.forEach(function(element) {
-                var p = document.createElement('span');
-                p.innerHTML =
-                    element.amount + ' ' +
-                    element.displayText + ' ' +
-                    element.name +
-                    shadedText(' (' +
-                        parseFloat((element.amount / j.space * 100).toFixed(2)) + '% of inventory)') +
-                    '<br>';
-                p.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
-                p.setAttribute('tooltip-text', element.description);
-                j.elements.stats.appendChild(p);
-            });
             for (var i = this.inventoryIndex; i < this.inventoryIndex + 5; i++) {
                 var element = this.items[i];
                 if (element == null)
@@ -1093,7 +1077,6 @@
                 if (Math.round(energy) == 0) {
                     global.GameObject.hp -= Math.floor(global.GameObject.maxhp / 3);
                     global.GameObject.hpEl.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
-                    log('You have no energy! Get food fast!');
                 }
                 if (hp < 0) {
                     var saveHTML = document.body.innerHTML;
@@ -1275,10 +1258,6 @@
         }, 600);
     }*/
 
-    function log(message) {
-        global.GameObject.elements.log.innerHTML = message + '<br>' + global.GameObject.elements.log.innerHTML;
-    }
-
     setInterval(function() {
         name = global.GameObject.elements.name.innerHTML;
     }, 1000);
@@ -1345,8 +1324,6 @@
     global.GameObject.elements.name.innerHTML = global.GameObject.name;
     global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
     global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-    qs('#log-heading').innerHTML = 'Log';
-    global.GameObject.elements.log.innerHTML = 'You awake into a strange world.';
     global.GameObject.elements.optionsButton.addEventListener('click', function() {
         var duck = global.GameObject.elements.optionsModal.style.display;
         if (duck == 'none')
@@ -1363,12 +1340,6 @@
             qs('html').classList.add('effects-on');
         }
     })
-    setTimeout(function() {
-        log('Your memories are a messy blur.')
-    }, 1500);
-    setTimeout(function() {
-        log('Distant flashbacks of the battlefield swirl through your mind.')
-    }, 3000);
 
     var count = 1;
 

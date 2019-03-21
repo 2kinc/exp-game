@@ -49,7 +49,7 @@
     </div>
     <div class="left-side">
         <div class="main">
-            <p id="hp" tooltip-text="Its basically your life." tooltip-title="HP">Loading...</p>
+            <p id="hp" tooltip-text="It's basically your life." tooltip-title="HP">Loading...</p>
             <p id="energy" tooltip-text="Helps you do just about everything." tooltip-title="Energy">Loading...</p>
             <div id="name" class="grid-background" contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                 Loading...
@@ -69,27 +69,9 @@
     </div>
 
     <div class="right-side">
-        <div class="card">
-            <div id="log-heading" class="heading">
-                Log
-            </div>
-            <hr>
-            <div id="log">
-                Loading...
-            </div>
-        </div>
-        <br>
-        <div class="card">
-            <div id="inventory-heading" class="heading">Inventory</div>
-            <hr>
-            <div id="inventory">
-                <div id="spaceused">
-                    <span id='percent'></span>
-                </div>
-                <div id="inventory-stats"></div>
-            </div>
-        </div>
+        <div class="round-button clear" id="options-button" style="font-size: 40px;">⚙️</div>
     </div>
+
     <div id="credits">
         <span>
             E. X. P. by 2K inc.<br> <br>
@@ -146,10 +128,6 @@
 
     <div>
         <span class="clickable" onclick="credits.roll();" style="font-size: 1.5em; position: absolute; left: 3em; top: 80vh;">Credits</span>
-    </div>
-
-    <div>
-        <span class="clickable" id="options-button" style="font-size: 1.5em; position: absolute; right: 3em; top: 80vh;">Options</span>
     </div>
 
     <div class="card modal" id="options-modal" style="display: none;">
