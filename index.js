@@ -1326,10 +1326,8 @@
     global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
     global.GameObject.elements.optionsButton.addEventListener('click', function() {
         var duck = global.GameObject.elements.optionsModal.style.display;
-        if (duck == 'none')
-            global.GameObject.elements.optionsModal.style.display = 'block';
-        else if (duck == 'block')
-            global.GameObject.elements.optionsModal.style.display = 'none'
+        $('#options-modal').toggle();
+        $('#mask').toggle();
     });
     global.GameObject.elements.effectsButton.addEventListener('click', function() {
         if (qs('html.effects-on') != null) {
@@ -1339,7 +1337,14 @@
             global.GameObject.elements.effectsButton.innerText = 'ON';
             qs('html').classList.add('effects-on');
         }
-    })
+    });
+
+    $('.modal-options-close').each(function (index) {
+        $(this).click(function () {
+            $(this).parent().parent().toggle();
+            $('#mask').toggle();
+        });
+    });
 
     var count = 1;
 

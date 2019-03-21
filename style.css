@@ -577,3 +577,23 @@ td:hover {
     background: #00000099;
     border: 2px white solid;
 }
+
+#options-modal {
+    height: 15em;
+}
+
+#mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: none;
+    background: #00000099;
+}
+
+.modal-options {
+    bottom: 0.8em;
+    position: inherit;
+    float: right;
+}
