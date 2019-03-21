@@ -295,7 +295,7 @@ hr {
 
 #inventory-slots {
     position: absolute;
-    top: 4em;
+    bottom: 2em;
     left: 0;
     right: 0;
     margin-left: auto;
