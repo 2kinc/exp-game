@@ -215,12 +215,12 @@
         };
 
         this.tileValues = {
-            water: new Tile('.', '03a9f4', 'Water', 'Made of two hydrogen atoms and one oxygen atom. Essential for life.', {
+            water: new Tile('.', '03a9f4', 'Water', 'Two H and one O fused into one character.', {
                 unbreakable: true
             }),
             dirt: new Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
-            sand: new Tile('~', 'fdd835', 'Sand', 'Millions of tiny grains that used to be mighty boulders form into this.'),
-            grass: new Tile(',', '4caf50', 'Grass', 'Living, breathing dirt. A main source of food for many animals.', {
+            sand: new Tile('~', 'fdd835', 'Sand', 'Tiny bits of shredded text make up sand.'),
+            grass: new Tile(',', '4caf50', 'Grass', 'Created when artificial life met dirt.', {
                 itemDrop: this.itemValues.dirt
             }),
             cactus: new Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', {
@@ -634,16 +634,14 @@
                 var element = this.items[i];
                 if (element == null)
                     return;
-                var slot = document.querySelectorAll('.inv-slot')[i - this.inventoryIndex];
-                slot.innerText = '';
+                var slot = document.querySelectorAll('.inv-slot')[i - that.inventoryIndex];
                 slot.innerText = element.displayText;
                 slot.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                 slot.setAttribute('tooltip-text', element.description);
                 slot.addEventListener('click', function() {
-                    j.selectedItem = element;
+                    that.selectedItem = that.items[i];
                     for (var item of qs('#main-slots-container').children) {
                         item.classList.remove('inv-slot-selected');
-                        console.log(item);
                     }
                     slot.classList.add('inv-slot-selected');
                 });
