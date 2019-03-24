@@ -1262,65 +1262,6 @@
         name = global.GameObject.elements.name.innerHTML;
     }, 1000);
 
-    /*function saveGame() {
-        saveFile = JSON.stringify(global._exp_game);
-        saveFile = JSON.stringify([worldSeed, hp, maxhp, energy, maxEnergy, ammo, food, this.currentCell,
-            gameProgression, isTown, fightingMode]);
-        global.GameObject.lootArray.forEach(function (element, index) {
-            if (element != null) {
-                saveFile = saveFile + index + '|' + element.ammo + '|' + element.food + ',';
-            }
-        });
-        saveFile = saveFile.slice(0, -1);
-        saveFile = window.btoa(saveFile);
-    }*/
-
-    /*function readSaveFile() {
-        if (saveFile != '') {
-            var decodedSaveFile = window.atob(saveFile);
-            var split = decodedSaveFile.split('#');
-            var loot = [];
-            split[10].split(',').forEach(function (element) {
-                var x = element.split('|');
-                loot[Number(x[0])] = {
-                    ammo: Number(x[1]),
-                    food: Number(x[2]),
-                    take: takeF
-                };
-            });
-            return {
-                seed: Number(split[0]),
-                hp: Number(split[1]),
-                maxhp: Number(split[2]),
-                energy: Number(split[3]),
-                maxEnergy: Number(split[4]),
-                ammo: Number(split[5]),
-                food: Number(split[6]),
-                currentCell: Number(split[7]),
-                gameProgression: Number(split[8]),
-                isTown: (split[9] == 'true'),
-                fightingMode: (split[10] == 'true'),
-                lootArray: loot
-            };
-        }
-    }*/
-
-    /*function initFromSave() {
-        var r = readSaveFile();
-        noise.seed(r.seed);
-        hp = r.hp;
-        maxhp = r.maxhp;
-        energy = r.energy;
-        maxEnergy = r.maxEnergy;
-        ammo = r.ammo;
-        food = r.food;
-        this.currentCell = r.currentCell;
-        gameProgression = r.gameProgression;
-        isTown = r.isTown;
-        fightingMode = r.fightingMode;
-        lootArray = r.lootArray;
-    }*/
-
     global.GameObject.elements.name.innerHTML = global.GameObject.name;
     global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
     global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
@@ -1400,26 +1341,6 @@
         'clip': 'unset',
         'left': '0'
     });
-
-
-    /*for (var i = 0; i < 625; i++) {
-        var randomNum = (pi[worldSeed + i] + pi[worldSeed + i + 1] + pi[worldSeed + i + 2]) / 3;
-        if (randomNum >= 8.5) {
-            document.querySelectorAll('td')[i].innerHTML = 'C';
-        } else if (randomNum <= 1. && randomNum > 0.15) {
-            document.querySelectorAll('td')[i].innerHTML = 'T';
-        } else if (randomNum == 0) {
-            document.querySelectorAll('td')[i].innerHTML = 'L';
-        }
-    }*/
-
-    /*function town(index) {
-        var possibleDirections = ['North', 'East', 'South', 'West'];
-        this.townHall = possibleDirections[pi[worldSeed + index] % 4];
-        this.pathLengths = [pi[worldSeed + index + 1] % 3 + 2, pi[worldSeed + index + 2] % 3 + 2,
-        pi[worldSeed + index + 3] % 3 + 2];
-        this.index = index;
-    }*/
 
     document.querySelector('#loading').style.display = 'none';
 
