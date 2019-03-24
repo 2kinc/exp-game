@@ -529,6 +529,28 @@ td:hover {
     opacity: 0.5;
 }
 
+@keyframes cursor {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+#dialogue::after {
+    content: '_';
+    animation: cursor 0.5s infinite;
+    animation-timing-function: linear;
+}
+
 #dialogue.info::before {
-    content: '# ';
+    content: '> ';
+}
+
+#dialogue.character::before {
+    content: attr(data-before);
 }
