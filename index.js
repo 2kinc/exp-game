@@ -238,17 +238,21 @@
             this.color = color || null;
         }
 
-        this.Character = function (name, color, faces) {
+        this.Character = function (name, faces) {
             this.name = name;
-            this.color = color;
             this.faces = faces;
         }
 
         this.characters = {
-            ctrlz: new that.Character('Ctrl + Z', '#ffffff', {
+            ctrlz: new that.Character('Ctrl + Z', {
                 default: new that.Face('o-╭ರ_⊙-o'),
-                happy: new that.Face('o-*⏝*-o'),
+                happy: new that.Face('o-✦‿✦-o'),
                 mad: new that.Face('O->⌒<-O💢', '#ff0000')
+            }),
+            curry: new that.Character('AutoCurry', {
+                default: new that.Face('<◔⎁◔>'),
+                happy: new that.Face('<♥⎁♥>🍛'),
+                mad: new that.Face('>ఠ⎁ఠ<🔥')
             })
         }
 
@@ -432,6 +436,10 @@
                         that.facing = d.left();
                         that.elements.player.style.transform = 'rotate(270deg)';
                         global.GameObject.gameProgression++;
+                    } else if (event.key === " ") {
+                        $('body').css({
+                            '--dialogue-display': 'none'
+                        });
                     }
                 }
             };
@@ -504,14 +512,29 @@
             this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         }
 
+        function distance(cx, cy, ex, ey) {
+            var dy = ey - cy;
+            var dx = ex - cx;
+            return {
+                x: dx,
+                y: dy
+            };
+        }
+
         $(document).mousemove(function (e) {
             global.GameObject.elements.tooltip.style.left = e.clientX + 15 + 'px';
             global.GameObject.elements.tooltip.style.top = e.clientY + 15 + 'px';
+            var c = qs('#dialogue').getBoundingClientRect();
+            var d = distance(c.x, c.y, e.clientX, e.clientY);
+            d.x = (360 + d.x / 50) % 360;
+            d.y = (360 + d.y / 50) % 360;
+            global.GameObject.elements.dialogue.css({
+                'transform': 'rotateY(' + d.y + 'deg) rotateX(' + d.x + 'deg)'
+            });
         });
 
         $(document).mouseover(function (e) {
             var t = e.target;
-            var a = t.getBoundingClientRect();
             if ($(t).attr('tooltip-text') != null) {
                 global.GameObject.elements.tooltipTitle.innerHTML = $(t).attr('tooltip-title');
                 global.GameObject.elements.tooltipText.innerHTML = $(t).attr('tooltip-text');
@@ -573,23 +596,21 @@
             var arr = text.split('');
             var fill = [];
             var count = 0;
+            if (character.indexOf('character:') >= 0) {
+                that.elements.dialogue.attr('class', 'character');
+                that.elements.dialogue.attr('data-before', that.characters[character.split(':')[1]].faces[character.split(':')[2]].text);
+                that.elements.dialogue.css({
+                    '--dialogue-before-color': that.characters[character.split(':')[1]].faces[character.split(':')[2]].color
+                });
+            } else {
+                that.elements.dialogue.attr('class', character);
+            }
             var x = setInterval(function () {
                 if (count >= text.length) {
-                    setTimeout(function () {
-                        $('body').css({
-                            '--dialogue-display': 'none'
-                        })
-                    }, 1300);
                     clearInterval(x);
                 }
                 fill.push(arr[count]);
-                if (character.indexOf('character:') >= 0) {
-                    that.elements.dialogue.attr('class', 'character');
-                    that.elements.dialogue.attr('data-before', that.characters[character.split(':')[1]].faces[character.split(':')[2]].text);
-                } else {
-                    that.elements.dialogue.attr('class', character);
-                }
-                that.elements.dialogue.text(fill.join(''));
+                $('#dialogue-text').text(fill.join(''));
                 count++;
             }, 60);
             $('body').css({
