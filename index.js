@@ -413,6 +413,7 @@
         this.initialize_viewport = function () {
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
+            var skips = 0;
             document.onkeypress = function (event) {
                 if (document.activeElement != that.elements.name) {
                     var d = new Directions();
@@ -440,7 +441,14 @@
                         $('body').css({
                             '--dialogue-display': 'none'
                         });
+                        clearInterval(global.GameObject.dialogueInterval);
                     }
+                }
+                if (event.key != ' ') {
+                    global.GameObject.displayDialogue('Salutations buddy! My name is Ctrl + Z. You just pressed the "' + event.key + '" key!', 'character:ctrlz:default');
+                    if (skips > 9)
+                        global.GameObject.displayDialogue('Hey, you better stop skipping my dialogue. It is not funny.', 'character:ctrlz:mad');
+                    skips++;
                 }
             };
             var a = new Chunk(this, 25, {
@@ -605,12 +613,15 @@
             } else {
                 that.elements.dialogue.attr('class', character);
             }
-            var x = setInterval(function () {
+            if (that.dialogueInterval != undefined)
+                clearInterval(that.dialogueInterval);
+            that.dialogueInterval = setInterval(function () {
                 if (count >= text.length) {
-                    clearInterval(x);
+                    clearInterval(that.dialogueInterval);
                 }
                 fill.push(arr[count]);
                 $('#dialogue-text').text(fill.join(''));
+                qs('#dialogue-text').scrollTop = 1000;
                 count++;
             }, 60);
             $('body').css({
