@@ -525,11 +525,11 @@
             global.GameObject.elements.tooltip.style.left = e.clientX + 15 + 'px';
             global.GameObject.elements.tooltip.style.top = e.clientY + 15 + 'px';
             var c = qs('#dialogue').getBoundingClientRect();
-            var d = distance(c.x, c.y, e.clientX, e.clientY);
-            d.x = (360 + d.x / 50) % 360;
-            d.y = (360 + d.y / 50) % 360;
+            var d = distance((c.left + c.right) / 2, (c.left + c.right) / 2, e.clientX, e.clientY);
+            d.x = (360 - d.x / 70) % 360;
+            d.y = (360 + d.y / 70) % 360;
             global.GameObject.elements.dialogue.css({
-                'transform': 'rotateY(' + d.y + 'deg) rotateX(' + d.x + 'deg)'
+                'transform': 'rotateX(' + d.y + 'deg) rotateY(' + d.x + 'deg)'
             });
         });
 

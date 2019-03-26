@@ -477,15 +477,16 @@ td:hover {
 #dialogue {
     background: black;
     height: 35vh;
-    width: 100%;
+    width: 120%;
     position: absolute;
-    bottom: 0;
-    left: 0;
+    top: 65vh;
+    left: -10%;
     font-size: 3em;
     padding: 1em;
     display: var(--dialogue-display);
     --dialogue-before-color: white;
     z-index: 1000000000;
+    padding-left: 15%;
 }
 
 #dialogue::before {
@@ -522,6 +523,6 @@ td:hover {
     width: 100%;
     text-align: center;
     position: absolute;
-    bottom: 50px;
-    left: 0;
+    left: -3%;
+    margin-bottom: 10vh;
 }
