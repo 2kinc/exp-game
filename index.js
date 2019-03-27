@@ -1,4 +1,4 @@
-(function (global, w, h, el) {
+(function(global, w, h, el) {
     NodeList.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
     HTMLCollection.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
 
@@ -25,7 +25,7 @@
         this.y = y || 0;
     }
 
-    var getMapTileKey = function (tile) {
+    var getMapTileKey = function(tile) {
         return String(tile.coordinates.x) + "," + String(tile.coordinates.y);
     };
 
@@ -39,7 +39,7 @@
         this.inventory = new GameObject.prototype.Inventory(150);
     }
 
-    var qs = function (selector) {
+    var qs = function(selector) {
         return document.querySelector(selector);
     };
 
@@ -233,12 +233,12 @@
             wood: new Tile('🏽', '826054', 'Wood', 'Strong organic material used to build structures.')
         };
 
-        this.Face = function (text, color) {
+        this.Face = function(text, color) {
             this.text = text;
             this.color = color || null;
         }
 
-        this.Character = function (name, faces) {
+        this.Character = function(name, faces) {
             this.name = name;
             this.faces = faces;
         }
@@ -263,21 +263,21 @@
 
         var worldModifications = new Map();
 
-        this.setMapTile = function (tile) {
+        this.setMapTile = function(tile) {
             worldModifications.set(getMapTileKey(tile), tile);
         };
 
-        this.getMapTile = function (coordinates) {
+        this.getMapTile = function(coordinates) {
             return worldModifications.get(String(coordinates.x) + ',' + String(coordinates.y));
         };
 
-        this.getTileElement = function (x, y) {
+        this.getTileElement = function(x, y) {
             return document.querySelector('#c_' + this.for_id(x) + '_' + this.for_id(y));
         };
 
         var that = this;
-        this.renderChunks = function (chunks) {
-            chunks.forEach(function (chunk) {
+        this.renderChunks = function(chunks) {
+            chunks.forEach(function(chunk) {
                 for (var x = chunk.bottomleft.x; x < chunk.bottomleft.x + chunk.sideLength; x++) {
                     for (var y = chunk.bottomleft.y; y < chunk.bottomleft.y + chunk.sideLength; y++) {
                         var tile = that.getTileElement(x, y);
@@ -325,37 +325,37 @@
             });
         };
 
-        this.get_topleft = function () {
+        this.get_topleft = function() {
             return {
                 y: this.coordinate.y + Math.floor(h / 2),
                 x: this.coordinate.x - Math.floor(w / 2)
             }
         };
-        this.get_bottomleft = function () {
+        this.get_bottomleft = function() {
             return {
                 x: this.coordinate.x - Math.floor(w / 2),
                 y: this.coordinate.y - Math.floor(h / 2)
             }
         };
-        this.get_topright = function () {
+        this.get_topright = function() {
             return {
                 x: this.coordinate.x + Math.floor(w / 2),
                 y: this.coordinate.y + Math.floor(h / 2)
             }
         };
-        this.get_bottomright = function () {
+        this.get_bottomright = function() {
             return {
                 x: this.coordinate.x + Math.floor(w / 2),
                 y: this.coordinate.y - Math.floor(h / 2)
             }
         };
-        this.for_id = function (n) {
+        this.for_id = function(n) {
             return String(Math.abs(n)) + (n < 0 ? "n" : "");
         };
-        this.get_tile_id = function (sx, sy) {
+        this.get_tile_id = function(sx, sy) {
             return "c_" + sx + "_" + sy;
         };
-        this.updateCenterEl = function () {
+        this.updateCenterEl = function() {
             var c = document.querySelector("td.current");
             if (c) {
                 c.classList.remove("current");
@@ -365,7 +365,7 @@
                 c.classList.add("current");
             }
         };
-        this.generate_rows = function (topleft, n_rows, n_cols, start_index) {
+        this.generate_rows = function(topleft, n_rows, n_cols, start_index) {
             var anchor = null;
             if (start_index >= 0) {
                 anchor = el.children[start_index];
@@ -393,7 +393,7 @@
             }
             this.updateCenterEl();
         };
-        this.generate_columns = function (topleft, n_rows, n_cols, start_index) {
+        this.generate_columns = function(topleft, n_rows, n_cols, start_index) {
             for (var x = 0; x < n_cols; x++) {
                 var sx = this.for_id(topleft.x + x);
                 var sy = this.for_id(topleft.y);
@@ -410,11 +410,11 @@
             this.updateCenterEl();
         }
 
-        this.initialize_viewport = function () {
+        this.initialize_viewport = function() {
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
             var skips = 0;
-            document.onkeypress = function (event) {
+            document.onkeypress = function(event) {
                 if (document.activeElement != that.elements.name) {
                     var d = new Directions();
                     if (event.key === "W" || event.key === "w") {
@@ -460,7 +460,7 @@
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
             this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         };
-        this.shift_viewport_vertically = function (distance) {
+        this.shift_viewport_vertically = function(distance) {
             this.coordinate.y += distance;
             if (distance > 0) {
                 for (var i = 0; i < distance; i++) {
@@ -486,7 +486,7 @@
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
             this.elements.lootHeading.innerHTML = qs('td.current').getAttribute('tooltip-title');
         };
-        this.shift_viewport_horizontally = function (distance) {
+        this.shift_viewport_horizontally = function(distance) {
             this.coordinate.x += distance;
             if (distance > 0) {
                 for (var i = 0; i < h; i++) {
@@ -529,7 +529,7 @@
             };
         }
 
-        $(document).mousemove(function (e) {
+        $(document).mousemove(function(e) {
             global.GameObject.elements.tooltip.style.left = e.clientX + 15 + 'px';
             global.GameObject.elements.tooltip.style.top = e.clientY + 15 + 'px';
             var c = qs('#dialogue').getBoundingClientRect();
@@ -541,7 +541,7 @@
             });
         });
 
-        $(document).mouseover(function (e) {
+        $(document).mouseover(function(e) {
             var t = e.target;
             if ($(t).attr('tooltip-text') != null) {
                 global.GameObject.elements.tooltipTitle.innerHTML = $(t).attr('tooltip-title');
@@ -552,7 +552,7 @@
             }
         });
         var that = this;
-        this.lootSpawn = function (chest) {
+        this.lootSpawn = function(chest) {
             this.items = [];
             var ammo = that.itemValues.ammo;
             ammo.amount = Math.floor(Math.random() * 10);
@@ -576,16 +576,16 @@
             if (armour.amount != 0)
                 this.items.push(armour);
             var localthat = this;
-            this.updateElements = function () {
+            this.updateElements = function() {
                 that.elements.loot.innerHTML = '';
-                localthat.items.forEach(function (element) {
+                localthat.items.forEach(function(element) {
                     var span = document.createElement('span');
                     span.className = 'clickable';
                     span.innerText = 'Take';
                     var p = document.createElement('span');
                     p.innerText = element.amount + ' × ' + element.displayText + ' ' + element.name + ' ';
                     that.elements.loot.appendChild(p);
-                    span.addEventListener('click', function () {
+                    span.addEventListener('click', function() {
                         that.inventory.addItem(element);
                         var i = localthat.items.indexOf(element);
                         localthat.items.splice(i, 1);
@@ -600,7 +600,7 @@
             }
             this.updateElements();
         };
-        this.displayDialogue = function (text, character) {
+        this.displayDialogue = function(text, character) {
             var arr = text.split('');
             var fill = [];
             var count = 0;
@@ -615,7 +615,7 @@
             }
             if (that.dialogueInterval != undefined)
                 clearInterval(that.dialogueInterval);
-            that.dialogueInterval = setInterval(function () {
+            that.dialogueInterval = setInterval(function() {
                 if (count >= text.length) {
                     clearInterval(that.dialogueInterval);
                 }
@@ -628,14 +628,14 @@
                 '--dialogue-display': 'block'
             });
         }
-        this.save = function () {
+        this.save = function() {
             var savedGame = new GameSave();
             for (var k in that) {
                 if (savedGame[k] != undefined)
                     savedGame[k] = that[k];
             };
             if (auth.currentUser != null) {
-                database.ref('/keys/exp').once('value').then(function (snapshot) {
+                database.ref('/keys/exp').once('value').then(function(snapshot) {
                     var value = snapshot.val().keyname;
 
                     function encryptDecrypt(input) {
@@ -659,7 +659,7 @@
         };
     }
 
-    GameObject.prototype.Inventory = function (space, items) {
+    GameObject.prototype.Inventory = function(space, items) {
         var that = this;
         this.space = space;
         this.items = items || [];
@@ -674,10 +674,10 @@
             scrollright: qs('#inv-scroll-right')
         };
         this.inventoryIndex = 0;
-        this.updateElements = function () {
+        this.updateElements = function() {
             var a = ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'];
             var b = 0;
-            this.items.forEach(function (a) {
+            this.items.forEach(function(a) {
                 b += a.amount;
             });
             var c = Math.round(b / this.space * 15);
@@ -699,39 +699,39 @@
                 if (element == null)
                     return;
                 var slot = document.querySelectorAll('.inv-slot')[i - that.inventoryIndex];
-                slot.innerText = element.displayText;
+                $(slot).text(element.displayText);
                 slot.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                 slot.setAttribute('tooltip-text', element.description);
-                slot.addEventListener('click', function () {
-                    that.selectedItem = that.items[i];
-                    for (var item of qs('#main-slots-container').children) {
-                        item.classList.remove('inv-slot-selected');
-                    }
-                    slot.classList.add('inv-slot-selected');
+                $(slot).click(() => {
+                    that.selectedItem = that.items[i - 1];
+                    $('.inv-slot-selected').each(function() {
+                        $(this).removeClass('inv-slot-selected');
+                    });
+                    $(slot).addClass('inv-slot-selected'); //its correct in the debug memory but it is wrong
                 });
                 var label = document.createElement('div');
-                label.className = 'inv-slot-label';
+                label.className = 'inv-slot-label'; //what should we do now can u help i will work on the useItem function
                 label.innerText = element.amount;
                 slot.appendChild(label);
             }
         };
-        this.elements.scrollleft.addEventListener('click', function () {
+        this.elements.scrollleft.addEventListener('click', function() {
             if (that.items[that.inventoryIndex - 1] != null)
                 that.inventoryIndex--;
             else
                 return;
             that.updateElements();
         });
-        this.elements.scrollright.addEventListener('click', function () {
+        this.elements.scrollright.addEventListener('click', function() {
             if (that.items[that.inventoryIndex + 5] != null)
                 that.inventoryIndex++;
             else
                 return;
             that.updateElements();
         });
-        this.addItem = function (ITEM) {
+        this.addItem = function(ITEM) {
             var t = 0;
-            that.items.forEach(function (element) {
+            that.items.forEach(function(element) {
                 t += element.amount;
             });
             if (t >= that.space) {
@@ -750,15 +750,17 @@
                 }
             }
         };
-        this.useItem = function (ITEM) {
+        this.useItem = function(ITEM) {
+            var game = global.GameObject;
             if (ITEM.properties.energy != undefined) {
-                global.GameObject.energy += ITEM.properties.energy;
+                game.energy += ITEM.properties.energy; //it doesn't update the energy for some reason
             }
-            if (global.GameObject.tileValues[ITEM.name.toLowerCase()] != undefined) {
-                setMapTile(global.GameObject.tileValues[ITEM.name.toLowerCase()]);
+            if (game.tileValues[ITEM.name.toLowerCase()] != undefined) {
+                game.setMapTile(global.GameObject.tileValues[ITEM.name.toLowerCase()]);
             }
             ITEM.amount--;
-        }
+            that.updateElements();
+        };
         this.updateElements();
     }
 
@@ -774,7 +776,7 @@
         return matchingElements;
     }
 
-    GameObject.prototype.detectHit = function (bulletEl, target) {
+    GameObject.prototype.detectHit = function(bulletEl, target) {
         var b = bulletEl.getBoundingClientRect();
         var t = target.getBoundingClientRect();
         return (b.top <= t.top + 20 &&
@@ -784,10 +786,10 @@
             b.left <= t.left + 20);
     };
 
-    GameSave.prototype.load = function () {
+    GameSave.prototype.load = function() {
         var data = window.localStorage.getItem("exp-game/save");
         var value = '';
-        database.ref('/keys/exp').once('value').then(function (snapshot) {
+        database.ref('/keys/exp').once('value').then(function(snapshot) {
             value = snapshot.val().keyname;
         });
 
@@ -802,7 +804,7 @@
             return output.join("");
         }
         if (auth.currentUser != null) {
-            databaseref.child('/' + auth.currentUser.uid).once('value').then(function (snapshot) {
+            databaseref.child('/' + auth.currentUser.uid).once('value').then(function(snapshot) {
                 if (snapshot.val().savefile != undefined) {
                     data = JSON.parse(encryptDecrypt(snapshot.val().savefile));
                     var newGameObject = Object.assign(new GameObject(), data);
@@ -823,7 +825,7 @@
     }
 
 
-    GameObject.prototype.Item = function (display_text, color, name, description, properties, amount) {
+    GameObject.prototype.Item = function(display_text, color, name, description, properties, amount) {
         this.displayText = display_text;
         this.color = color;
         this.name = name;
@@ -834,19 +836,19 @@
 
     global.GameObject = new GameSave().load();
 
-    auth.onAuthStateChanged(function (user) {
+    auth.onAuthStateChanged(function(user) {
         if (user) {
             global.GameObject = new GameSave().load();
         }
     });
 
     global.credits = document.querySelector('#credits');
-    global.credits.roll = function () {
+    global.credits.roll = function() {
         global.credits.style.display = 'block';
         global.credits.style.animationName = 'creditsroll';
         global.credits.style.animationDuration = '7s';
         global.credits.style.animationTimingFunction = 'linear';
-        setTimeout(function () {
+        setTimeout(function() {
             global.credits.style.display = 'none';
         }, 7000);
     };
@@ -1144,8 +1146,8 @@
         }
     }*/
     if ($('startscreen').html != '') {
-        global.GameObject.elements.play.addEventListener('click', function () {
-            regenDegenInterval = setInterval(function () {
+        global.GameObject.elements.play.addEventListener('click', function() {
+            regenDegenInterval = setInterval(function() {
                 if (Math.round(energy) > 0 && hp == maxhp)
                     global.GameObject.energy--;
                 if (global.GameObject.energy > global.GameObject.maxEnergy)
@@ -1161,13 +1163,13 @@
                 if (hp < 0) {
                     var saveHTML = document.body.innerHTML;
                     document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-                    setTimeout(function () {
+                    setTimeout(function() {
                         document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
                     }, 1000);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
                     }, 2000);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         global.GameObject.energy = global.GameObject.maxEnergy;
                         global.GameObject.hp = global.GameObject.maxhp;
                         location.reload();
@@ -1338,19 +1340,19 @@
         }, 600);
     }*/
 
-    setInterval(function () {
+    setInterval(function() {
         name = global.GameObject.elements.name.innerHTML;
     }, 1000);
 
     global.GameObject.elements.name.innerHTML = global.GameObject.name;
     global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
     global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-    global.GameObject.elements.optionsButton.addEventListener('click', function () {
+    global.GameObject.elements.optionsButton.addEventListener('click', function() {
         var duck = global.GameObject.elements.optionsModal.style.display;
         $('#options-modal').toggle();
         $('#mask').toggle();
     });
-    global.GameObject.elements.effectsButton.addEventListener('click', function () {
+    global.GameObject.elements.effectsButton.addEventListener('click', function() {
         if (qs('html.effects-on') != null) {
             global.GameObject.elements.effectsButton.innerText = 'OFF';
             qs('html.effects-on').classList.remove('effects-on');
@@ -1360,8 +1362,8 @@
         }
     });
 
-    $('.modal-options-close').each(function (index) {
-        $(this).click(function () {
+    $('.modal-options-close').each(function(index) {
+        $(this).click(function() {
             $(this).parent().parent().toggle();
             $('#mask').toggle();
         });
@@ -1370,22 +1372,22 @@
     var count = 1;
 
     function glitchInterval() {
-        setTimeout(function () {
+        setTimeout(function() {
             var savePlayerCoordinates = this.player.getBoundingClientRect();
             $('html').css({
                 'position': 'absolute',
                 'left': '89px'
             });
-            setTimeout(function () {
+            setTimeout(function() {
                 $('html').css('transform', 'scale(1.2), rotate(180deg)')
             }, 100);
-            setTimeout(function () {
+            setTimeout(function() {
                 $('html').css({
                     'filter': 'invert(1)',
                     'left': '0'
                 })
             }, 150);
-            setTimeout(function () {
+            setTimeout(function() {
                 $('html').css({
                     'filter': 'none',
                     'transform': 'none',
