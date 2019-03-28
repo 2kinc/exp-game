@@ -1181,6 +1181,9 @@
                 global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
             }, 5000);
             global.GameObject.initialize_viewport();
+            var soundtrack = new Audio();
+            soundtrack.src = 'exp-main-soundtrack.mp3';
+            soundtrack.play();
             $('#startscreen').html('');
             $('#startscreen').css('display', 'none');
         });
