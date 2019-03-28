@@ -168,28 +168,19 @@ img {
 }
 
 .clickable {
+    border: 2px white solid;
+    border-radius: 4px;
+    text-shadow: none!important;
+    text-align: center;
+    height: 1em;
+    line-height: 0.8em;
+    background: black;
     cursor: pointer;
-}
-
-.clickable::before {
-    content: '[';
-}
-
-.clickable::after {
-    content: ']';
 }
 
 .clickable:hover {
     background: #fff;
     color: #333;
-}
-
-.clickable:hover::before {
-    content: '[ ';
-}
-
-.clickable:hover::after {
-    content: ' ]';
 }
 
 td {
@@ -476,22 +467,39 @@ td:hover {
 }
 
 #dialogue {
+    position: absolute;
+    height: calc(35vh + 9em);
+    top: calc(65vh - 9em);
+    left: 0;
+    width: 100%;
+    display: var(--dialogue-display);
+    z-index: 1000000000;
+}
+
+#dialogue-main {
     background: black;
     height: 35vh;
     width: 120%;
-    position: absolute;
-    top: 65vh;
     left: -10%;
+    position: absolute;
     font-size: 3em;
     padding: 1em;
-    display: var(--dialogue-display);
-    --dialogue-before-color: white;
-    z-index: 1000000000;
     padding-left: 15%;
+    top: 3.5em;
 }
 
-#dialogue::before {
-    color: var(--dialogue-before-color);
+#dialogue-character {
+    background: repeating-linear-gradient(315deg, transparent, transparent 15px, #00000077 15px, #00000077 20px);
+    font-size: 5em;
+    padding: 0.4em;
+    padding-left: 3em;
+    width: 120%;
+    left: -10%;
+    position: absolute;
+}
+
+#dialogue-text::before {
+    content: '> ';
 }
 
 @keyframes cursor {
@@ -515,23 +523,21 @@ td:hover {
 
 #dialogue-text::after {
     content: '█';
-}
-
-#dialogue.info::before {
-    content: '->';
-}
-
-#dialogue.character::before {
-    content: attr(data-before) ' ';
-    height: 100%;
-    padding: 10px 0;
+    margin-left: 0.1em;
 }
 
 #dialogue-continue {
-    width: 100%;
-    text-align: center;
-    position: absolute;
-    left: -5%;
+    width: 5em;
+    line-height: 0.4em;
     margin-top: 1em;
-    font-size: 0.7em;
+    margin-left: calc(44% - 5em);
+}
+
+.round-white-border {
+    border: 2px white solid;
+    border-radius: 4px;
+    text-shadow: none!important;
+    text-align: center;
+    height: 1em;
+    background: black;
 }

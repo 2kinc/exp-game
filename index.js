@@ -187,7 +187,9 @@
             inventorySlots: qs('#inventory-slots'),
             inventoryScrollLeft: qs('#inv-scroll-left'),
             inventoryScrollRight: qs('#inv-scroll-right'),
-            dialogue: $('#dialogue')
+            dialogueContainer: $('#dialogue'),
+            dialogue: $('#dialogue-text'),
+            dialogueCharacter: $('#dialogue-character')
         };
 
         this.itemValues = {
@@ -238,16 +240,17 @@
             this.color = color || null;
         }
 
-        this.Character = function(name, faces) {
+        this.Character = function(name, faces, color) {
             this.name = name;
             this.faces = faces;
+            this.color = color || '#00c853';
         }
 
         this.characters = {
             ctrlz: new that.Character('Ctrl + Z', {
-                default: new that.Face('o-╭ರ_⊙-o'),
-                happy: new that.Face('o-✦‿✦-o'),
-                mad: new that.Face('O->⌒<-O💢', '#ff0000')
+                default: new that.Face('o-(╭ರ_⊙)-o'),
+                happy: new that.Face('o-(✦‿✦)-o'),
+                mad: new that.Face('O-(>⌒<)-O💢', '#ff0000')
             }),
             curry: new that.Character('AutoCurry', {
                 default: new that.Face('<◔⎁◔>'),
@@ -536,7 +539,7 @@
             var d = distance((c.left + c.right) / 2, (c.left + c.right) / 2, e.clientX, e.clientY);
             d.x = (360 - d.x / 70) % 360;
             d.y = (360 + d.y / 70) % 360;
-            global.GameObject.elements.dialogue.css({
+            global.GameObject.elements.dialogueContainer.css({
                 'transform': 'rotateX(' + d.y + 'deg) rotateY(' + d.x + 'deg)'
             });
         });
@@ -596,6 +599,7 @@
                     p.setAttribute('tooltip-text', element.description);
                     that.elements.loot.appendChild(span);
                     that.elements.loot.appendChild(document.createElement('br'));
+
                 });
             }
             this.updateElements();
@@ -605,13 +609,16 @@
             var fill = [];
             var count = 0;
             if (character.indexOf('character:') >= 0) {
-                that.elements.dialogue.attr('class', 'character');
-                that.elements.dialogue.attr('data-before', that.characters[character.split(':')[1]].faces[character.split(':')[2]].text);
-                that.elements.dialogue.css({
-                    '--dialogue-before-color': that.characters[character.split(':')[1]].faces[character.split(':')[2]].color
+                var selectedCharacter = that.characters[character.split(':')[1]];
+                that.elements.dialogueCharacter.css({
+                    backgroundColor: (selectedCharacter.faces[character.split(':')[2]].color || selectedCharacter.color) + '88'
                 });
+                that.elements.dialogueCharacter.text(
+                    selectedCharacter.faces[character.split(':')[2]].text
+                );
+                that.elements.dialogueCharacter.show();
             } else {
-                that.elements.dialogue.attr('class', character);
+                that.elements.dialogueCharacter.hide();
             }
             if (that.dialogueInterval != undefined)
                 clearInterval(that.dialogueInterval);
@@ -1183,6 +1190,7 @@
             global.GameObject.initialize_viewport();
             var soundtrack = new Audio();
             soundtrack.src = 'exp-main-soundtrack.mp3';
+            soundtrack.loop = true;
             soundtrack.play();
             $('#startscreen').html('');
             $('#startscreen').css('display', 'none');
