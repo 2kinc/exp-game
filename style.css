@@ -534,6 +534,11 @@ td:hover {
     margin-left: calc(37% - 2.5em);
 }
 
+#dialogue-continue:hover {
+    background: #fff;
+    color: #333;
+}
+
 .round-white-border {
     border: 2px white solid;
     border-radius: 4px;
