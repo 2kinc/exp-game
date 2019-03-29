@@ -640,7 +640,7 @@
             var count = 0;
             if (character.indexOf('character:') >= 0) {
                 var selectedCharacter = that.characters[character.split(':')[1]];
-                that.elements.dialogueCharacter.css({
+                $('#dialogue-character-container').css({
                     backgroundColor: (selectedCharacter.faces[character.split(':')[2]].color || selectedCharacter.color) + '88'
                 });
                 that.elements.dialogueCharacter.text(
@@ -698,9 +698,19 @@
                 pos2 = pos4 - e.clientY;
                 pos3 = e.clientX;
                 pos4 = e.clientY;
+                var newY = elmnt.offsetTop - pos2;
+                var newX = elmnt.offsetLeft - pos1;
+                if (newY > 132 - elmnt.getBoundingClientRect().height)
+                    newY = 132 - elmnt.getBoundingClientRect().height;
+                if (newY < -15)
+                    newY = -15;
+                if (newX > window.innerWidth * 1.1 - elmnt.getBoundingClientRect().width)
+                    newX = window.innerWidth * 1.1 - elmnt.getBoundingClientRect().width;
+                if (newX < window.innerWidth * 0.1)
+                    newX = window.innerWidth * 0.1;
                 // set the element's new position:
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                elmnt.style.top = newY + "px";
+                elmnt.style.left = newX + "px";
             }
 
             function closeDragElement() {

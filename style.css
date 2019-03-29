@@ -494,7 +494,7 @@ td:hover {
     top: 3.5em;
 }
 
-#dialogue-character {
+#dialogue-character-container {
     background: repeating-linear-gradient(315deg, transparent, transparent 15px, #00000077 15px, #00000077 20px);
     font-size: 5em;
     padding: 0.4em;
@@ -502,6 +502,7 @@ td:hover {
     width: 120%;
     left: -10%;
     position: absolute;
+    height: 9em;
 }
 
 #dialogue-text::before {
@@ -542,6 +543,10 @@ td:hover {
 #dialogue-continue:hover {
     background: #fff;
     color: #000;
+}
+
+#dialogue-character {
+    position: absolute;
 }
 
 .round-white-border {
