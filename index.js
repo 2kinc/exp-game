@@ -458,9 +458,11 @@
                         $('body').css({
                             cursor: 'text'
                         });
+                    } else if (event.key === "Enter") {
+                        $('span.take-loot')[0].click();
                     }
                 }
-                if (event.key != ' ') {
+                if (event.key === '$') {
                     global.GameObject.displayDialogue('Salutations buddy! My name is Ctrl + Z. You just pressed the "' + event.key + '" key!', 'character:ctrlz:default');
                     if (skips > 9)
                         global.GameObject.displayDialogue('Hey, you better stop skipping my dialogue. It is not funny.', 'character:ctrlz:mad');
@@ -470,7 +472,8 @@
             document.onkeydown = function(e) {
                 if (e.key === " ") {
                     $('#dialogue-continue').addClass('active');
-
+                } else if (e.key === "Enter") {
+                    $('span.take-loot')[0].classList.add('active');
                 }
             };
             $('#dialogue-continue').click(function() {
@@ -609,8 +612,8 @@
                 that.elements.loot.innerHTML = '';
                 localthat.items.forEach(function(element) {
                     var span = document.createElement('span');
-                    span.className = 'clickable';
-                    span.innerText = 'Take';
+                    span.className = 'clickable take-loot';
+                    span.innerText = 'Enter ↵';
                     var p = document.createElement('span');
                     p.innerText = element.amount + ' × ' + element.displayText + ' ' + element.name + ' ';
                     that.elements.loot.appendChild(p);

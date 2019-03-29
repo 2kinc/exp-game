@@ -548,7 +548,15 @@ td:hover {
     background: black;
 }
 
-.round-white-border.active {
+.active {
     background: #fff;
     color: #333;
+}
+
+.take-loot {
+    opacity: 1;
+}
+
+#loot > span ~ span ~ span{
+    opacity: 0.3;
 }
