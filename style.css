@@ -180,7 +180,8 @@ img {
 
 .clickable:hover {
     background: #fff;
-    color: #333;
+    color: #000;
+    opacity: 1!important;
 }
 
 td {
@@ -536,7 +537,7 @@ td:hover {
 
 #dialogue-continue:hover {
     background: #fff;
-    color: #333;
+    color: #000;
 }
 
 .round-white-border {
@@ -550,13 +551,17 @@ td:hover {
 
 .active {
     background: #fff;
-    color: #333;
+    color: #000;
 }
 
 .take-loot {
     opacity: 1;
 }
 
-#loot > span ~ span ~ span{
+#loot > div ~ div > .take-loot{
     opacity: 0.3;
+}
+
+.take-loot:hover {
+    opacity: 1;
 }
