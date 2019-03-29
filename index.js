@@ -446,6 +446,18 @@
                         });
                         $('#dialogue-continue').removeClass('active');
                         clearInterval(global.GameObject.dialogueInterval);
+                    } else if (event.key === "Z" || event.key === "z") {
+                        $('body').css({
+                            cursor: 'pointer'
+                        });
+                    } else if (event.key === "X" || event.key === "x") {
+                        $('body').css({
+                            cursor: 'grab'
+                        });
+                    } else if (event.key === "C" || event.key === "c") {
+                        $('body').css({
+                            cursor: 'text'
+                        });
                     }
                 }
                 if (event.key != ' ') {
