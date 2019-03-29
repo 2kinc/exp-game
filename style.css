@@ -173,7 +173,7 @@ img {
     text-shadow: none!important;
     text-align: center;
     height: 1em;
-    line-height: 0.8em;
+    padding: 0 0.2em;
     background: black;
     cursor: pointer;
 }
@@ -264,6 +264,7 @@ hr {
     background: #00000099;
     vertical-align: middle;
     top: -20px;
+    margin: 0;
 }
 
 .inv-slot:nth-child(odd) {
@@ -530,7 +531,7 @@ td:hover {
     width: 5em;
     line-height: 0.4em;
     margin-top: 1em;
-    margin-left: calc(44% - 5em);
+    margin-left: calc(37% - 2.5em);
 }
 
 .round-white-border {
@@ -540,4 +541,9 @@ td:hover {
     text-align: center;
     height: 1em;
     background: black;
+}
+
+.round-white-border.active {
+    background: #fff;
+    color: #333;
 }

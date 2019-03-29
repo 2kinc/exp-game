@@ -417,7 +417,7 @@
             var topleft = this.get_topleft();
             this.generate_rows(topleft, h, w);
             var skips = 0;
-            document.onkeypress = function(event) {
+            document.onkeyup = function(event) {
                 if (document.activeElement != that.elements.name) {
                     var d = new Directions();
                     if (event.key === "W" || event.key === "w") {
@@ -444,6 +444,7 @@
                         $('body').css({
                             '--dialogue-display': 'none'
                         });
+                        $('#dialogue-continue').removeClass('active');
                         clearInterval(global.GameObject.dialogueInterval);
                     }
                 }
@@ -454,6 +455,12 @@
                     skips++;
                 }
             };
+            document.onkeydown = function (e) {
+                if (e.key === " ") {
+                    $('#dialogue-continue').addClass('active');
+
+                }
+            }
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
                 y: this.get_bottomleft().y
