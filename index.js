@@ -701,36 +701,39 @@
                 var newY = elmnt.offsetTop - pos2;
                 var newX = elmnt.offsetLeft - pos1;
                 var smacked = false;
-                if (newY > 132 - elmnt.getBoundingClientRect().height) {
-                    var diff = newY - (132 - elmnt.getBoundingClientRect().height);
-                    newY = 132 - elmnt.getBoundingClientRect().height;
+                if (newY > 250 - elmnt.getBoundingClientRect().height) {
+                    var diff = newY - (250 - elmnt.getBoundingClientRect().height);
+                    newY = 250 - elmnt.getBoundingClientRect().height;
                     if (smacked == false) {
-                        document.body.style.top = '-' + diff + 'px';
+                        smacked = true;
+                        document.body.style.top = diff + 'px';
                         setTimeout(function () {
                             document.body.style.top = '0px';
-                            smacked = true;
+                            smacked = false;
                         }, 80);
                     }
                 }
                 if (newY < -15) {
-                    var diff = (newY + 15) * 1.5;
+                    var diff = newY + 15;
                     newY = -15;
                     if (smacked == false) {
+                        smacked = true;
                         document.body.style.top = diff + 'px';
                         setTimeout(function () {
                             document.body.style.top = '0px';
-                            smacked = true;
+                            smacked = false;
                         }, 80);
                     }
                 }   
-                if (newX > window.innerWidth * 1.1 - elmnt.getBoundingClientRect().width){
-                    var diff = newX - (window.innerWidth * 1.1 - elmnt.getBoundingClientRect().width);
-                    newX = window.innerWidth * 1.1 - elmnt.getBoundingClientRect().width;
+                if (newX > window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width){
+                    var diff = newX - (window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width);
+                    newX = window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width;
                     if (smacked == false) {
+                        smacked = true;
                         document.body.style.left = diff + 'px';
                         setTimeout(function () {
                             document.body.style.left = '0px';
-                            smacked = true;
+                            smacked = false;
                         }, 80);
                     }
                 }
@@ -738,10 +741,11 @@
                     var diff = newX + (window.innerWidth * 0.1);
                     newX = window.innerWidth * 0.1;
                     if (smacked == false) {
+                        smacked = true;
                         document.body.style.left = '-' + diff + 'px';
                         setTimeout(function () {
                             document.body.style.left = '0px';
-                            smacked = true;
+                            smacked = false;
                         }, 80);
                     }
                 }

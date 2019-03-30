@@ -482,8 +482,8 @@ td:hover {
 
 #dialogue {
     position: absolute;
-    height: calc(35vh + 9em);
-    top: calc(65vh - 9em);
+    height: calc(35vh + 28em);
+    top: calc(65vh - 28em);
     left: 0;
     width: 100%;
     display: var(--dialogue-display);
@@ -492,25 +492,23 @@ td:hover {
 
 #dialogue-main {
     background: black;
-    height: 35vh;
+    height: 15em;
     width: 120%;
     left: -10%;
     position: absolute;
     font-size: 3em;
     padding: 1em;
     padding-left: 15%;
-    top: 3.5em;
+    top: 6.7em;
 }
 
 #dialogue-character-container {
     background: repeating-linear-gradient(315deg, transparent, transparent 15px, #00000077 15px, #00000077 20px);
+    padding: 2em 4em;
     font-size: 5em;
-    padding: 0.4em;
-    padding-left: 3em;
     width: 120%;
     left: -10%;
     position: absolute;
-    height: 9em;
 }
 
 #dialogue-text::before {
@@ -531,7 +529,7 @@ td:hover {
 
 #dialogue-text {
     max-width: 75%;
-    max-height: 1.3em;
+    max-height: 2.6em;
     overflow: hidden;
     scroll-behavior: smooth;
 }
@@ -544,7 +542,7 @@ td:hover {
 #dialogue-continue {
     width: 5em;
     line-height: 0.4em;
-    margin-top: 1em;
+    margin-top: 2em;
     margin-left: calc(37% - 2.5em);
 }
 
@@ -575,7 +573,7 @@ td:hover {
     opacity: 1;
 }
 
-#loot > div ~ div > .take-loot{
+#loot > div ~ div > .take-loot {
     opacity: 0.3;
 }
 
