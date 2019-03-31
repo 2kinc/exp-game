@@ -703,6 +703,7 @@
                 var smacked = false;
                 if (newY > 250 - elmnt.getBoundingClientRect().height) {
                     var diff = newY - (250 - elmnt.getBoundingClientRect().height);
+                    diff *= 10;
                     newY = 250 - elmnt.getBoundingClientRect().height;
                     if (smacked == false) {
                         smacked = true;
@@ -714,7 +715,8 @@
                     }
                 }
                 if (newY < -15) {
-                    var diff = newY + 15;
+                    var diff = (-15) - newY;
+                    diff *= 10;
                     newY = -15;
                     if (smacked == false) {
                         smacked = true;
@@ -726,7 +728,8 @@
                     }
                 }   
                 if (newX > window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width){
-                    var diff = newX - (window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width);
+                    var diff = (newX - (window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width));
+                    diff *= 10;
                     newX = window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width;
                     if (smacked == false) {
                         smacked = true;
@@ -738,7 +741,8 @@
                     }
                 }
                 if (newX < window.innerWidth * 0.1) {
-                    var diff = newX + (window.innerWidth * 0.1);
+                    var diff = (window.innerWidth * 0.1) - newX;
+                    diff *= 10;
                     newX = window.innerWidth * 0.1;
                     if (smacked == false) {
                         smacked = true;

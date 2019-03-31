@@ -194,7 +194,7 @@ img {
 
 td {
     width: 20px;
-    height: 18px;
+    height: 19px;
     text-align: center;
     font-size: 1em;
     margin: 0;
@@ -215,6 +215,7 @@ hr {
     border: 1px solid;
     margin-left: -10px;
     margin-right: -10px;
+    background: white;
 }
 
 #credits {
