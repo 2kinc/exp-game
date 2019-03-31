@@ -43,7 +43,7 @@
         return document.querySelector(selector);
     };
 
-    function Directions() { }
+    function Directions() {}
     Directions.prototype.up = () => {
         return 0
     };
@@ -119,9 +119,9 @@
                     newTile.loot = new game.lootSpawn(false);
                 }
                 if (game.getMapTile({
-                    x: x,
-                    y: y
-                }) != undefined)
+                        x: x,
+                        y: y
+                    }) != undefined)
                     newTile = game.getMapTile({
                         x: x,
                         y: y
@@ -135,11 +135,15 @@
 
     function GameObject() {
         var that = this;
+        var energy = 15;
         this.coordinates = new Coordinate;
         this.facing = (new Directions).up();
         this.hp = 10;
         this.maxhp = 10;
-        this.energy = 15;
+        this.getEnergy = () => energy;
+        this.setEnergy = function (a) {
+            energy = a;
+        };
         this.maxEnergy = 15;
         this.name = 'Default Noob';
         this.lootArray = [];
@@ -296,30 +300,30 @@
                         tile.setAttribute('tooltip-title', '[' + k.display_text + '] ' + k.name);
                         tile.setAttribute('tooltip-text', k.description);
                         if (chunk.terrain.get(getMapTileKey({
-                            coordinates: {
-                                x: x + 1,
-                                y: y
-                            }
-                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
-                            coordinates: {
-                                x: x + 1,
-                                y: y
-                            }
-                        })).terrain.name) {
+                                coordinates: {
+                                    x: x + 1,
+                                    y: y
+                                }
+                            })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
+                                coordinates: {
+                                    x: x + 1,
+                                    y: y
+                                }
+                            })).terrain.name) {
                             tile.style.borderRight = '2px #ffffffaa solid';
                             tile.style.paddingRight = '-2px';
                         }
                         if (chunk.terrain.get(getMapTileKey({
-                            coordinates: {
-                                x: x,
-                                y: y + 1
-                            }
-                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
-                            coordinates: {
-                                x: x,
-                                y: y + 1
-                            }
-                        })).terrain.name) {
+                                coordinates: {
+                                    x: x,
+                                    y: y + 1
+                                }
+                            })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
+                                coordinates: {
+                                    x: x,
+                                    y: y + 1
+                                }
+                            })).terrain.name) {
                             tile.style.borderTop = '2px #ffffffaa solid';
                             tile.style.paddingTop = '-2px';
                         }
@@ -589,11 +593,11 @@
             var ammo = that.itemValues.ammo;
             ammo.amount = Math.floor(Math.random() * 10);
             var food = [that.itemValues.potato,
-            that.itemValues.tomato,
-            that.itemValues.grapes,
-            that.itemValues.pie,
-            that.itemValues.meat,
-            that.itemValues.orange
+                that.itemValues.tomato,
+                that.itemValues.grapes,
+                that.itemValues.pie,
+                that.itemValues.meat,
+                that.itemValues.orange
             ];
             food = food[Math.floor(Math.random() * food.length)];
             food.amount = Math.floor(Math.random() * 3);
@@ -726,8 +730,8 @@
                             smacked = false;
                         }, 80);
                     }
-                }   
-                if (newX > window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width){
+                }
+                if (newX > window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width) {
                     var diff = (newX - (window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width));
                     diff *= 10;
                     newX = window.innerWidth * 1.05 - elmnt.getBoundingClientRect().width;
@@ -765,6 +769,11 @@
             }
         }
         dragElement(qs('#dialogue-character'));
+        this.updateElements = function () {
+            that.elements.name.innerHTML = that.name;
+            that.elements.hp.innerHTML = that.hp + '/' + that.maxhp;
+            that.elements.energy.innerHTML = Math.round(that.getEnergy()) + '/' + that.maxEnergy;
+        }
         this.save = function () {
             var savedGame = new GameSave();
             for (var k in that) {
@@ -888,15 +897,18 @@
             }
         };
         this.useItem = function (ITEM) {
-            var game = global.GameObject;
-            if (ITEM.properties.energy != undefined) {
-                game.energy += ITEM.properties.energy; //it doesn't update the energy for some reason
+            if (ITEM.amount > 0) {
+                var game = global.GameObject;
+                if (ITEM.properties.energy != undefined) {
+                    game.setEnergy(game.getEnergy() + ITEM.properties.energy); //it doesn't update the energy for some reason
+                }
+                if (game.tileValues[ITEM.name.toLowerCase()] != undefined) {
+                    game.setMapTile(global.GameObject.tileValues[ITEM.name.toLowerCase()]);
+                }
+                ITEM.amount--;
+                game.updateElements();
+                that.updateElements();
             }
-            if (game.tileValues[ITEM.name.toLowerCase()] != undefined) {
-                game.setMapTile(global.GameObject.tileValues[ITEM.name.toLowerCase()]);
-            }
-            ITEM.amount--;
-            that.updateElements();
         };
         this.updateElements();
     }
@@ -942,7 +954,7 @@
         }
         if (auth.currentUser != null) {
             databaseref.child('/' + auth.currentUser.uid).once('value').then(function (snapshot) {
-                if (snapshot.val().savefile != undefined) {
+                if (snapshot.val() && snapshot.val().savefile != undefined) {
                     data = JSON.parse(encryptDecrypt(snapshot.val().savefile));
                     var newGameObject = Object.assign(new GameObject(), data);
                     console.log(newGameObject);
@@ -1284,39 +1296,6 @@
     }*/
     if ($('startscreen').html != '') {
         global.GameObject.elements.play.addEventListener('click', function () {
-            regenDegenInterval = setInterval(function () {
-                if (Math.round(energy) > 0 && hp == maxhp)
-                    global.GameObject.energy--;
-                if (global.GameObject.energy > global.GameObject.maxEnergy)
-                    global.GameObject.energy = global.GameObject.maxEnergy;
-                if (Math.round(energy) == global.GameObject.maxEnergy && global.GameObject.hp < global.GameObject.maxhp) {
-                    global.GameObject.energy = global.GameObject.maxEnergy;
-                    global.GameObject.hp += 3;
-                }
-                if (Math.round(energy) == 0) {
-                    global.GameObject.hp -= Math.floor(global.GameObject.maxhp / 3);
-                    global.GameObject.hpEl.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
-                }
-                if (hp < 0) {
-                    var saveHTML = document.body.innerHTML;
-                    document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 3</span></p>"
-                    setTimeout(function () {
-                        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 2</span></p>"
-                    }, 1000);
-                    setTimeout(function () {
-                        document.body.innerHTML = "<p style='font-size: 100px; position: absolute; top: 0; height: 100%; width: 100%; text-align: center;'>YOU DIED<br><span style='font-size: 20px;'>respawning in: 1</span></p>"
-                    }, 2000);
-                    setTimeout(function () {
-                        global.GameObject.energy = global.GameObject.maxEnergy;
-                        global.GameObject.hp = global.GameObject.maxhp;
-                        location.reload();
-                    }, 3000);
-                }
-                if (global.GameObject.hp > global.GameObject.maxhp)
-                    global.GameObject.hp = global.GameObject.maxhp;
-                global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
-                global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
-            }, 5000);
             global.GameObject.initialize_viewport();
             var soundtrack = new Audio();
             soundtrack.src = 'exp-main-soundtrack.mp3';
@@ -1487,7 +1466,7 @@
 
     global.GameObject.elements.name.innerHTML = global.GameObject.name;
     global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
-    global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.energy) + '/' + global.GameObject.maxEnergy;
+    global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.getEnergy()) + '/' + global.GameObject.maxEnergy;
     global.GameObject.elements.optionsButton.addEventListener('click', function () {
         var duck = global.GameObject.elements.optionsModal.style.display;
         $('#options-modal').toggle();
