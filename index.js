@@ -706,7 +706,7 @@
                 var newX = elmnt.offsetLeft - pos1;
                 var smacked = false;
                 if (newY > 250 - elmnt.getBoundingClientRect().height) {
-                    var diff = newY - (250 - elmnt.getBoundingClientRect().height);
+                    var diff = (250 - elmnt.getBoundingClientRect().height) - newY;
                     newY = 250 - elmnt.getBoundingClientRect().height;
                     if (smacked == false) {
                         smacked = true;
