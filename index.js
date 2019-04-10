@@ -641,35 +641,58 @@
             this.updateElements();
         };
 
-        this.Encounter = function (character, width, height) {
+        this.Controller = function (keys) {
+            var that = this;
+            keys.forEach(function (key) {
+                that[key.toLowerCase()] = false;
+            });
+            this.keyListener = function (e) {
+                var hit = (e.type == 'keydown');
+                var key = e.key.toLowerCase();
+                that[key.toLowerCase()] = hit;
+            }
+        }
+
+        this.Encounter = function (character, width, height, controller) {
             var tat = this;
             this.character = character;
             this.width = width;
             this.height = height;
             this.x = this.width / 2;
             this.y = this.height / 2;
+            this.controller = controller;
             this.animationLoop = function () {
+                if (tat.controller['w']) {
+                    tat.y -= 5;
+                }
+                if (tat.controller['a']) {
+                    tat.x -= 5;
+                }
+                if (tat.controller['s']) {
+                    tat.y += 5;
+                }
+                if (tat.controller['d']) {
+                    tat.x += 5;
+                } //movement
+                if (tat.x < 0) {
+                    tat.x = 0;
+                } else if (tat.x > tat.width - 15) {
+                    tat.x = tat.width - 15;
+                } else if (tat.y < -6) {
+                    tat.y = -6;
+                } else if (tat.y > tat.height - 27) {
+                    tat.y = tat.height - 27;
+                }
                 that.elements.encounterPlayer.css({
                     left: tat.x,
                     top: tat.y
                 });
                 window.requestAnimationFrame(tat.animationLoop);
             };
-            console.log(that);
             this.activate = function () {
                 that.currentEncounter = this;
-                document.onkeypress = function (e) {
-                    var key = e.key.toLowerCase();
-                    if (key === "w") {
-                        tat.y -= 10;
-                    } else if (key === 'a') {
-                        tat.x -= 10;
-                    } else if (key === 's') {
-                        tat.y += 10;
-                    } else if (key === 'd') {
-                        tat.x += 10;
-                    }
-                };
+                document.onkeydown = tat.controller.keyListener;
+                document.onkeyup = tat.controller.keyListener;
                 that.elements.encounterBox.css({
                     width: tat.width + 'px',
                     height: tat.height + 'px'
