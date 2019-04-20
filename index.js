@@ -43,7 +43,7 @@
         return document.querySelector(selector);
     };
 
-    function Directions() {}
+    function Directions() { }
     Directions.prototype.up = () => {
         return 0
     };
@@ -119,9 +119,9 @@
                     newTile.loot = new game.lootSpawn(false);
                 }
                 if (game.getMapTile({
-                        x: x,
-                        y: y
-                    }) != undefined)
+                    x: x,
+                    y: y
+                }) != undefined)
                     newTile = game.getMapTile({
                         x: x,
                         y: y
@@ -193,7 +193,9 @@
             inventoryScrollRight: qs('#inv-scroll-right'),
             dialogueContainer: $('#dialogue'),
             dialogue: $('#dialogue-text'),
-            dialogueCharacter: $('#dialogue-character')
+            dialogueCharacter: $('#dialogue-character'),
+            encounterBox: $('#encounter-box'),
+            encounterPlayer: $('#encounter-player')
         };
 
         this.itemValues = {
@@ -300,30 +302,30 @@
                         tile.setAttribute('tooltip-title', '[' + k.display_text + '] ' + k.name);
                         tile.setAttribute('tooltip-text', k.description);
                         if (chunk.terrain.get(getMapTileKey({
-                                coordinates: {
-                                    x: x + 1,
-                                    y: y
-                                }
-                            })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
-                                coordinates: {
-                                    x: x + 1,
-                                    y: y
-                                }
-                            })).terrain.name) {
+                            coordinates: {
+                                x: x + 1,
+                                y: y
+                            }
+                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
+                            coordinates: {
+                                x: x + 1,
+                                y: y
+                            }
+                        })).terrain.name) {
                             tile.style.borderRight = '2px #ffffffaa solid';
                             tile.style.paddingRight = '-2px';
                         }
                         if (chunk.terrain.get(getMapTileKey({
-                                coordinates: {
-                                    x: x,
-                                    y: y + 1
-                                }
-                            })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
-                                coordinates: {
-                                    x: x,
-                                    y: y + 1
-                                }
-                            })).terrain.name) {
+                            coordinates: {
+                                x: x,
+                                y: y + 1
+                            }
+                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
+                            coordinates: {
+                                x: x,
+                                y: y + 1
+                            }
+                        })).terrain.name) {
                             tile.style.borderTop = '2px #ffffffaa solid';
                             tile.style.paddingTop = '-2px';
                         }
@@ -593,11 +595,11 @@
             var ammo = that.itemValues.ammo;
             ammo.amount = Math.floor(Math.random() * 10);
             var food = [that.itemValues.potato,
-                that.itemValues.tomato,
-                that.itemValues.grapes,
-                that.itemValues.pie,
-                that.itemValues.meat,
-                that.itemValues.orange
+            that.itemValues.tomato,
+            that.itemValues.grapes,
+            that.itemValues.pie,
+            that.itemValues.meat,
+            that.itemValues.orange
             ];
             food = food[Math.floor(Math.random() * food.length)];
             food.amount = Math.floor(Math.random() * 3);
@@ -638,6 +640,66 @@
             }
             this.updateElements();
         };
+
+        this.Controller = function (keys) {
+            var that = this;
+            keys.forEach(function (key) {
+                that[key.toLowerCase()] = false;
+            });
+            this.keyListener = function (e) {
+                var hit = (e.type == 'keydown');
+                var key = e.key.toLowerCase();
+                that[key.toLowerCase()] = hit;
+            }
+        }
+
+        this.Encounter = function (character, width, height, controller) {
+            var tat = this;
+            this.character = character;
+            this.width = width;
+            this.height = height;
+            this.x = this.width / 2;
+            this.y = this.height / 2;
+            this.controller = controller;
+            this.animationLoop = function () {
+                if (tat.controller['w']) {
+                    tat.y -= 5;
+                }
+                if (tat.controller['a']) {
+                    tat.x -= 5;
+                }
+                if (tat.controller['s']) {
+                    tat.y += 5;
+                }
+                if (tat.controller['d']) {
+                    tat.x += 5;
+                } //movement
+                if (tat.x < 0) {
+                    tat.x = 0;
+                } else if (tat.x > tat.width - 15) {
+                    tat.x = tat.width - 15;
+                } else if (tat.y < -6) {
+                    tat.y = -6;
+                } else if (tat.y > tat.height - 27) {
+                    tat.y = tat.height - 27;
+                }
+                that.elements.encounterPlayer.css({
+                    left: tat.x,
+                    top: tat.y
+                });
+                window.requestAnimationFrame(tat.animationLoop);
+            };
+            this.activate = function () {
+                that.currentEncounter = this;
+                document.onkeydown = tat.controller.keyListener;
+                document.onkeyup = tat.controller.keyListener;
+                that.elements.encounterBox.css({
+                    width: tat.width + 'px',
+                    height: tat.height + 'px'
+                });
+                window.requestAnimationFrame(tat.animationLoop);
+            };
+        }
         this.displayDialogue = function (text, character) {
             var arr = text.split('');
             var fill = [];
@@ -770,6 +832,7 @@
             that.elements.hp.innerHTML = that.hp + '/' + that.maxhp;
             that.elements.energy.innerHTML = Math.round(that.getEnergy()) + '/' + that.maxEnergy;
         }
+
         this.save = function () {
             var savedGame = new GameSave();
             for (var k in that) {

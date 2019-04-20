@@ -20,6 +20,9 @@
 }
 
 body {
+    --color-main: black;
+    --color-secondary: white;
+    --color-background: black;
     font-family: 'Roboto Mono', monospace;
     user-select: none !important;
     font-size: 13px;
@@ -580,4 +583,24 @@ td:hover {
 
 .take-loot:hover {
     opacity: 1;
+}
+
+#encounter {
+    position: absolute;
+    left: -8px;
+    top: -8px;
+    width: calc(100% + 50px);
+    height: 100vh;
+    background: black;
+    display: none;
+}
+
+#encounter-box {
+    border: 2px white solid;
+    border-radius: 4px;
+}
+
+#encounter-player {
+    position: relative;
+    font-size: 25px;
 }
