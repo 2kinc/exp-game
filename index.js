@@ -444,7 +444,7 @@
                         that.facing = d.left();
                         that.elements.player.style.transform = 'rotate(270deg)';
                         global.GameObject.gameProgression++;
-                    } else if (event.key === " ") {
+                    } else if (key === "q") {
                         $('body').css({
                             '--dialogue-display': 'none'
                         });
