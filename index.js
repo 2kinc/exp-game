@@ -84,52 +84,56 @@
         for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
             for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
                 var value = noise.simplex2(x / 100, y / 100);
-                if (value < 0) {
-                    value = 1 + value;
+                var _ = game.getMapTile(new Coordinate(x, y));
+                var newTile;
+                if (_) {
+                    value = _;
+                    newTile = new MapTile({
+                        x: x,
+                        y: y
+                    }, null, value);
                 }
-                if (value >= 0.75) {
-                    value = game.tileValues.water;
-                } else if (value >= 0.45) {
-                    value = game.tileValues.sand;
-                } else if (value >= 0.25) {
-                    value = game.tileValues.grass;
-                } else if (value >= 0) {
-                    value = game.tileValues.dirt;
-                }
-                var newTile = new MapTile({
-                    x: x,
-                    y: y
-                }, null, value);
-                var a = newTile.coordinates.x;
-                if (a < 0) {
-                    a = pi.length + a;
-                }
-                var b = newTile.coordinates.y;
-                if (b < 0) {
-                    b = pi.length + b;
-                }
-                var k = ((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a + b) % (pi.length - 1)] + pi[Math.abs(a - b)] % (pi.length - 1)) / 4);
-                if (k < 2 && newTile.terrain.name == 'Sand') {
-                    newTile.terrain = global.GameObject.tileValues.cactus;
-                }
-                if (k < 4 && newTile.terrain.name == 'Dirt') {
-                    newTile.terrain = global.GameObject.tileValues.tree;
+                else {
+                    if (value < 0) {
+                        value = 1 + value;
+                    }
+                    if (value >= 0.75) {
+                        value = game.tileValues.water;
+                    } else if (value >= 0.45) {
+                        value = game.tileValues.sand;
+                    } else if (value >= 0.25) {
+                        value = game.tileValues.grass;
+                    } else if (value >= 0) {
+                        value = game.tileValues.dirt;
+                    }
+                    newTile = new MapTile({
+                        x: x,
+                        y: y
+                    }, null, value);
+                    var a = newTile.coordinates.x;
+                    if (a < 0) {
+                        a = pi.length + a;
+                    }
+                    var b = newTile.coordinates.y;
+                    if (b < 0) {
+                        b = pi.length + b;
+                    }
+                    var k = ((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a + b) % (pi.length - 1)] + pi[Math.abs(a - b)] % (pi.length - 1)) / 4);
+                    if (k < 2 && newTile.terrain.name == 'Sand') {
+                        newTile.terrain = global.GameObject.tileValues.cactus;
+                    }
+                    if (k < 4 && newTile.terrain.name == 'Dirt') {
+                        newTile.terrain = global.GameObject.tileValues.tree;
+                    }
                 }
                 if (newTile.coordinates.x == game.coordinate.x && newTile.coordinates.y == game.coordinate.y) {
                     newTile.loot = new game.lootSpawn(false);
                 }
-                if (game.getMapTile({
-                    x: x,
-                    y: y
-                }) != undefined)
-                    newTile = game.getMapTile({
-                        x: x,
-                        y: y
-                    });
-                this.terrain.set(getMapTileKey(newTile), newTile);
+                this.terrain.set(getMapTileKey({
+                    coordinates: new Coordinate(x, y)
+                }), newTile);
             }
         }
-        // var localthat = this;
     };
 
 
@@ -224,6 +228,9 @@
         };
 
         this.tileValues = {
+            empty: new Tile(' ', '000000', 'Empty', 'An empty tile.', {
+                unbreakable: true
+            }),
             water: new Tile('.', '03a9f4', 'Water', 'Two H and one O fused into one character.', {
                 unbreakable: true
             }),
@@ -274,10 +281,15 @@
 
         this.setMapTile = function (tile) {
             worldModifications.set(getMapTileKey(tile), tile);
+            var a = new Chunk(this, 25, {
+                x: this.get_bottomleft().x,
+                y: this.get_bottomleft().y
+            }, 32422);
+            this.renderChunks([a]);
         };
 
         this.getMapTile = function (coordinates) {
-            return worldModifications.get(String(coordinates.x) + ',' + String(coordinates.y));
+            return worldModifications.get(getMapTileKey({ coordinates: coordinates }));
         };
 
         this.getTileElement = function (x, y) {
@@ -296,36 +308,35 @@
                                 y: y
                             }
                         })).terrain;
-                        tile.innerHTML = k.display_text;
+                        if (k) {
+                            tile.innerHTML = k.display_text;
+                        }
+                        else {
+                            tile.innerHTML = "-NTI-";
+                        }
                         var b = k.color + Math.floor((that.gameProgression + 1) / 5000 * 256 + 20).toString(16);
                         tile.style.background = '#' + b;
                         tile.setAttribute('tooltip-title', '[' + k.display_text + '] ' + k.name);
                         tile.setAttribute('tooltip-text', k.description);
-                        if (chunk.terrain.get(getMapTileKey({
+
+                        var tr = chunk.terrain.get(getMapTileKey({
                             coordinates: {
                                 x: x + 1,
                                 y: y
                             }
-                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
-                            coordinates: {
-                                x: x + 1,
-                                y: y
-                            }
-                        })).terrain.name) {
+                        }));
+                        if (tr && tr.terrain && k.name != tr.terrain.name) {
                             tile.style.borderRight = '2px #ffffffaa solid';
                             tile.style.paddingRight = '-2px';
                         }
-                        if (chunk.terrain.get(getMapTileKey({
+
+                        var tt = chunk.terrain.get(getMapTileKey({
                             coordinates: {
                                 x: x,
                                 y: y + 1
                             }
-                        })) != undefined && k.name != chunk.terrain.get(getMapTileKey({
-                            coordinates: {
-                                x: x,
-                                y: y + 1
-                            }
-                        })).terrain.name) {
+                        }));
+                        if (tt && tt.terrain && k.name != tt.terrain.name) {
                             tile.style.borderTop = '2px #ffffffaa solid';
                             tile.style.paddingTop = '-2px';
                         }
@@ -426,45 +437,50 @@
             document.onkeyup = function (event) {
                 if (document.activeElement != that.elements.name) {
                     var d = new Directions();
-                    if (event.key === "W" || event.key === "w") {
+                    var key = event.key.toLowerCase();
+                    if (key === "w") {
                         that.shift_viewport_vertically(1);
                         that.facing = d.up();
                         that.elements.player.style.transform = 'rotate(0deg)';
                         global.GameObject.gameProgression++;
-                    } else if (event.key === "S" || event.key === "s") {
+                    } else if (key === "s") {
                         that.shift_viewport_vertically(-1);
                         that.facing = d.down();
                         that.elements.player.style.transform = 'rotate(180deg)';
                         global.GameObject.gameProgression++;
-                    } else if (event.key === "D" || event.key === "d") {
+                    } else if (key === "d") {
                         that.shift_viewport_horizontally(1);
                         that.facing = d.right();
                         that.elements.player.style.transform = 'rotate(90deg)';
                         global.GameObject.gameProgression++;
-                    } else if (event.key === "A" || event.key === "a") {
+                    } else if (key === "a") {
                         that.shift_viewport_horizontally(-1);
                         that.facing = d.left();
                         that.elements.player.style.transform = 'rotate(270deg)';
-                        global.GameObject.gameProgression++;
+                        global.GameObject.gadameProgression++;
                     } else if (key === "q") {
+                        var emptyTile = Object.assign({}, that.tileValues.empty);
+                        emptyTile.coordinates = Object.assign({}, that.coordinate);
+                        that.setMapTile(emptyTile);
+                    } else if (key === " ") {
                         $('body').css({
                             '--dialogue-display': 'none'
                         });
                         $('#dialogue-continue').removeClass('active');
                         clearInterval(global.GameObject.dialogueInterval);
-                    } else if (event.key === "Z" || event.key === "z") {
+                    } else if (key === "z") {
                         $('body').css({
                             cursor: 'pointer'
                         });
-                    } else if (event.key === "X" || event.key === "x") {
+                    } else if (key === "x") {
                         $('body').css({
                             cursor: 'grab'
                         });
-                    } else if (event.key === "C" || event.key === "c") {
+                    } else if (key === "c") {
                         $('body').css({
                             cursor: 'text'
                         });
-                    } else if (event.key === "Enter") {
+                    } else if (key === "enter") {
                         $('span.take-loot')[0].click();
                     }
                 }
@@ -962,7 +978,9 @@
                     game.setEnergy(game.getEnergy() + ITEM.properties.energy); //it doesn't update the energy for some reason
                 }
                 if (game.tileValues[ITEM.name.toLowerCase()] != undefined) {
-                    game.setMapTile(global.GameObject.tileValues[ITEM.name.toLowerCase()]);
+                    var newTile = Object.assign({}, game.tileValues[ITEM.name.toLowerCase()]);
+                    newTile.coordinates = this.coordinate;
+                    game.setMapTile(newTile);
                 }
                 ITEM.amount--;
                 game.updateElements();
@@ -970,18 +988,6 @@
             }
         };
         this.updateElements();
-    }
-
-    function getAllElementsWithAttribute(attribute) {
-        var matchingElements = [];
-        var allElements = document.getElementsByTagName('*');
-        for (var i = 0, n = allElements.length; i < n; i++) {
-            if (allElements[i].getAttribute(attribute) !== null) {
-                // Element exists with attribute. Add to array.
-                matchingElements.push(allElements[i]);
-            }
-        }
-        return matchingElements;
     }
 
     GameObject.prototype.detectHit = function (bulletEl, target) {
