@@ -316,6 +316,7 @@
                         }
                         var b = k.color + Math.floor((that.gameProgression + 1) / 5000 * 256 + 20).toString(16);
                         tile.style.background = '#' + b;
+                        tile.style.border = 'none';
                         tile.setAttribute('tooltip-title', '[' + k.display_text + '] ' + k.name);
                         tile.setAttribute('tooltip-text', k.description);
 
@@ -463,6 +464,13 @@
                         var emptyTile = Object.assign({}, that.tileValues.empty);
                         emptyTile.coordinates = Object.assign({}, that.coordinate);
                         that.setMapTile(emptyTile);
+                    } else if (key === "e" && document.activeElement != qs('#test-place-tile')) {
+                        var value = qs('#test-place-tile').value;
+                        if (that.tileValues[value]) {
+                            var newTile = Object.assign({}, that.tileValues[value]);
+                            newTile.coordinates = Object.assign({}, that.coordinate);
+                            that.setMapTile(newTile);
+                        }
                     } else if (key === " ") {
                         $('body').css({
                             '--dialogue-display': 'none'
@@ -1079,7 +1087,7 @@
             $('#startscreen').css('display', 'none');
         });
     }
-    
+
     setInterval(function () {
         name = global.GameObject.elements.name.innerHTML;
     }, 1000);
