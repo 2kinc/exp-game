@@ -228,24 +228,25 @@
         };
 
         this.tileValues = {
-            empty: new Tile(' ', '000000', 'Empty', 'An empty tile.', {
+            empty: new Tile(' ', '#000000', 'Empty', 'An empty tile.', {
                 unbreakable: true
             }),
-            water: new Tile('.', '03a9f4', 'Water', 'Two H and one O fused into one character.', {
+            water: new Tile('.', '#03a9f4', 'Water', 'Two H and one O fused into one character.', {
                 unbreakable: true
             }),
-            dirt: new Tile('*', '6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
-            sand: new Tile('~', 'fdd835', 'Sand', 'Tiny bits of shredded text make up sand.'),
-            grass: new Tile(',', '4caf50', 'Grass', 'Created when artificial life met dirt.', {
+            dirt: new Tile('*', '#6d4c41', 'Dirt', 'An abundant substance that plants grow in.'),
+            sand: new Tile('~', '#fdd835', 'Sand', 'Tiny bits of shredded text make up sand.'),
+            grass: new Tile(',', '#4caf50', 'Grass', 'Created when artificial life met dirt.', {
                 itemDrop: this.itemValues.dirt
             }),
-            cactus: new Tile('🌵', 'fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', {
+            cactus: new Tile('🌵', '#fdd835', 'Cactus', 'A prickly plant that is tough enough to survive in the harsh desert.', {
                 damage: 1
             }),
-            tree: new Tile('🌲', '6d4c41', 'Tree', 'A tall plant with a thick trunk.', {
+            tree: new Tile('🌲', '#6d4c41', 'Tree', 'A tall plant with a thick trunk.', {
                 itemDrop: this.itemValues.wood
             }),
-            wood: new Tile('🏽', '826054', 'Wood', 'Strong organic material used to build structures.')
+            wood: new Tile('🏽', '#826054', 'Wood', 'Strong organic material used to build structures.'),
+            spaghetti: new Tile('🍝', '#000000', 'Spaghetti', 'A steaming plate of spaghetti, just lying around.')
         };
 
         this.Face = function (text, color) {
@@ -314,8 +315,7 @@
                         else {
                             tile.innerHTML = "-NTI-";
                         }
-                        var b = k.color + Math.floor((that.gameProgression + 1) / 5000 * 256 + 20).toString(16);
-                        tile.style.background = '#' + b;
+                        tile.style.background = k.color + '66';
                         tile.style.border = 'none';
                         tile.setAttribute('tooltip-title', '[' + k.display_text + '] ' + k.name);
                         tile.setAttribute('tooltip-text', k.description);
