@@ -12,7 +12,7 @@
         background-color: #1b03a3;
     }
     80% {
-        background-color: #bc13fe;
+        background-color: #b700ff;
     }
     100% {
         background-color: #ff073a;
@@ -264,32 +264,19 @@ hr {
 }
 
 .inv-slot {
-    border: 2px solid #fff;
     min-height: 40px;
     min-width: 40px;
     max-width: 40px;
     max-height: 40px;
     font-size: 30px;
     display: inline-block;
-    position: relative;
-    text-align: center;
-    padding: 0.1px 0;
-    background: #00000099;
-    vertical-align: middle;
-    top: -20px;
     margin: 0;
 }
 
-.inv-slot:nth-child(odd) {
-    border-left: none;
-    border-right: none;
-}
-
 .inv-slot-label {
-    z-index: 100;
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
+    float: right;
+    position: relative;
+    top: -20px;
     font-size: initial;
 }
 
@@ -300,14 +287,22 @@ hr {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    width: 300px;
+    width: 252px;
+}
+
+#main-slots-container {
+    width: 252px;
+    height: 44px;
+    position: relative;
+    top: -28px;
+    background: #00000099;
 }
 
 #hp {
     border-bottom: 2px white solid;
     font-size: 1.8em;
     padding-left: 0.3em;
-    background: #ffffff99;
+    background: #00000099;
     height: 2em;
     vertical-align: middle;
     line-height: 2em;
@@ -320,7 +315,6 @@ hr {
     margin-left: 1em;
     background: repeating-linear-gradient(315deg, transparent, transparent 10px, #00000077 10px, #00000077 11px), repeating-linear-gradient(45deg, transparent, transparent 10px, #00000077 10px, #00000077 11px);
     animation: colors 100s infinite;
-    background-opacity: 0.5;
     border-top-right-radius: 2px;
     display: block;
     float: right;
@@ -332,7 +326,7 @@ hr {
     border-bottom: 2px white solid;
     font-size: 1.8em;
     padding-left: 0.3em;
-    background: #ffffff99;
+    background: #00000099;
     height: 2em;
     vertical-align: middle;
     line-height: 2em;
@@ -394,10 +388,6 @@ html {
     background: rgba(255, 255, 0, 0.6)
 }
 
-td:hover {
-    outline: 2px white solid;
-}
-
 #name {
     padding: 0.5em;
     font-size: 1.2em;
@@ -410,9 +400,7 @@ td:hover {
     cursor: pointer;
     text-align: center;
     height: 44px;
-    position: relative;
     margin: 0;
-    top: -26px;
 }
 
 #inv-scroll-right {
@@ -422,9 +410,8 @@ td:hover {
     cursor: pointer;
     text-align: center;
     height: 44px;
-    position: relative;
     margin: 0;
-    top: -26px;
+    float: right;
 }
 
 .grid-background {

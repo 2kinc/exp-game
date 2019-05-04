@@ -121,10 +121,17 @@
                     var k = ((pi[a % (pi.length - 1)] + pi[b % (pi.length - 1)] + pi[Math.abs(a + b) % (pi.length - 1)] + pi[Math.abs(a - b)] % (pi.length - 1)) / 4);
                     if (k < 2 && newTile.terrain.name == 'Sand') {
                         newTile.terrain = global.GameObject.tileValues.cactus;
+                        value = global.GameObject.tileValues.cactus;
                     }
                     if (k < 4 && newTile.terrain.name == 'Dirt') {
                         newTile.terrain = global.GameObject.tileValues.tree;
+                        value = global.GameObject.tileValues.tree;
                     }
+                    game.setMapTileWithoutUpdate(Object.assign(value, {
+                        coordinates: {
+                            x: x, y: y
+                        }
+                    }));
                 }
                 if (newTile.coordinates.x == game.coordinate.x && newTile.coordinates.y == game.coordinate.y) {
                     newTile.loot = new game.lootSpawn(false);
@@ -132,6 +139,7 @@
                 this.terrain.set(getMapTileKey({
                     coordinates: new Coordinate(x, y)
                 }), newTile);
+
             }
         }
     };
@@ -287,6 +295,10 @@
                 y: this.get_bottomleft().y
             }, 32422);
             this.renderChunks([a]);
+        };
+
+        this.setMapTileWithoutUpdate = function (tile) {
+            worldModifications.set(getMapTileKey(tile), tile);
         };
 
         this.getMapTile = function (coordinates) {
@@ -461,9 +473,11 @@
                         that.elements.player.style.transform = 'rotate(270deg)';
                         global.GameObject.gadameProgression++;
                     } else if (key === "q") {
-                        var emptyTile = Object.assign({}, that.tileValues.empty);
-                        emptyTile.coordinates = Object.assign({}, that.coordinate);
-                        that.setMapTile(emptyTile);
+                        if (that.getMapTile(that.coordinate).properties.unbreakable != true) {
+                            var emptyTile = Object.assign({}, that.tileValues.empty);
+                            emptyTile.coordinates = Object.assign({}, that.coordinate);
+                            that.setMapTile(emptyTile);
+                        }
                     } else if (key === "e" && document.activeElement != qs('#test-place-tile')) {
                         var value = qs('#test-place-tile').value;
                         if (that.tileValues[value]) {
@@ -1088,7 +1102,6 @@
     global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
     global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.getEnergy()) + '/' + global.GameObject.maxEnergy;
     global.GameObject.elements.optionsButton.addEventListener('click', function () {
-        var duck = global.GameObject.elements.optionsModal.style.display;
         $('#options-modal').toggle();
         $('#mask').toggle();
     });
@@ -1107,61 +1120,6 @@
             $(this).parent().parent().toggle();
             $('#mask').toggle();
         });
-    });
-
-    var count = 1;
-
-    function glitchInterval() {
-        setTimeout(function () {
-            var savePlayerCoordinates = this.player.getBoundingClientRect();
-            $('html').css({
-                'position': 'absolute',
-                'left': '89px'
-            });
-            setTimeout(function () {
-                $('html').css('transform', 'scale(1.2), rotate(180deg)')
-            }, 100);
-            setTimeout(function () {
-                $('html').css({
-                    'filter': 'invert(1)',
-                    'left': '0'
-                })
-            }, 150);
-            setTimeout(function () {
-                $('html').css({
-                    'filter': 'none',
-                    'transform': 'none',
-                    'position': 'relative'
-                });
-                this.player.style.left = savePlayerCoordinates.left + 'px';
-                this.player.style.top = savePlayerCoordinates.top + 'px';
-            }, 200);
-            count++;
-        }, (10000000 / global.GameObject.gameProgression) * count);
-    }
-
-    glitchInterval();
-
-    $('#hugeheading').mgGlitch({
-        // set 'true' to stop the plugin
-        destroy: false,
-        // set 'false' to stop glitching
-        glitch: true,
-        // set 'false' to stop scaling
-        scale: true,
-        // set 'false' to stop glitch blending
-        blend: true,
-        // select blend mode type
-        blendModeType: 'hue',
-        // set min time for glitch 1 elem
-        glitch1TimeMin: 100,
-        // set max time for glitch 1 elem
-        glitch1TimeMax: 500,
-    });
-
-    $('#by2kinc').css({
-        'clip': 'unset',
-        'left': '0'
     });
 
     document.querySelector('#loading').style.display = 'none';

@@ -78,7 +78,6 @@ var worldSeed;
       gradP[i] = gradP[i + 256] = grad3[v % 12];
     }
     worldSeed = seed;
-    console.log(worldSeed);
     return worldSeed;
   };
 
