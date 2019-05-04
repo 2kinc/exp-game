@@ -293,7 +293,7 @@ hr {
     font-size: initial;
 }
 
-#inventory-slots {
+#inventory {
     position: absolute;
     top: calc(100vh - 6em);
     left: 0;

@@ -914,36 +914,28 @@
             for (var i = 0; i < c; i++) {
                 a[i] = '$';
             }
-            var o = this;
-            /*a.forEach(function(element) {
-                if (element == "$") {
-                    o.elements.spaceused.occupied.innerText += element;
-                } else {
-                    o.elements.spaceused.available.innerText += element;
-                }
-            });*/
             this.elements.spaceused.main.innerText = b + '/' + that.space + ' slots used';
-            var j = this;
-            for (var i = this.inventoryIndex; i < this.inventoryIndex + 5; i++) {
-                var element = this.items[i];
-                if (element == null)
-                    return;
-                var slot = document.querySelectorAll('.inv-slot')[i - that.inventoryIndex];
-                $(slot).text(element.displayText);
+            this.elements.slots.innerText = '';
+
+            that.items.forEach(function (element, index) {
+                var slot = document.createElement('div');
+                slot.innerText = element.displayText;
+                slot.className = 'inv-slot';
                 slot.setAttribute('tooltip-title', '[' + element.displayText + '] ' + element.name);
                 slot.setAttribute('tooltip-text', element.description);
-                $(slot).click(() => {
-                    that.selectedItem = that.items[i - 1];
+                slot.onclick = function () {
+                    that.selectedItem = that.items[index];
                     $('.inv-slot-selected').each(function () {
-                        $(this).removeClass('inv-slot-selected');
+                        this.classList.remove('inv-slot-selected');
                     });
-                    $(slot).addClass('inv-slot-selected'); //its correct in the debug memory but it is wrong
-                });
+                    slot.classList.add('inv-slot-selected'); //its correct in the debug memory but it is wrong
+                };
                 var label = document.createElement('div');
                 label.className = 'inv-slot-label'; //what should we do now can u help i will work on the useItem function
                 label.innerText = element.amount;
                 slot.appendChild(label);
-            }
+                that.elements.slots.appendChild(slot);
+            });
         };
         this.elements.scrollleft.addEventListener('click', function () {
             if (that.items[that.inventoryIndex - 1] != null)
