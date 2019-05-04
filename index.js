@@ -75,12 +75,10 @@
         }
     };
 
-    function Chunk(game, sideLength, bottomleft, seed) {
+    function Chunk(game, sideLength, bottomleft) {
         this.terrain = new Map();
         this.bottomleft = bottomleft;
         this.sideLength = sideLength;
-        this.seed = seed;
-        noise.seed(seed);
         for (var x = bottomleft.x; x < sideLength + bottomleft.x; x++) {
             for (var y = bottomleft.y; y < sideLength + bottomleft.y; y++) {
                 var value = noise.simplex2(x / 100, y / 100);
@@ -148,6 +146,7 @@
     function GameObject() {
         var that = this;
         var energy = 15;
+        noise.seed(Math.random());
         this.coordinates = new Coordinate;
         this.facing = (new Directions).up();
         this.hp = 10;
@@ -293,7 +292,7 @@
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
                 y: this.get_bottomleft().y
-            }, 32422);
+            });
             this.renderChunks([a]);
         };
 
@@ -531,7 +530,7 @@
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
                 y: this.get_bottomleft().y
-            }, 32422);
+            });
             this.renderChunks([a]);
             this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
@@ -557,7 +556,7 @@
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
                 y: this.get_bottomleft().y
-            }, 32422);
+            });
             this.renderChunks([a]);
             this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
@@ -590,7 +589,7 @@
             var a = new Chunk(this, 25, {
                 x: this.get_bottomleft().x,
                 y: this.get_bottomleft().y
-            }, 32422);
+            });
             this.renderChunks([a]);
             this.elements.player.style.left = qs('td.current').getBoundingClientRect().left + 'px';
             this.elements.player.style.top = qs('td.current').getBoundingClientRect().top + 'px';
