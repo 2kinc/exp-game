@@ -866,7 +866,6 @@
         }
         dragElement(qs('#dialogue-character'));
         this.updateElements = function () {
-            that.elements.name.innerHTML = that.name;
             that.elements.hp.innerHTML = that.hp + '/' + that.maxhp;
             that.elements.energy.innerHTML = Math.round(that.getEnergy()) + '/' + that.maxEnergy;
         }
@@ -1093,11 +1092,6 @@
         });
     }
 
-    setInterval(function () {
-        name = global.GameObject.elements.name.innerHTML;
-    }, 1000);
-
-    global.GameObject.elements.name.innerHTML = global.GameObject.name;
     global.GameObject.elements.hp.innerHTML = global.GameObject.hp + '/' + global.GameObject.maxhp;
     global.GameObject.elements.energy.innerHTML = Math.round(global.GameObject.getEnergy()) + '/' + global.GameObject.maxEnergy;
     global.GameObject.elements.optionsButton.addEventListener('click', function () {
